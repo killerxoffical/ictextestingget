@@ -65,6 +65,23 @@
         </div>
     </div>
 
+    <!-- Prize Pool Distribution Modal -->
+    <div id="prize-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-surfaceLight border border-white/10 rounded-2xl w-full max-w-sm p-5 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-[17px] font-bold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-ictexGreen" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.015 5.015 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.015 5.015 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                    Prize Distribution
+                </h3>
+                <button onclick="closePrizeModal()" class="text-textDim hover:text-white transition bg-white/5 p-1.5 rounded-lg border border-white/5">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="flex justify-between text-[11px] font-bold text-textDim uppercase tracking-wider mb-3 px-2"><span>Position</span><span>Prize</span></div>
+            <div id="prize-modal-list" class="flex flex-col gap-2 overflow-y-auto hide-scrollbar pr-1"></div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="bg-surface backdrop-blur-md border-b border-white/5 px-4 py-3 flex items-center justify-between shadow-lg z-50">
         <!-- Changed onclick function to postMessage -->
@@ -120,7 +137,7 @@
             </button>
             <div class="flex border-b border-white/5">
                 <button class="inner-tab-btn active flex-1 pb-3 text-sm font-semibold text-textDim uppercase tracking-wide" data-target="inner-info">INFO</button>
-                <button class="inner-tab-btn flex-1 pb-3 text-sm font-semibold text-textDim uppercase tracking-wide" data-target="inner-prizes">PRIZES</button>
+                <button class="inner-tab-btn flex-1 pb-3 text-sm font-semibold text-textDim uppercase tracking-wide" data-target="inner-prizes">LEADERBOARD</button>
             </div>
         </div>
 
@@ -172,7 +189,13 @@
                 </div>
 
                 <div class="border-t border-white/10 pt-6">
-                    <h3 class="text-[16px] font-bold mb-3">Description</h3>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-[16px] font-bold">Description</h3>
+                        <button onclick="openPrizeModal()" class="bg-ictexBlue/10 hover:bg-ictexBlue/20 text-ictexBlue border border-ictexBlue/30 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            View Prizes
+                        </button>
+                    </div>
                     <p id="det-desc" class="text-textDim text-sm leading-relaxed"></p>
                 </div>
             </div>
@@ -218,6 +241,14 @@
 
         function closeCustomModal() {
             document.getElementById('custom-modal').classList.remove('modal-active');
+        }
+
+        function openPrizeModal() {
+            document.getElementById('prize-modal').classList.add('modal-active');
+        }
+
+        function closePrizeModal() {
+            document.getElementById('prize-modal').classList.remove('modal-active');
         }
 
         // Generate consistent fake random number
@@ -341,19 +372,11 @@
             const showLeaderboard = isJoined && (isActive || isCompleted);
 
             if (!showLeaderboard) {
-                let prizeListHTML = '';
-                if(tour.prizes) {
-                    for(let i=1; i<=10; i++) {
-                        let amt = tour.prizes[`place_${i}`] || 0;
-                        if(amt > 0) prizeListHTML += `<div class="flex justify-between items-center ${i%2!==0 ? 'bg-white/5' : 'bg-transparent'} rounded-md p-2.5"><span class="font-bold text-[12px] text-white">${i} PLACE</span><span class="font-bold text-[14px] text-ictexGreen">${amt}$</span></div>`;
-                    }
-                } else { prizeListHTML = '<p class="text-center text-textDim text-sm py-4">Prize list pending.</p>'; }
-
                 prizesTab.innerHTML = `
-                    <div class="bg-surfaceLight rounded-xl p-4 border border-white/5 shadow-lg">
-                        <div class="flex items-center gap-2 mb-5"><svg class="w-5 h-5 text-ictexGreen" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.015 5.015 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.015 5.015 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg><h3 class="text-[15px] font-bold text-white">Prize pool distribution</h3></div>
-                        <div class="flex justify-between text-[11px] font-bold text-textDim uppercase tracking-wider mb-3 px-2"><span>Position</span><span>Prize</span></div>
-                        <div class="flex flex-col gap-1.5">${prizeListHTML}</div>
+                    <div class="flex flex-col items-center justify-center pt-24 pb-10 text-center">
+                        <svg class="w-12 h-12 opacity-20 mb-4 text-textDim" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <h3 class="text-white font-semibold text-lg tracking-wide">Leaderboard unavailable</h3>
+                        <p class="text-textDim text-sm mt-2 px-6">Join the tournament to view live rankings once it starts.</p>
                     </div>`;
                 return;
             }
@@ -412,7 +435,7 @@
                                 }
                             }
                             
-                            if (isActive && parseFloat(tour.rebuyCost) > 0) {
+                            if (isActive && !isCompleted && parseFloat(tour.rebuyCost) > 0) {
                                 rebuyBtn = `<button class="bg-ictexGreen hover:opacity-80 text-white font-bold text-[10px] px-2 py-1 rounded-md active:scale-95 transition" onclick="handleRebuy()">Rebuy — ${tour.rebuyCost}$</button>`;
                             }
 
@@ -682,6 +705,18 @@
             document.getElementById('det-grid-rebuys').innerText = tour.rebuys || '0';
             document.getElementById('det-grid-rebuy-cost').innerText = tour.rebuyCost == 0 ? 'Free' : `${tour.rebuyCost} $`;
             document.getElementById('det-desc').innerText = `The total prize pool is $${tour.prize}. To participate, you need to register and pay the entrance fee of $${tour.fee}. After that, $${tour.initialBalance || 100} will be deposited into a special tournament account. All participants start with the same initial conditions. Over the duration of ${tour.duration}, participants must make trades on their tournament account. The top traders with the highest balances will be the winners.`;
+
+            // Populate the Prize Modal List
+            let prizeListHTML = '';
+            if(tour.prizes) {
+                for(let i=1; i<=10; i++) {
+                    let amt = tour.prizes[`place_${i}`] || 0;
+                    if(amt > 0) {
+                        prizeListHTML += `<div class="flex justify-between items-center ${i%2!==0 ? 'bg-white/5 border border-white/5' : 'bg-transparent border border-transparent'} rounded-lg p-3 transition hover:bg-white/10"><span class="font-black text-[13px] text-white tracking-wide">${i} PLACE</span><span class="font-black text-[15px] text-ictexGreen">${amt}$</span></div>`;
+                    }
+                }
+            } else { prizeListHTML = '<p class="text-center text-textDim text-sm py-4">Prize list pending.</p>'; }
+            document.getElementById('prize-modal-list').innerHTML = prizeListHTML;
 
             listenToTournamentLeaderboard(tourId, tour, isJoined);
         }
