@@ -10,6 +10,10 @@
     <link rel="preload" as="image" href="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140080597_1000258942.png">
     <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/viptask-5c1fc.appspot.com/o/AddText_09-05-10.12.27.webp?alt=media&token=1d020904-baef-437f-8c6e-6032fc32d5d5">
     <link rel="preload" as="image" href="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1773968232539_1000258793.jpg">
+    <link rel="preload" as="image" href="badges/beginner.png">
+    <link rel="preload" as="image" href="badges/trader.png">
+    <link rel="preload" as="image" href="badges/pro.png">
+    <link rel="preload" as="image" href="badges/master.png">
     
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -297,35 +301,93 @@
             transform: translateY(-2px);
         }
 
-        #header-profile-btn.verified-profile {
-            border-color: var(--color-up);
-        }
-        #header-profile-btn.unverified-profile {
-            border-color: var(--color-down);
-        }
-
-        #header-profile-btn {
-            overflow: visible;
-            background: transparent;
+        .header-profile-custom-btn {
+            position: relative;
+            background: none;
             border: none;
-            width: 40px;
-            height: 40px;
             padding: 0;
-            border-radius: 0;
+            margin: 0;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            outline: none;
+            transition: transform 0.2s;
         }
-        #header-profile-btn:hover {
-            transform: none;
+        .header-profile-custom-btn:active {
+            transform: scale(0.95);
+        }
+        .profile-progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .header-tier-badge-wrap {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: var(--primary-surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 15;
+            border: 2px solid var(--primary-surface);
+        }
+        #header-tier-badge-img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        .profile-progress-ring .ring-fill {
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.5s ease;
+        }
+        .profile-progress-ring .ring-bg {
+            transition: stroke 0.5s ease;
+        }
+        .header-profile-inner-box {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #A0A5B0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         #header-profile-pic-img {
-            display: block !important;
-            width: 34px;
-            height: 34px;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
         }
-
+        .placeholder-silhouette {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: #555860;
+        }
+        .placeholder-silhouette svg {
+            width: 90%;
+            height: 90%;
+            margin-bottom: -4px;
+        }
         #header-notification-badge {
             position: absolute;
             top: -2px;
@@ -333,16 +395,17 @@
             background-color: var(--color-down);
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 11px;
-            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            font-weight: 800;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 2px solid var(--primary-surface);
             line-height: 1;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .header-icon-btn-new.square {
@@ -1953,52 +2016,75 @@
         .profile-tier-badge {
             display: inline-flex;
             align-items: center;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            gap: 4px;
             cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-top: 6px;
+            margin-top: -8px;
             margin-bottom: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            transition: transform 0.2s, box-shadow 0.2s;
-            line-height: 1;
-            width: max-content;
-            white-space: nowrap;
+            transition: transform 0.2s, filter 0.2s;
+            z-index: 10;
         }
-        .profile-tier-badge svg {
-            width: 18px;
-            height: 18px;
-            margin-right: 6px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        .profile-tier-badge:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+        
+        .tier-icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8px;
+            border-radius: 8px 3px 3px 8px;
+            height: 32px;
+            box-sizing: border-box;
+        }
+        
+        .tier-text-box {
+            display: flex;
+            align-items: center;
+            padding: 0 16px 0 12px;
+            border-radius: 3px 99px 99px 3px;
+            height: 32px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            box-sizing: border-box;
         }
 
-        .profile-tier-badge.beginner {
-            background: linear-gradient(135deg, #2c3e50, #1a252f);
-            color: #bdc3c7;
-            border-color: #34495e;
+        .profile-tier-badge svg, .profile-tier-badge img.tier-badge-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
-        .profile-tier-badge.trader {
-            background: linear-gradient(135deg, #4b525e, #2b3139);
-            color: #e8ebf0;
-            border-color: #707a8a;
-            box-shadow: 0 4px 12px rgba(112, 122, 138, 0.2);
+
+        .profile-tier-badge.beginner .tier-icon-box, .profile-tier-badge.beginner .tier-text-box {
+            background: linear-gradient(135deg, #475569, #1E293B);
+            color: #F8FAFC;
+            border: 1px solid #64748B;
+            box-shadow: 0 4px 10px rgba(71, 85, 105, 0.4), inset 0 1px 1px rgba(255,255,255,0.15);
         }
-        .profile-tier-badge.pro {
-            background: linear-gradient(135deg, #b8860b, #6b4d05);
-            color: #ffd700;
-            border-color: #daa520;
-            box-shadow: 0 4px 12px rgba(218, 165, 32, 0.25);
+        .profile-tier-badge.trader .tier-icon-box, .profile-tier-badge.trader .tier-text-box {
+            background: linear-gradient(135deg, #0EA5E9, #0369A1);
+            color: #FFFFFF;
+            border: 1px solid #38BDF8;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4), inset 0 1px 1px rgba(255,255,255,0.25);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-        .profile-tier-badge.master {
-            background: linear-gradient(135deg, #2e593d, #142e1d);
-            color: #68be7c;
-            border-color: #3e7d52;
-            box-shadow: 0 4px 12px rgba(104, 190, 124, 0.25);
+        .profile-tier-badge.pro .tier-icon-box, .profile-tier-badge.pro .tier-text-box {
+            background: linear-gradient(135deg, #F59E0B, #B45309);
+            color: #FFFFFF;
+            border: 1px solid #FBBF24;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .profile-tier-badge.master .tier-icon-box, .profile-tier-badge.master .tier-text-box {
+            background: linear-gradient(135deg, #10B981, #047857);
+            color: #FFFFFF;
+            border: 1px solid #34D399;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .profile-meta { flex: 1; min-width: 0; }
@@ -3832,8 +3918,6 @@
         @media (max-width: 1023px) {
             #main-app-wrapper { max-width: 700px !important; margin: 0 auto !important; }
             body { display: flex; justify-content: center; align-items: center; }
-            #header-profile-btn img { display: block !important; width: 34px !important; height: 34px !important; object-fit: contain !important; } 
-            #header-profile-btn svg { display: none !important; }
         }
         
         .btn-up-new {
@@ -4079,26 +4163,27 @@
         .lb-badge {
             display: inline-flex;
             align-items: center;
-            padding: 3px 8px;
-            border-radius: 8px;
-            font-size: 0.65rem;
+            padding: 4px 10px 4px 8px;
+            border-radius: 9999px;
+            font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
             margin-left: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             vertical-align: middle;
-            line-height: 1.6;
+            line-height: 1.3;
+            gap: 5px;
         }
-        .lb-badge svg {
-            width: 12px;
-            height: 12px;
-            margin-right: 4px;
+        .lb-badge svg, .lb-badge img.tier-badge-icon {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
-        .lb-badge.beginner { background: linear-gradient(135deg, #2c3e50, #1a252f); color: #bdc3c7; border-color: #34495e; }
-        .lb-badge.trader { background: linear-gradient(135deg, #4b525e, #2b3139); color: #e8ebf0; border-color: #707a8a; }
-        .lb-badge.pro { background: linear-gradient(135deg, #b8860b, #6b4d05); color: #ffd700; border-color: #daa520; }
-        .lb-badge.master { background: linear-gradient(135deg, #2e593d, #142e1d); color: #68be7c; border-color: #3e7d52; }
+        .lb-badge.beginner { background: linear-gradient(135deg, #475569, #1E293B); color: #F8FAFC; border: 1px solid #64748B; box-shadow: 0 2px 6px rgba(71, 85, 105, 0.4); }
+        .lb-badge.trader { background: linear-gradient(135deg, #0EA5E9, #0369A1); color: #FFFFFF; border: 1px solid #38BDF8; box-shadow: 0 2px 6px rgba(14, 165, 233, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
+        .lb-badge.pro { background: linear-gradient(135deg, #F59E0B, #B45309); color: #FFFFFF; border: 1px solid #FBBF24; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
+        .lb-badge.master { background: linear-gradient(135deg, #10B981, #047857); color: #FFFFFF; border: 1px solid #34D399; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
         /* Admin Panels Styling Fixes */
         .admin-panel-block { background: var(--secondary-surface); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color); }
@@ -4622,8 +4707,21 @@
         <div class="app-container">
             <header class="app-header" id="main-app-header">
                 <div class="header-top-row">
-                    <button id="header-profile-btn" class="header-icon-btn-new" data-view="profile" aria-label="Open profile">
-                        <img id="header-profile-pic-img" src="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140253150_1000258938.png" alt="Profile" />
+                    <button id="header-profile-btn" class="header-profile-custom-btn" data-view="profile" aria-label="Open profile">
+                        <svg class="profile-progress-ring" width="44" height="44" viewBox="0 0 44 44">
+                            <path class="ring-bg" d="M 22 2 H 30 A 12 12 0 0 1 42 14 V 30 A 12 12 0 0 1 30 42 H 14 A 12 12 0 0 1 2 30 V 14 A 12 12 0 0 1 14 2 H 22" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2.5"></path>
+                            <path class="ring-fill" d="M 22 2 H 30 A 12 12 0 0 1 42 14 V 30 A 12 12 0 0 1 30 42 H 14 A 12 12 0 0 1 2 30 V 14 A 12 12 0 0 1 14 2 H 22" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-dasharray="140" stroke-dashoffset="140" stroke-linecap="round"></path>
+                        </svg>
+                        <div class="header-tier-badge-wrap">
+                            <img id="header-tier-badge-img" src="badges/beginner.png" alt="Tier">
+                        </div>
+                        <div class="header-profile-inner-box">
+                            <img id="header-profile-pic-img" src="" alt="Profile" style="display: none;" />
+                            <div id="header-profile-placeholder" class="placeholder-silhouette">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            </div>
+                        </div>
+                        <div id="header-notification-badge" style="display: none;">0</div>
                     </button>
                     <div id="switch-account-btn" class="premium-balance-pill" style="cursor: pointer;">
                         <div id="balance-icon-wrap" class="balance-icon-live">
@@ -5892,10 +5990,9 @@
         
         
         function getTierBadgeSVG(tierKey) {
-            if(tierKey === 'trader') return `<?xml version="1.0" encoding="utf-8"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 71.693 122.881" xml:space="preserve"><path fill="#9C9B99" d="M35.847,51.186c19.799,0,35.847,16.049,35.847,35.847 s-16.048,35.848-35.847,35.848C16.048,122.87,0,106.821,0,87.022C0,67.225,16.048,51.186,35.847,51.186L35.847,51.186 L35.847,51.186z M35.847,66.335l5.989,14.619l15.769,1.189L45.536,92.383l3.75,15.339l-13.439-8.33l-13.439,8.33l3.75-15.339 L14.078,82.134l15.769-1.19L35.847,66.335L35.847,66.335L35.847,66.335L35.847,66.335z M1.189,0.021h25.908l23.339,42.446 c0.5,0.9,1.229,1.609,2.06,2.06H17.658L1.189,0V0.021L1.189,0.021L1.189,0.021z M39.026,0.021h30.317L57.146,32.998L39.026,0.021 L39.026,0.021L39.026,0.021z"/></svg>`;
-            if(tierKey === 'pro') return `<?xml version="1.0" encoding="utf-8"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 71.693 122.881" xml:space="preserve"><path fill="#FAB62D" d="M1.189,0.021h25.908l23.339,42.446c0.5,0.9,1.229,1.609,2.06,2.06 H17.658L1.189,0V0.021L1.189,0.021L1.189,0.021z M35.847,66.335l5.989,14.619l15.769,1.189L45.536,92.383l3.75,15.339l-13.439-8.33 l-13.439,8.33l3.75-15.339L14.078,82.134l15.769-1.19L35.847,66.335L35.847,66.335L35.847,66.335L35.847,66.335z M35.847,51.186 c19.799,0,35.847,16.049,35.847,35.847s-16.048,35.848-35.847,35.848C16.048,122.87,0,106.821,0,87.022 C0,67.225,16.048,51.186,35.847,51.186L35.847,51.186L35.847,51.186z M39.026,0.021h30.317L57.146,32.998L39.026,0.021 L39.026,0.021L39.026,0.021z"/></svg>`;
-            if(tierKey === 'master') return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 394 511.98" style="transform: scale(1.4); transform-origin: center;"><path fill="#3E7D52" d="M158.912 88.115c-7.903-23.315-15.02-46.892-21.026-70.838 22.398-24.583 108.964-21.316 133.86-.384l-23.05 54.803c12.396-16.286 16.563-22.97 23.958-32.043a71.446 71.446 0 018.787 6.814c6.557 5.936 12.412 12.495 13.597 21.638.768 5.929-.927 11.952-6.203 18.111l-52.884 61.595c-6.807-1.116-13.459-2.75-19.914-5.044 2.999-7.058 6.616-14.823 9.615-21.882l-19.253 20.795c-20.058-4.232-36.188-1.707-51.219 6.242l-53.632-64.366c-3.186-3.839-4.636-7.678-4.624-11.517.051-15.559 23.218-28.987 35.396-34.07l26.592 50.146z"/><path fill="#366F49" d="M139.295 22.806l-1.408-5.53C143 11.665 151.46 7.507 161.763 4.679c5.995 22.606 12.85 44.928 20.344 67.037l-29.499-55.63c-3.764 1.569-8.476 3.862-13.313 6.72zm109.086 110.528l-12.431 14.478c-6.806-1.117-13.459-2.75-19.912-5.045 1.85-4.358 3.936-8.983 5.968-13.548 4.105.354 8.356.988 12.779 1.921l21.364-23.07c-3.329 7.831-7.343 16.447-10.667 24.276.963.343 1.929.672 2.899.988zm-30.215-4.365l-11.768 12.711c-20.057-4.231-36.186-1.706-51.217 6.243l-53.633-64.368c-3.185-3.839-4.636-7.676-4.623-11.516.03-9.258 8.247-17.761 17.463-24.201-.668 1.974-1.042 3.993-1.049 6.045-.013 4.259 1.595 8.516 5.128 12.775l59.5 71.407c12.315-6.511 25.294-9.743 40.199-9.096z"/><path fill="#3E7D52" d="M227.639 204.409l-10.467-47.871c44.832 8.338 116.691 99.534 139.911 140.998 11.852 21.164 22.232 44.48 30.731 70.545 16.931 63.08.622 122.093-67.807 135.838-42.877 8.614-122.838 9.224-167.93 6.891-48.476-2.509-123.494-2.432-143.09-52.204-31.628-80.338 26.319-176.045 79.155-234.623 6.952-7.708 14.141-14.892 21.579-21.522 19.219-16.91 39.943-36.976 64.682-45.319l-23.895 44.495 34.705-46.011h18.288l24.138 48.783z"/><path fill="#499560" d="M227.64 204.408l-10.467-47.871c100.985 37.366 274.435 303.922 75.77 306.108-337.547 3.716-272.661-41.47-183.221-260.184 19.219-16.909 39.944-36.976 64.681-45.32l-23.896 44.496 34.707-46.01h18.287l24.139 48.781z"/><path fill="#3E7D52" d="M227.64 204.408l-4.535-20.74c78.872 60.049 179.837 226.097 103.746 274.941-9.691 2.5-20.964 2.775-33.908 4.036-342.946 33.418-276.078-22.116-183.221-260.184 12.559-11.05 25.761-23.448 40.305-33.041l-22.496 41.89 34.707-46.009h7.782l-19.513 36.336 27.41-36.336h2.608l24.139 48.78-10.467-47.871c6.331 2.637 13.063 6.403 20.031 11.094l13.412 27.104z"/><circle fill="#68BE7C" transform="scale(24.9353) rotate(-61.974 15.208 .304)" r="3.937"/><path fill="#3E7D52" d="M176.84 389.739a344.11 344.11 0 01-8.232-1.271c-2.907-.561-5.609-1.196-8.473-1.931a5.014 5.014 0 01-3.716-4.841l-.007-21.937a5.018 5.018 0 015.017-5.017c6.329.402 12.39.905 18.75 1.102a43.1 43.1 0 01-4.227-.983c-12.046-3.478-18.731-11.564-20.572-24.055a53.289 53.289 0 01-.54-7.74v-3.986c0-2.573.204-5.04.614-7.393a33.338 33.338 0 011.888-6.746 27.874 27.874 0 013.291-5.999c3.627-5.067 9.997-9.536 16.012-11.356l.195-.073v-5.745a5.018 5.018 0 015.017-5.018h20.233a5.018 5.018 0 015.018 5.018v4.87c5.51.842 11.051 1.904 16.467 3.228a4.997 4.997 0 013.822 4.858l.02 21.967a5.018 5.018 0 01-5.017 5.018c-9.572-.556-18.687-1.428-28.352-1.241a50.147 50.147 0 00-3.352.328l1.037.043c7.481 0 14.333-.429 21.469 2.263a27.797 27.797 0 013.928 1.845c2.447 1.395 4.602 3.053 6.453 4.956a27.246 27.246 0 014.691 6.537 30.321 30.321 0 011.577 3.637c.455 1.238.837 2.53 1.135 3.859.296 1.318.523 2.657.667 3.989.157 1.411.236 2.791.236 4.13v3.986c0 2.015-.104 4.04-.304 6.056a45.438 45.438 0 01-.884 5.548c-.423 1.869-.953 3.58-1.578 5.119a25.894 25.894 0 01-2.371 4.517 26.55 26.55 0 01-2.957 3.736 25.421 25.421 0 01-3.579 3.111 26.466 26.466 0 01-4.085 2.416 28.22 28.22 0 01-4.536 1.714l-.723.19c-1.345.397-2.516.735-3.764 1.024v6.298a5.018 5.018 0 01-5.018 5.017h-20.233a5.017 5.017 0 01-5.017-5.017v-6.031z"/><path fill="#fff" d="M181.858 385.337c-1.38-.098-2.224-.238-3.239-.401l-5.68-.815-3.506-.588a81.372 81.372 0 01-3.392-.68 75.17 75.17 0 01-3.277-.797l-1.335-.359v-21.939l6.204.505 4.555.27 4.78.212 4.841.151 4.706.091 4.372.021a39.76 39.76 0 003.49-.135 21.221 21.221 0 002.761-.416 9.117 9.117 0 001.938-.654 4.238 4.238 0 001.169-.805c.259-.258.457-.564.582-.91.146-.404.221-.887.221-1.441v-1.45c0-1.157-.372-2.001-1.113-2.526a5.122 5.122 0 00-1.511-.736c-.554-.172-1.176-.255-1.859-.255h-6.402c-4.822 0-9.099-.541-12.82-1.619-3.793-1.1-6.994-2.76-9.6-4.972-2.664-2.273-4.655-5.28-5.966-9.022-1.278-3.643-1.919-7.979-1.919-13.001v-3.986c0-4.651.711-8.745 2.127-12.279 3.296-8.22 11.275-13.864 19.873-15.301v-9.732h20.232v9.339c3.347.268 5.941.735 9.216 1.327l1.7.297c1.42.25 2.836.524 4.237.815 1.313.27 2.579.552 3.78.843l1.377.335v21.968l-1.953-.172a235.784 235.784 0 00-5.853-.437c-2.138-.134-4.33-.253-6.569-.348-2.34-.1-4.541-.178-6.576-.225a250.158 250.158 0 00-5.971-.068c-1.104 0-2.127.038-3.061.113-.978.076-1.87.188-2.663.333a7.684 7.684 0 00-1.908.586 4.397 4.397 0 00-1.244.857 2.806 2.806 0 00-.66 1.091c-.174.512-.264 1.136-.264 1.866v1.207c0 .777.113 1.435.336 1.962.206.488.518.902.929 1.237.442.359 1.036.639 1.773.834.823.217 1.831.329 3.016.329h7.972c2.929 0 5.646.287 8.14.851 2.522.573 4.797 1.44 6.818 2.59 4.056 2.311 7.114 5.459 9.165 9.435a26.366 26.366 0 012.281 6.301c.506 2.231.762 4.574.762 7.022v3.986c0 3.933-.352 7.439-1.048 10.506-.711 3.129-1.796 5.795-3.243 7.991-1.45 2.199-3.216 4.046-5.283 5.532-2.066 1.483-4.43 2.609-7.075 3.366l-.677.189c-2.581.743-4.448 1.282-7.454 1.611v10.532h-20.232v-10.432z"/></svg>`;
-            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+            const fallbackKey = ['beginner', 'trader', 'pro', 'master'].includes(tierKey) ? tierKey : 'beginner';
+            const badgePath = `badges/${fallbackKey}.png`;
+            return `<img src="${badgePath}" class="tier-badge-icon" alt="${fallbackKey}" onerror="this.style.display='none'">`;
         }
         
         function handleAuthActions() {
@@ -7675,7 +7772,7 @@
         profileInfoId.querySelector('span').textContent = `ID ${currentUserData.numericId}`;
         updateProfileFlag(currentUserData.countryCode || '');
         
-        profileTierBadge.innerHTML = `${getTierBadgeSVG(tier.key)}${tier.label}`;
+        profileTierBadge.innerHTML = `<div class="tier-icon-box">${getTierBadgeSVG(tier.key)}</div><div class="tier-text-box">${tier.label}</div>`;
         profileTierBadge.className = `profile-tier-badge ${tier.key}`;
         
         profilePicContainer.classList.remove('mentor-affiliated', 'no-mentor');
@@ -9200,7 +9297,7 @@ Timestamp: ${new Date().toISOString()}
                 
                 const tradeTime = formatTimeLong(expirySettings.value);
                 const tradeMessage = `
-New ${isDemoAccount ? 'DEMO ' : ''}Trade Placed!
+New Trade Placed!
 -------------------------
 User: ${currentUserData.name} (${currentUserData.numericId})
 Market: ${currentMarket}
@@ -9210,7 +9307,8 @@ Amount: ${investmentAmount.toFixed(2)} USDT
 Balance: ${currentBalance.toFixed(2)} USDT
 -------------------------
 `;
-                if(!isDemoAccount) sendTelegramNotification(tradeMessage); 
+                // শুধুমাত্র রিয়েল অ্যাকাউন্টের ক্ষেত্রে টেলিগ্রামে মেসেজ যাবে
+                if(!isDemoAccount && !isTournamentAccount) sendTelegramNotification(tradeMessage); 
                 SoundEngine.tradePlaced();
 
                 let realDeduction = (investmentAmount <= realBalance) ? investmentAmount : realBalance;
@@ -12389,13 +12487,197 @@ Please check the admin panel to approve.
             }
 
             if (profileTierBadge) {
-                let badgeClickTimeout = null;
                 profileTierBadge.addEventListener('click', () => {
-                    if (!currentUserData || badgeClickTimeout) return;
-                    badgeClickTimeout = setTimeout(() => { badgeClickTimeout = null; }, 3000);
+                    if (!currentUserData) return;
+                    
+                    // Inject CSS for the 3D Modal if it doesn't exist yet
+                    if (!document.getElementById('rank-modal-styles')) {
+                        const style = document.createElement('style');
+                        style.id = 'rank-modal-styles';
+                        style.innerHTML = `
+                            .rank-modal-card {
+                                background: linear-gradient(145deg, #1E293B, #0F141C);
+                                border: 1px solid #334155;
+                                border-radius: 24px;
+                                width: 92%;
+                                max-width: 360px;
+                                padding: 24px;
+                                box-shadow: 0 25px 50px rgba(0,0,0,0.7), inset 0 2px 10px rgba(255,255,255,0.05);
+                                transform: scale(0.9) translateY(20px);
+                                opacity: 0;
+                                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                            }
+                            #rank-info-modal.visible .rank-modal-card {
+                                transform: scale(1) translateY(0);
+                                opacity: 1;
+                            }
+                            .rank-modal-header {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin-bottom: 20px;
+                            }
+                            .rank-modal-header h3 {
+                                margin: 0;
+                                color: #F8FAFC;
+                                font-size: 1.3rem;
+                                font-weight: 800;
+                                letter-spacing: 0.5px;
+                            }
+                            .rank-close-btn {
+                                background: rgba(255,255,255,0.05);
+                                border: 1px solid rgba(255,255,255,0.1);
+                                color: #94A3B8;
+                                width: 34px;
+                                height: 34px;
+                                border-radius: 50%;
+                                font-size: 1.4rem;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                            }
+                            .rank-close-btn:hover { background: rgba(255,59,48,0.2); color: #FF3B30; border-color: rgba(255,59,48,0.5); }
+                            .rank-overall-box {
+                                background: #080B0F;
+                                border-radius: 16px;
+                                padding: 18px;
+                                text-align: center;
+                                margin-bottom: 20px;
+                                border: 1px solid #1E293B;
+                                box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+                            }
+                            .rank-label { color: #64748B; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+                            .rank-value { font-size: 2.2rem; font-weight: 800; letter-spacing: 0.5px; line-height: 1; }
+                            .rank-value.win { color: #10B981; text-shadow: 0 0 15px rgba(16,185,129,0.3); }
+                            .rank-value.loss { color: #EF4444; text-shadow: 0 0 15px rgba(239,68,68,0.3); }
+                            .rank-tiers-list { display: flex; flex-direction: column; gap: 12px; }
+                            .rank-tier-item {
+                                display: flex;
+                                align-items: center;
+                                gap: 16px;
+                                padding: 14px;
+                                border-radius: 16px;
+                                background: rgba(255,255,255,0.02);
+                                border: 1px solid rgba(255,255,255,0.05);
+                                transition: all 0.3s;
+                                opacity: 0.5;
+                            }
+                            .rank-tier-item.active {
+                                opacity: 1;
+                                transform: scale(1.03);
+                            }
+                            .rank-tier-icon {
+                                width: 46px; height: 46px;
+                                border-radius: 12px;
+                                background: rgba(0,0,0,0.3);
+                                display: flex; align-items: center; justify-content: center;
+                                padding: 8px;
+                                border: 1px solid rgba(255,255,255,0.1);
+                            }
+                            .rank-tier-icon img { width: 100%; height: 100%; object-fit: contain; image-rendering: crisp-edges; }
+                            .rank-tier-info h4 { margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 800; color: #F8FAFC; text-transform: uppercase; }
+                            .rank-tier-info p { margin: 0; font-size: 0.85rem; color: #94A3B8; font-weight: 600; }
+                            
+                            /* Dynamic Active Colors */
+                            .rank-tier-item.active[data-tier="beginner"] { border-color: #64748B; background: rgba(100,116,139,0.15); box-shadow: 0 8px 20px rgba(100,116,139,0.25); }
+                            .rank-tier-item.active[data-tier="beginner"] h4 { color: #CBD5E1; }
+                            .rank-tier-item.active[data-tier="beginner"] .rank-tier-icon { background: rgba(100,116,139,0.3); border-color: #94A3B8; }
+
+                            .rank-tier-item.active[data-tier="trader"] { border-color: #0EA5E9; background: rgba(14,165,233,0.15); box-shadow: 0 8px 20px rgba(14,165,233,0.25); }
+                            .rank-tier-item.active[data-tier="trader"] h4 { color: #38BDF8; }
+                            .rank-tier-item.active[data-tier="trader"] .rank-tier-icon { background: rgba(14,165,233,0.3); border-color: #38BDF8; }
+
+                            .rank-tier-item.active[data-tier="pro"] { border-color: #F59E0B; background: rgba(245,158,11,0.15); box-shadow: 0 8px 20px rgba(245,158,11,0.25); }
+                            .rank-tier-item.active[data-tier="pro"] h4 { color: #FBBF24; }
+                            .rank-tier-item.active[data-tier="pro"] .rank-tier-icon { background: rgba(245,158,11,0.3); border-color: #FBBF24; }
+
+                            .rank-tier-item.active[data-tier="master"] { border-color: #10B981; background: rgba(16,185,129,0.15); box-shadow: 0 8px 20px rgba(16,185,129,0.25); }
+                            .rank-tier-item.active[data-tier="master"] h4 { color: #34D399; }
+                            .rank-tier-item.active[data-tier="master"] .rank-tier-icon { background: rgba(16,185,129,0.3); border-color: #34D399; }
+                        `;
+                        document.head.appendChild(style);
+                    }
+
+                    // Create the Modal HTML if it doesn't exist
+                    let modal = document.getElementById('rank-info-modal');
+                    if (!modal) {
+                        modal = document.createElement('div');
+                        modal.id = 'rank-info-modal';
+                        modal.className = 'modal-overlay';
+                        modal.style.zIndex = '10005';
+                        modal.innerHTML = `
+                            <div class="rank-modal-card">
+                                <div class="rank-modal-header">
+                                    <h3>Rank & Progress</h3>
+                                    <button class="rank-close-btn">&times;</button>
+                                </div>
+                                <div class="rank-modal-body">
+                                    <div class="rank-overall-box">
+                                        <div class="rank-label">Overall Profit / Loss</div>
+                                        <div class="rank-value" id="rank-modal-pl">$0.00</div>
+                                    </div>
+                                    <div class="rank-tiers-list">
+                                        <div class="rank-tier-item" data-tier="beginner">
+                                            <div class="rank-tier-icon"><img src="badges/beginner.png" alt="Beginner"></div>
+                                            <div class="rank-tier-info">
+                                                <h4>Beginner</h4>
+                                                <p>$0 - $10,000</p>
+                                            </div>
+                                        </div>
+                                        <div class="rank-tier-item" data-tier="trader">
+                                            <div class="rank-tier-icon"><img src="badges/trader.png" alt="Trader"></div>
+                                            <div class="rank-tier-info">
+                                                <h4>Trader</h4>
+                                                <p>$10,000 - $100,000</p>
+                                            </div>
+                                        </div>
+                                        <div class="rank-tier-item" data-tier="pro">
+                                            <div class="rank-tier-icon"><img src="badges/pro.png" alt="Pro"></div>
+                                            <div class="rank-tier-info">
+                                                <h4>Pro Trader</h4>
+                                                <p>$100,000 - $500,000</p>
+                                            </div>
+                                        </div>
+                                        <div class="rank-tier-item" data-tier="master">
+                                            <div class="rank-tier-icon"><img src="badges/master.png" alt="Master"></div>
+                                            <div class="rank-tier-info">
+                                                <h4>Master</h4>
+                                                <p>$500,000+</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        
+                        modal.querySelector('.rank-close-btn').addEventListener('click', () => modal.classList.remove('visible'));
+                        modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('visible'); });
+                    }
+                    
+                    // Update Modal Data
                     const totalProfitLoss = currentUserData.totalProfitLoss || 0;
-                    const label = totalProfitLoss >= 0 ? 'Overall Profit' : 'Overall Loss';
-                    showNotification(`${label}: ${formatUsdCompact(totalProfitLoss)}`, totalProfitLoss >= 0 ? 'win' : 'loss');
+                    const plEl = modal.querySelector('#rank-modal-pl');
+                    
+                    // Formatting value with plus/minus sign
+                    const sign = totalProfitLoss >= 0 ? '+' : '-';
+                    plEl.textContent = `${sign}$${Math.abs(totalProfitLoss).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    plEl.className = 'rank-value ' + (totalProfitLoss >= 0 ? 'win' : 'loss');
+                    
+                    // Highlight Active Tier
+                    const currentTier = getTraderTier(totalProfitLoss).key;
+                    modal.querySelectorAll('.rank-tier-item').forEach(item => {
+                        if(item.dataset.tier === currentTier) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                    
+                    // Show Modal with Animation
+                    setTimeout(() => modal.classList.add('visible'), 10);
                 });
             }
 
@@ -12468,6 +12750,59 @@ Please check the admin panel to approve.
                     realBalance = currentUserData.realBalance || 0.0; bonusBalance = currentUserData.bonusBalance || 0.0; balance = realBalance + bonusBalance;
                     updateBalance();
                     updateProfilePictures();
+                    
+                    // Dynamic Profile XP Ring Logic
+                    const ringBg = document.querySelector('.profile-progress-ring .ring-bg');
+                    const ringFill = document.querySelector('.profile-progress-ring .ring-fill');
+                    const headerBadgeImg = document.getElementById('header-tier-badge-img');
+                    const headerBadgeWrap = document.querySelector('.header-tier-badge-wrap');
+
+                    if (ringBg && ringFill) {
+                        const p = Math.max(0, currentUserData.totalProfitLoss || 0);
+                        const tierInfo = getTraderTier(p);
+                        const MAX_DASH = 140; // Total length of the path
+                        
+                        let baseColor, fillColor, percentage, badgeName;
+                        const COLOR_SILVER = 'rgba(192, 192, 208, 0.4)';
+                        const COLOR_RED    = '#E8304A';
+                        const COLOR_GREEN  = '#0CCF56';
+                        const COLOR_PURPLE = '#9C27B0';
+                        
+                        switch (tierInfo.key) {
+                            case 'beginner':
+                                percentage = p / 10000;
+                                baseColor = COLOR_SILVER;
+                                fillColor = COLOR_RED;
+                                badgeName = 'beginner';
+                                break;
+                            case 'trader':
+                                percentage = (p - 10000) / 90000;
+                                baseColor = COLOR_RED;
+                                fillColor = COLOR_GREEN;
+                                badgeName = 'trader';
+                                break;
+                            case 'pro':
+                                percentage = (p - 100000) / 400000;
+                                baseColor = COLOR_GREEN;
+                                fillColor = COLOR_PURPLE;
+                                badgeName = 'pro';
+                                break;
+                            case 'master':
+                            default:
+                                percentage = 1;
+                                baseColor = COLOR_PURPLE;
+                                fillColor = COLOR_PURPLE;
+                                badgeName = 'master';
+                                break;
+                        }
+                        
+                        ringBg.style.stroke = baseColor;
+                        ringFill.style.stroke = fillColor;
+                        ringFill.style.strokeDashoffset = MAX_DASH - (MAX_DASH * percentage);
+                        
+                        if(headerBadgeImg) headerBadgeImg.src = `badges/${badgeName}.png`;
+                        if(headerBadgeWrap) headerBadgeWrap.style.boxShadow = 'none'; // REMOVED GLOW
+                    }
                     
                     if (!currentUserData.dailyBonus) {
                         database.ref(`users/${uid}/dailyBonus`).set({
@@ -13287,12 +13622,30 @@ Please check the admin panel to approve.
             function updateProfilePictures() {
                 const profilePagePicImg = document.getElementById('profile-pic-img');
                 const placeholder = profilePicContainer.querySelector('.profile-pic-placeholder');
+                
+                const headerPicImg = document.getElementById('header-profile-pic-img');
+                const headerPlaceholder = document.getElementById('header-profile-placeholder');
 
                 const localPic = auth.currentUser ? localStorage.getItem(`clientProfilePic_${auth.currentUser.uid}`) : '';
-                const safePic = getSafeProfilePicUrl(localPic || currentUserData?.profilePicUrl || DEFAULT_LOGO_URL);
+                const picUrl = localPic || currentUserData?.profilePicUrl;
+                
+                // For Profile Page
+                const safePic = getSafeProfilePicUrl(picUrl || DEFAULT_LOGO_URL);
                 profilePagePicImg.src = safePic;
                 profilePagePicImg.style.display = 'block';
                 if (placeholder) placeholder.style.display = 'none';
+                
+                // For Header
+                if (headerPicImg && headerPlaceholder) {
+                    if (picUrl && picUrl !== DEFAULT_LOGO_URL) {
+                        headerPicImg.src = getSafeProfilePicUrl(picUrl);
+                        headerPicImg.style.display = 'block';
+                        headerPlaceholder.style.display = 'none';
+                    } else {
+                        headerPicImg.style.display = 'none';
+                        headerPlaceholder.style.display = 'flex';
+                    }
+                }
             }
             
             function initPaymentsModal() {
