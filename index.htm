@@ -6035,19 +6035,24 @@
         let otcSocket = null;
 
         function syncServerUrl() {
+            const localDevUrl = "http://192.168.110.235:3000"; // আপনার লোকাল সার্ভারের ঠিকানা
+            let initialUrlSet = false;
+
             database.ref('admin/settings/activeServerUrl').on('value', (snapshot) => {
                 const newUrl = snapshot.val();
-                if (newUrl && newUrl !== currentActiveServer) {
-                    console.log("Switching Server to: " + newUrl);
-                    currentActiveServer = newUrl;
+                let urlToUse = newUrl || (window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168') ? localDevUrl : '');
+
+                if (urlToUse && urlToUse !== currentActiveServer) {
+                    console.log("Switching Server to: " + urlToUse);
+                    currentActiveServer = urlToUse;
                     
-                    BACKEND_REST_URL = newUrl;
-                    BACKEND_WS_URL = newUrl.replace("https://", "wss://").replace("http://", "ws://");
+                    BACKEND_REST_URL = urlToUse;
+                    BACKEND_WS_URL = urlToUse.replace("https://", "wss://").replace("http://", "ws://");
                     
                     const displayEl = document.getElementById('current-active-server-display');
-                    if (displayEl) displayEl.textContent = newUrl;
+                    if (displayEl) displayEl.textContent = urlToUse;
 
-                    if (typeof isAppInitialized !== 'undefined' && isAppInitialized) {
+                    if (isAppInitialized) {
                         closeLiveSockets(true);
                         const mId = localStorage.getItem('lastMarketId');
                         if (mId) {
@@ -6058,6 +6063,22 @@
                         }
                     }
                 }
+                
+                // Ensure URL is set on initial load even if it's the same
+                if (!initialUrlSet && urlToUse) {
+                    BACKEND_REST_URL = urlToUse;
+                    BACKEND_WS_URL = urlToUse.replace("https://", "wss://").replace("http://", "ws://");
+                    initialUrlSet = true;
+                    console.log("Initial server URL set to:", BACKEND_REST_URL);
+                }
+            }, (error) => {
+                 console.error("Could not fetch server URL from Firebase, falling back to local.", error);
+                 if (!initialUrlSet && (window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168'))) {
+                    BACKEND_REST_URL = localDevUrl;
+                    BACKEND_WS_URL = localDevUrl.replace("http://", "ws://");
+                    initialUrlSet = true;
+                    console.log("Fallback initial server URL set to:", BACKEND_REST_URL);
+                 }
             });
         }
         syncServerUrl();
@@ -9078,224 +9099,103 @@ Timestamp: ${new Date().toISOString()}
             isBetActionInProgress = true;
             if(investmentAmount < 0.5) investmentAmount = 0.5;
             if(investmentAmount > 3000) investmentAmount = 3000;
-            updateInvestmentDisplay(); 
+            updateInvestmentDisplay();
             btnUp.disabled = true; btnDown.disabled = true;
 
             try {
-                const uid = auth.currentUser.uid;
-                let multipleTradeViolations = userTaskProgress.multipleTradeViolations || 0;
-                if (myActiveBets.length >= 2) {
-                     if (multipleTradeViolations === 0 && !userTaskProgress.multipleTradeWarningShown) {
-                        multipleTradesWarningModal.classList.add('visible');
-                        await database.ref(`users/${uid}/taskProgress/multipleTradeWarningShown`).set(true);
-                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                        return;
-                     }
-                     multipleTradeViolations++;
-                     await database.ref(`users/${uid}/taskProgress/multipleTradeViolations`).set(multipleTradeViolations);
-                     let banDuration = (multipleTradeViolations === 1) ? (30 * 60 * 1000) : (6 * 24 * 60 * 60 * 1000);
-                     const banUntil = Date.now() + banDuration;
-                     await database.ref(`users/${uid}/bannedUntil`).set(banUntil);
-                     await forceLossAllActiveTrades();
-                     isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                     return;
-                }
-                
+                const user = auth.currentUser;
+                if (!user) { throw new Error('You must be logged in to trade.'); }
+
+                // --- Client-side checks before sending to server ---
                 const minInvestment = 0.5;
                 const maxInvestment = 3000;
-                let currentBalance = isDemoAccount ? demoBalance : balance;
-                if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
-                    SoundEngine.warning();
-                    showNotification(`Invalid amount (min ${minInvestment} USDT) or insufficient balance.`, 'loss'); 
-                    isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                    return; 
-                }
-                if (investmentAmount > maxInvestment) { 
-                    if (balance > 0 && balance < maxInvestment) {
-                        investmentAmount = balance;
-                        showNotification(`Amount adjusted to your full balance: $${balance.toFixed(2)}`, 'info');
-                    } else {
-                        showNotification(`Maximum investment is ${maxInvestment} USDT.`, 'loss'); 
-                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                        return;
-                    }
-                }
+                let currentBalance = isDemoAccount ? demoBalance : (isTournamentAccount ? myTourBalance : balance);
                 
-                const user = auth.currentUser;
-                if (!user) { 
-                    showNotification('You must be logged in to trade.', 'loss'); 
-                    isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                    return; 
+                if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) {
+                    throw new Error(`Invalid amount (min ${minInvestment} USDT) or insufficient balance.`);
                 }
-                
-                const tradeTime = formatTimeLong(expirySettings.value);
-                const tradeMessage = `
-New Trade Placed!
--------------------------
-User: ${currentUserData.name} (${currentUserData.numericId})
-Market: ${currentMarket}
-Direction: ${direction.toUpperCase()}
-Duration: ${tradeTime}
-Amount: ${investmentAmount.toFixed(2)} USDT
-Balance: ${currentBalance.toFixed(2)} USDT
--------------------------
-`;
-                // শুধুমাত্র রিয়েল অ্যাকাউন্টের ক্ষেত্রে টেলিগ্রামে মেসেজ যাবে
-                if(!isDemoAccount && !isTournamentAccount) sendTelegramNotification(tradeMessage); 
+                if (investmentAmount > maxInvestment) {
+                    throw new Error(`Maximum investment is ${maxInvestment} USDT.`);
+                }
+
                 SoundEngine.tradePlaced();
 
-                let realDeduction = (investmentAmount <= realBalance) ? investmentAmount : realBalance;
-                let bonusDeduction = (investmentAmount > realBalance) ? (investmentAmount - realBalance) : 0;
-                
-                let openPrice;
-                const liveBaseCandle = historicalData[historicalData.length - 1];
-                if (!liveBaseCandle) {
-                    showNotification('Chart is not ready. Please wait a moment.', 'info');
-                    isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                    return;
-                }
-                openPrice = liveBaseCandle.close;
-
-                if (forceHighLossRate && Math.random() < 0.3) {
-                    const slippageAmount = openPrice * 0.00005 * (Math.random() + 0.5);
-                    if (direction === 'UP') {
-                        openPrice += slippageAmount;
-                        showNotification('Slippage occurred.', 'info');
-                    } else {
-                        openPrice -= slippageAmount;
-                        showNotification('Slippage occurred.', 'info');
-                    }
-                }
-
-                const now = Date.now();
-                let expiryTimestamp;
-                let resolveOnNextOpen = false;
-                
-                const timeIntoCandle = (now - liveBaseCandle.timestamp) % (BASE_TIMEFRAME * 1000);
-
-                if (expirySettings.type === 'time') {
-                    const candleEndTime = liveBaseCandle.timestamp + BASE_TIMEFRAME * 1000;
-                    const nextCandleOpenTime = candleEndTime;
-                    const candlesToWait = Math.floor(expirySettings.value / BASE_TIMEFRAME);
-
-                    if (timeIntoCandle < 30000) {
-                        expiryTimestamp = nextCandleOpenTime + ((candlesToWait - 1) * BASE_TIMEFRAME * 1000);
-                    } else {
-                         expiryTimestamp = nextCandleOpenTime + (candlesToWait * BASE_TIMEFRAME * 1000);
-                    }
-                    resolveOnNextOpen = true;
-                } else {
-                    expiryTimestamp = now + (expirySettings.value * 1000);
-                    resolveOnNextOpen = false;
-                }
-                
-                if (isDemoAccount) {
-                    demoBalance -= investmentAmount;
-                    localStorage.setItem('demoBalance', demoBalance);
-                    updateBalance();
+                // Demo & Tournament trades are still handled client-side
+                if (isDemoAccount || isTournamentAccount) {
+                    const liveBaseCandle = historicalData[historicalData.length - 1];
+                    if (!liveBaseCandle) throw new Error('Chart is not ready. Please wait a moment.');
                     
-                    const betData = { 
-                        id: 'demo_' + Date.now() + Math.random().toString(36).substr(2, 5), 
-                        amount: investmentAmount, 
-                        realAmount: 0, 
-                        bonusAmount: 0, 
-                        direction, 
-                        openPrice: openPrice, 
-                        expiryTimestamp, 
-                        expiryType: expirySettings.type, 
-                        entryTimestamp: liveBaseCandle.timestamp, 
-                        payoutRate: PAYOUT_RATE, 
-                        market: currentMarket,
-                        isDemo: true,
-                        resolveOnNextOpen: resolveOnNextOpen
-                    };
-                    myActiveBets.push(betData);
-                    updateTradeControlsState();
-                    return;
-                }
+                    let openPrice = liveBaseCandle.close;
+                    
+                    const now = Date.now();
+                    let expiryTimestamp;
+                    let resolveOnNextOpen = false;
+                    const timeIntoCandle = (now - liveBaseCandle.timestamp);
 
-                // --- TOURNAMENT BETTING LOGIC (inside handleBet) ---
-                if (isTournamentAccount && currentTourData) {
-                    if (investmentAmount > myTourBalance) {
-                        SoundEngine.warning();
-                        showNotification('Insufficient tournament balance.', 'loss'); 
-                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
-                        return;
-                    }
-
-                    const tourLiveCandle = historicalData[historicalData.length - 1];
-                    if (!tourLiveCandle) {
-                        showNotification('Chart is not ready. Please wait.', 'info');
-                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false; return;
-                    }
-                    const tourOpenPrice = tourLiveCandle.close;
-                    SoundEngine.tradePlaced();
-
-                    // Deduct from tournament balance only (not real balance)
-                    myTourBalance -= investmentAmount;
-                    database.ref(`tournaments/${currentTourData.id}/participants/${auth.currentUser.uid}/tourBalance`).set(myTourBalance);
-                    updateBalance();
-
-                    const tourNow = Date.now();
-                    let tourExpiryTimestamp;
-                    let tourResolveOnNextOpen = false;
-                    const tourTimeIntoCandle = (tourNow - tourLiveCandle.timestamp) % (BASE_TIMEFRAME * 1000);
                     if (expirySettings.type === 'time') {
-                        const tourCandleEndTime = tourLiveCandle.timestamp + BASE_TIMEFRAME * 1000;
-                        const tourCandlesToWait = Math.floor(expirySettings.value / BASE_TIMEFRAME);
-                        if (tourTimeIntoCandle < 30000) tourExpiryTimestamp = tourCandleEndTime + ((tourCandlesToWait - 1) * BASE_TIMEFRAME * 1000);
-                        else tourExpiryTimestamp = tourCandleEndTime + (tourCandlesToWait * BASE_TIMEFRAME * 1000);
-                        tourResolveOnNextOpen = true;
+                        const candleEndTime = liveBaseCandle.timestamp + (BASE_TIMEFRAME * 1000);
+                        const candlesToWait = Math.floor(expirySettings.value / 60);
+                        if (timeIntoCandle < 30000) expiryTimestamp = candleEndTime + ((candlesToWait - 1) * (BASE_TIMEFRAME * 1000));
+                        else expiryTimestamp = candleEndTime + (candlesToWait * (BASE_TIMEFRAME * 1000));
+                        resolveOnNextOpen = true;
                     } else {
-                        tourExpiryTimestamp = tourNow + (expirySettings.value * 1000);
+                        expiryTimestamp = now + (expirySettings.value * 1000);
                     }
 
-                    const tourBetData = { 
-                        id: 'tour_' + Date.now() + Math.random().toString(36).substr(2, 5), 
-                        amount: investmentAmount, realAmount: 0, bonusAmount: 0, direction, openPrice: tourOpenPrice, 
-                        expiryTimestamp: tourExpiryTimestamp, expiryType: expirySettings.type, entryTimestamp: tourLiveCandle.timestamp, 
-                        payoutRate: PAYOUT_RATE, market: currentMarket,
-                        isTournament: true, tourId: currentTourData.id, resolveOnNextOpen: tourResolveOnNextOpen
+                    const betData = {
+                        amount: investmentAmount, direction, openPrice, expiryTimestamp, 
+                        expiryType: expirySettings.type, entryTimestamp: liveBaseCandle.timestamp, 
+                        payoutRate: PAYOUT_RATE, market: currentMarket, resolveOnNextOpen
                     };
-                    myActiveBets.push(tourBetData);
-                    updateTradeControlsState();
-                    isBetActionInProgress = false;
-                    return;
-                }
-                // --- END TOURNAMENT BETTING LOGIC ---
-                
-                await updateBalances({ realChange: -realDeduction, bonusChange: -bonusDeduction });
-                await database.ref(`users/${user.uid}/taskProgress/tradeVolume`).set(firebase.database.ServerValue.increment(investmentAmount));
-                await database.ref(`users/${user.uid}/taskProgress/currentTradeVolume`).set(firebase.database.ServerValue.increment(investmentAmount));
-                const activeTradesRef = database.ref(`users/${user.uid}/activeTrades`);
-                const newBetRef = activeTradesRef.push();
-                const betData = { 
-                    id: newBetRef.key, 
-                    amount: investmentAmount, 
-                    realAmount: realDeduction, 
-                    bonusAmount: bonusDeduction, 
-                    direction, 
-                    openPrice: openPrice, 
-                    expiryTimestamp, 
-                    expiryType: expirySettings.type, 
-                    entryTimestamp: liveBaseCandle.timestamp, 
-                    payoutRate: PAYOUT_RATE, 
-                    market: currentMarket,
-                    marketId: localStorage.getItem('lastMarketId'),
-                    resolveOnNextOpen: resolveOnNextOpen
-                };
-                
-                const betUpdates = {};
-                betUpdates[`/users/${user.uid}/activeTrades/${betData.id}`] = betData;
-                const actualMarketId = localStorage.getItem('lastMarketId');
-                betUpdates[`/admin/markets/${actualMarketId}/activeTrades/${betData.id}`] = { amount: betData.amount, direction: betData.direction, uid: user.uid, timestamp: betData.entryTimestamp };
-                
-                await database.ref().update(betUpdates);
-                updateTradeControlsState();
 
+                    if(isDemoAccount) {
+                        betData.id = 'demo_' + Date.now();
+                        betData.isDemo = true;
+                        demoBalance -= investmentAmount;
+                        localStorage.setItem('demoBalance', demoBalance);
+                    } else { // Tournament
+                        betData.id = 'tour_' + Date.now();
+                        betData.isTournament = true;
+                        betData.tourId = currentTourData.id;
+                        myTourBalance -= investmentAmount;
+                        database.ref(`tournaments/${currentTourData.id}/participants/${user.uid}/tourBalance`).set(myTourBalance);
+                    }
+                    
+                    myActiveBets.push(betData);
+                    updateBalance();
+                    updateTradeControlsState();
+                    return; // End here for demo/tour trades
+                }
+
+                // --- REAL MONEY TRADE: Send to Server API ---
+                const tradePayload = {
+                    uid: user.uid,
+                    marketId: localStorage.getItem('lastMarketId'),
+                    direction,
+                    amount: investmentAmount,
+                    payoutRate: PAYOUT_RATE,
+                    expirySettings
+                };
+
+                const response = await fetch(`${BACKEND_REST_URL}/api/trade/place`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(tradePayload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Failed to place trade on server.');
+                }
+                
+                // Server successfully placed the trade. UI is updated via Firebase listener.
+                updateTradeControlsState();
+                
             } catch (error) {
                 console.error("Betting error:", error);
-                showNotification('An error occurred. Please try again.', 'loss');
+                showNotification(error.message, 'loss');
+                // The balance is now deducted on the server, so no need to refund from client
             } finally {
                 setTimeout(() => {
                     isBetActionInProgress = false;
