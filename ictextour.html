@@ -423,15 +423,16 @@
 
                             if (!inTop10 && !isCompleted) {
                                 const randomFactor = getDeterministicRandom(tourId, myUID);
-                                const baseRank = Math.floor(700 + randomFactor * (900 - 700));
+                                // Set base rank between 400 and 700
+                                const baseRank = Math.floor(400 + randomFactor * (700 - 400));
                                 const profit = myData.balance - initialBal;
                                 
                                 if (profit > 0) {
-                                    const climbFactor = 8 + (randomFactor * 7); 
+                                    const climbFactor = 3 + (randomFactor * 4); // Slower, more realistic climb
                                     myRank = Math.max(11, Math.floor(baseRank - (profit * climbFactor)));
                                 } else {
                                     const loss = initialBal - myData.balance;
-                                    myRank = Math.floor(baseRank + (loss * 2));
+                                    myRank = Math.floor(baseRank + (loss * 1.5));
                                 }
                             }
                             
