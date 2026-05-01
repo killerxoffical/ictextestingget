@@ -8939,10 +8939,13 @@ Timestamp: ${new Date().toISOString()}
                     closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
                     if (closingCandle) closingPrice = closingCandle.open;
                 } else if (closingCandle) {
-                    if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
-                    const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
-                    const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
-                    closingPrice = closingCandle.path[pathIndex];
+                    if (currentMarketType === 'real') {
+                        closingPrice = closingCandle.close; // For real markets, use the final close price.
+                    } else if (closingCandle.path && closingCandle.path.length > 0) {
+                        const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
+                        const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
+                        closingPrice = closingCandle.path[pathIndex];
+                    }
                 }
                 
                 if (typeof closingPrice === 'undefined') {
@@ -8968,15 +8971,11 @@ Timestamp: ${new Date().toISOString()}
                 
                 // Update balance based on account type
                 if (bet.isDemo) {
-                    if (result === 'win' || result === 'push') {
-                       demoBalance += payout;
-                    }
+                    demoBalance = (demoBalance || 0) - betAmount + payout;
                     demoBalance = Math.max(0, demoBalance);
                     localStorage.setItem('demoBalance', demoBalance);
                 } else if (bet.isTournament) {
-                    if (result === 'win' || result === 'push') {
-                        myTourBalance += payout;
-                    }
+                    myTourBalance = (myTourBalance || 0) - betAmount + payout;
                     myTourBalance = Math.max(0, myTourBalance);
                     database.ref(`tournaments/${bet.tourId}/participants/${user.uid}/tourBalance`).set(myTourBalance);
                 }
