@@ -614,7 +614,7 @@
                                 </div>
                             </div>
                             <div class="bg-btnAreaBg p-4 border-t border-white/5 flex gap-2 relative z-20">
-                                <button class="flex-1 bg-ictexBlue hover:bg-blue-600 text-white font-bold rounded-lg py-3 text-[15px] shadow-md transition" onclick="alert('Trade redirect coming soon!')">Trade</button>
+                                <button class="flex-1 bg-ictexBlue hover:bg-blue-600 text-white font-bold rounded-lg py-3 text-[15px] shadow-md transition" onclick="redirectToTrade()">Trade</button>
                                 <button onclick="openDetails('${key}')" class="w-14 bg-ictexBlue/10 hover:bg-ictexBlue/20 text-ictexBlue rounded-lg flex items-center justify-center transition border border-ictexBlue/30 shadow-md">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                                 </button>
@@ -686,7 +686,7 @@
                     if (isStarted) {
                         newJoinBtn.innerText = "Trade";
                         newJoinBtn.className = "w-full py-3.5 rounded-lg bg-ictexBlue hover:bg-blue-600 text-white font-bold text-[16px] shadow-lg active:scale-95 transition";
-                        newJoinBtn.onclick = () => alert("Redirecting to Trade Panel...");
+                        newJoinBtn.onclick = redirectToTrade;
                     } else {
                         newJoinBtn.innerText = "Not started yet";
                         newJoinBtn.className = "w-full py-3.5 rounded-lg bg-surfaceLight text-white/40 font-bold text-[15px] shadow-lg cursor-not-allowed border border-white/5";
@@ -810,6 +810,10 @@
             document.getElementById('view-details').classList.add('hidden');
             document.getElementById('view-main').classList.remove('hidden');
             document.querySelector('[data-target="inner-info"]').click();
+        }
+
+        function redirectToTrade() {
+            window.parent.postMessage({ type: 'SWITCH_TO_TRADE_TERMINAL' }, '*');
         }
     </script>
 </body>
