@@ -8917,7 +8917,10 @@ Timestamp: ${new Date().toISOString()}
             const user = auth.currentUser;
             if (!user) return;
 
+            // This function NOW ONLY handles client-side (Demo/Tournament) trades.
+            // Real money trades are resolved by the server and results are received via a listener.
             const betsToResolve = myActiveBets.filter(bet => {
+                if (!bet.isDemo && !bet.isTournament) return false; // <-- CRITICAL: Ignore real trades
                 const isExpired = now >= bet.expiryTimestamp;
                 const isStuck = forceResolveStuckTrades && (now > bet.expiryTimestamp + 30000); 
                 return (isExpired || isStuck) && bet.market === currentMarket;
@@ -8925,241 +8928,72 @@ Timestamp: ${new Date().toISOString()}
 
             if (betsToResolve.length === 0) return;
 
-            let totalRealChange = 0, totalBonusChange = 0, totalProfitChange = 0, totalAmountForMentor = 0, totalAmountForVolume = 0;
-            let resolvedWins = 0, resolvedLosses = 0, resolvedTrades = 0;
-            const historyUpdates = {}, activeTradeDeletions = {}, userUpdates = {};
-            const demoTradeDeletions = [];
+            const demoOrTourTradeDeletions = [];
 
             for (const bet of betsToResolve) {
-                if (bet.isDemo) {
-                    let closingPrice;
-                    const relevantTimeframe = BASE_TIMEFRAME;
-                    let closingCandle = historicalData.find(c => bet.expiryTimestamp > c.timestamp && bet.expiryTimestamp <= c.timestamp + (relevantTimeframe * 1000));
-                    
-                    if (bet.resolveOnNextOpen) {
-                        closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
-                        if (closingCandle) closingPrice = closingCandle.open;
-                    } else if (closingCandle) {
-                        if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
-                        const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
-                        const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
-                        closingPrice = closingCandle.path[pathIndex];
-                    }
-                    
-                    if (typeof closingPrice === 'undefined') {
-                        if (forceResolveStuckTrades) {
-                            const openPrice = parseFloat(bet.openPrice);
-                            const randomGap = 0.00015 + (Math.random() * 0.00075);
-                            closingPrice = bet.direction === 'UP' ? openPrice - randomGap : openPrice + randomGap;
-                        } else {
-                            continue;
-                        }
-                    }
-                    
-                    let result, payout, profitChange;
-                    const betAmount = parseFloat(bet.amount), openPrice = parseFloat(bet.openPrice), betPayoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
-                    const priceDifference = closingPrice - openPrice, pricePrecision = 1e-6;
-                    if (Math.abs(priceDifference) < pricePrecision) {
-                        result = 'push'; payout = betAmount; profitChange = 0;
-                    } else if ((priceDifference > 0 && bet.direction === 'UP') || (priceDifference < 0 && bet.direction === 'DOWN')) {
-                        result = 'win'; payout = betAmount * betPayoutRate; profitChange = payout - betAmount;
-                    } else {
-                        result = 'loss'; payout = 0; profitChange = -betAmount;
-                    }
-                    
-                    demoBalance += payout;
-                    localStorage.setItem('demoBalance', demoBalance);
-                    updateBalance();
-                    
-                    let pnlText, messageClass;
-                    if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win';
-                    } else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss';
-                    } else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
-                    addTradeResultToQueue({ pnlText, resultClass: messageClass, market: bet.market });
-                    if (result === 'win') SoundEngine.win();
-                    else if (result === 'loss') SoundEngine.loss();
-                    
-                    demoTradeDeletions.push(bet.id);
-                    continue;
-                }
-                
-                // --- TOURNAMENT TRADE RESOLUTION ---
-                if (bet.isTournament) {
-                    let closingPrice;
-                    const relevantTimeframe = BASE_TIMEFRAME;
-                    let closingCandle = historicalData.find(c => bet.expiryTimestamp > c.timestamp && bet.expiryTimestamp <= c.timestamp + (relevantTimeframe * 1000));
-                    
-                    if (bet.resolveOnNextOpen) {
-                        closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
-                        if (closingCandle) closingPrice = closingCandle.open;
-                    } else if (closingCandle) {
-                        if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
-                        const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
-                        const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
-                        closingPrice = closingCandle.path[pathIndex];
-                    }
-                    
-                    if (typeof closingPrice === 'undefined') {
-                        if (forceResolveStuckTrades) {
-                            const openPrice = parseFloat(bet.openPrice);
-                            closingPrice = bet.direction === 'UP' ? openPrice - 0.0005 : openPrice + 0.0005;
-                        } else { continue; }
-                    }
-                    
-                    let result, payout, profitChange;
-                    const betAmount = parseFloat(bet.amount), openPrice = parseFloat(bet.openPrice), betPayoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
-                    const priceDifference = closingPrice - openPrice;
-                    if (Math.abs(priceDifference) < 1e-6) {
-                        result = 'push'; payout = betAmount; profitChange = 0;
-                    } else if ((priceDifference > 0 && bet.direction === 'UP') || (priceDifference < 0 && bet.direction === 'DOWN')) {
-                        result = 'win'; payout = betAmount * betPayoutRate; profitChange = payout - betAmount;
-                    } else {
-                        result = 'loss'; payout = 0; profitChange = -betAmount;
-                    }
-                    
-                    if (result === 'win' || result === 'push') {
-                        myTourBalance += payout;
-                    }
-                    // Always sync tournament balance to Firebase & update UI
-                    database.ref(`tournaments/${bet.tourId}/participants/${user.uid}/tourBalance`).set(myTourBalance);
-                    updateBalance();
-                    
-                    let pnlText, messageClass;
-                    if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win';
-                    } else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss';
-                    } else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
-                    
-                    addTradeResultToQueue({ pnlText, resultClass: messageClass, market: bet.market });
-                    if (result === 'win') SoundEngine.win(); else if (result === 'loss') SoundEngine.loss();
-                    
-                    demoTradeDeletions.push(bet.id); // Same array removes it from UI
-                    continue;
-                }
-                // --- END TOURNAMENT RESOLUTION ---
-
-                const historySnapshot = await database.ref(`users/${user.uid}/tradeHistory/${bet.id}`).once('value');
-                if (historySnapshot.exists()) { 
-                    activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] = null; 
-                    continue; 
-                }
-
-                totalAmountForMentor += bet.amount;
-                totalAmountForVolume += bet.amount;
-                
-                const resolutionTime = bet.expiryTimestamp + 2000;
-                if (now < resolutionTime && !forceResolveStuckTrades) continue;
-
                 let closingPrice;
-                const relevantTimeframe = (currentMarketType === 'real' || currentMarketType === 'broker_real') ? REAL_MARKET_TIMEFRAME : BASE_TIMEFRAME;
-                
+                const relevantTimeframe = BASE_TIMEFRAME;
                 let closingCandle = historicalData.find(c => bet.expiryTimestamp > c.timestamp && bet.expiryTimestamp <= c.timestamp + (relevantTimeframe * 1000));
                 
                 if (bet.resolveOnNextOpen) {
                     closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
-                    if (closingCandle) {
-                        closingPrice = closingCandle.open;
-                    }
+                    if (closingCandle) closingPrice = closingCandle.open;
                 } else if (closingCandle) {
-                    if (currentMarketType === 'real') { 
-                        closingPrice = closingCandle.close; 
-                    } else {
-                        if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
-                        const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
-                        const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
-                        closingPrice = closingCandle.path[pathIndex];
-                    }
+                    if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
+                    const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
+                    const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
+                    closingPrice = closingCandle.path[pathIndex];
                 }
-
+                
                 if (typeof closingPrice === 'undefined') {
                     if (forceResolveStuckTrades) {
-                        console.log(`Syncing exact execution price for trade ${bet.id} from server...`);
-                        const marketPath = bet.marketId ? bet.marketId.replace(/[\.\/ ]/g, '-').toLowerCase() : currentMarket.replace(/[\.\/ ]/g, '-').toLowerCase();
-                        
-                        try {
-                            const candleSnap = await database.ref(`markets/${marketPath}/candles/60s`)
-                                .orderByKey()
-                                .endAt(String(bet.expiryTimestamp))
-                                .limitToLast(1)
-                                .once('value');
-
-                            if (candleSnap.exists()) {
-                                const cData = Object.values(candleSnap.val())[0];
-                                const marketTypeForBet = availableMarkets[bet.marketId]?.type || currentMarketType;
-
-                                if (marketTypeForBet === 'real') {
-                                    closingPrice = cData.close;
-                                } 
-                                else {
-                                    const candleWithPath = createCandleWithPath(cData);
-                                    if (candleWithPath.path && candleWithPath.path.length > 0) {
-                                        const progress = (bet.expiryTimestamp - candleWithPath.timestamp) / (60 * 1000);
-                                        const pathIndex = Math.max(0, Math.min(Math.floor(progress * (candleWithPath.path.length - 1)), candleWithPath.path.length - 1));
-                                        closingPrice = candleWithPath.path[pathIndex];
-                                    } else {
-                                        closingPrice = candleWithPath.close;
-                                    }
-                                }
-                            }
-                        } catch(e) {
-                            console.error("Failed to fetch historical candle from server", e);
-                        }
-
-                        if (typeof closingPrice === 'undefined') {
-                            const openPrice = parseFloat(bet.openPrice);
-                            const randomGap = 0.00015 + (Math.random() * 0.00075);
-                            closingPrice = bet.direction === 'UP' ? openPrice - randomGap : openPrice + randomGap;
-                        }
+                        const openPrice = parseFloat(bet.openPrice);
+                        closingPrice = bet.direction === 'UP' ? openPrice - 0.0005 : openPrice + 0.0005; // Force a loss on stuck trades
                     } else {
-                        continue; 
+                        continue;
                     }
                 }
-
+                
                 let result, payout, profitChange;
                 const betAmount = parseFloat(bet.amount), openPrice = parseFloat(bet.openPrice), betPayoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
-                const priceDifference = closingPrice - openPrice, pricePrecision = 1e-6;
-                if (Math.abs(priceDifference) < pricePrecision) {
+                const priceDifference = closingPrice - openPrice;
+
+                if (Math.abs(priceDifference) < 1e-6) {
                     result = 'push'; payout = betAmount; profitChange = 0;
-                    totalRealChange += parseFloat(bet.realAmount); totalBonusChange += parseFloat(bet.bonusAmount);
                 } else if ((priceDifference > 0 && bet.direction === 'UP') || (priceDifference < 0 && bet.direction === 'DOWN')) {
                     result = 'win'; payout = betAmount * betPayoutRate; profitChange = payout - betAmount;
-                    totalRealChange += payout;
                 } else {
                     result = 'loss'; payout = 0; profitChange = -betAmount;
                 }
-                totalProfitChange += profitChange;
-                resolvedTrades++;
-                if (result === 'win') resolvedWins++;
-                else if (result === 'loss') resolvedLosses++;
-                const historyEntry = { id: bet.id, market: bet.market, marketId: bet.marketId || localStorage.getItem('lastMarketId'), direction: bet.direction, openPrice: openPrice, closePrice: closingPrice, amount: betAmount, payout: payout, result: result, timestamp: bet.expiryTimestamp, payoutRate: betPayoutRate };
-                historyUpdates[`/users/${user.uid}/tradeHistory/${bet.id}`] = historyEntry;
-                activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] = null;
-                if(bet.marketId) activeTradeDeletions[`/admin/markets/${bet.marketId}/activeTrades/${bet.id}`] = null;
-                else activeTradeDeletions[`/admin/markets/${localStorage.getItem('lastMarketId')}/activeTrades/${bet.id}`] = null;
                 
-                userUpdates[`/users/${user.uid}/tradeCycle/count`] = firebase.database.ServerValue.increment(1);
-                userUpdates[`/users/${user.uid}/totalTradeVolume`] = firebase.database.ServerValue.increment(betAmount);
-                userUpdates[`/users/${user.uid}/totalProfitLoss`] = firebase.database.ServerValue.increment(profitChange);
-                userUpdates[`/users/${user.uid}/lastTradeTimestamp`] = firebase.database.ServerValue.TIMESTAMP;
-
-
+                // Update balance based on account type
+                if (bet.isDemo) {
+                    if (result === 'win' || result === 'push') {
+                       demoBalance += payout;
+                    }
+                    demoBalance = Math.max(0, demoBalance);
+                    localStorage.setItem('demoBalance', demoBalance);
+                } else if (bet.isTournament) {
+                    if (result === 'win' || result === 'push') {
+                        myTourBalance += payout;
+                    }
+                    myTourBalance = Math.max(0, myTourBalance);
+                    database.ref(`tournaments/${bet.tourId}/participants/${user.uid}/tourBalance`).set(myTourBalance);
+                }
+                updateBalance();
+                
                 let pnlText, messageClass;
-                if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win';
-                } else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss';
-                } else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
+                if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win'; SoundEngine.win(); } 
+                else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss'; SoundEngine.loss(); }
+                else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
+                
                 addTradeResultToQueue({ pnlText, resultClass: messageClass, market: bet.market });
-                if (result === 'win') SoundEngine.win();
-                else if (result === 'loss') SoundEngine.loss();
+                
+                demoOrTourTradeDeletions.push(bet.id);
             }
             
-            const finalUpdates = {...historyUpdates, ...activeTradeDeletions, ...userUpdates};
-            try {
-                if(Object.keys(finalUpdates).length > 0) { await database.ref().update(finalUpdates); }
-                if (totalRealChange !== 0 || totalBonusChange !== 0) { await updateBalances({ realChange: totalRealChange, bonusChange: totalBonusChange }); }
-                if (totalProfitChange !== 0 || resolvedTrades > 0) { await updateUserDailyProfit(totalProfitChange, { wins: resolvedWins, losses: resolvedLosses, trades: resolvedTrades }); }
-                
-                myActiveBets = myActiveBets.filter(bet => !activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] && !demoTradeDeletions.includes(bet.id));
-                updateTradeControlsState();
-            } catch(error) { console.error("Error batch-resolving trades:", error); }
+            myActiveBets = myActiveBets.filter(bet => !demoOrTourTradeDeletions.includes(bet.id));
+            updateTradeControlsState();
         }
         
 
@@ -12389,6 +12223,58 @@ Please check the admin panel to approve.
             }
         };
             
+        let tradeHistoryListener = null; // Listener reference
+        
+        function handleTradeResultFromServer(trade) {
+            // This is the single source of truth for a REAL trade's result.
+            // This function is called ONLY when the server confirms a result.
+            
+            const profitChange = trade.payout - trade.amount;
+            let pnlText, messageClass;
+
+            if (trade.result === 'win') {
+                pnlText = `+USDT ${(profitChange).toFixed(2)}`;
+                messageClass = 'win';
+                SoundEngine.win();
+            } else if (trade.result === 'loss') {
+                pnlText = `-USDT ${trade.amount.toFixed(2)}`;
+                messageClass = 'loss';
+                SoundEngine.loss();
+            } else { // push
+                pnlText = `USDT ${trade.amount.toFixed(2)} Returned`;
+                messageClass = 'push';
+            }
+
+            // Show the result popup from the queue
+            addTradeResultToQueue({ pnlText, resultClass: messageClass, market: trade.market });
+
+            // The main user data listener already handles the balance update from the server transaction.
+            // Leaderboard and other stats are also handled by server-side logic and reflected via user data listener.
+            // This function is purely for triggering the immediate UI feedback (popup and sound).
+        }
+
+        function listenForTradeResults(uid) {
+            if (tradeHistoryListener) {
+                tradeHistoryListener.off(); // Detach old listener to prevent duplicates
+            }
+            const tradeHistoryRef = database.ref(`users/${uid}/tradeHistory`);
+            
+            // Listen for new trades added from now on
+            tradeHistoryListener = tradeHistoryRef.orderByChild('timestamp').startAt(Date.now() - 5000); // Look back 5s to catch any immediate resolutions
+            
+            tradeHistoryListener.on('child_added', (snapshot) => {
+                const tradeResult = snapshot.val();
+                if (!tradeResult) return;
+                
+                // Check if this trade was already processed by the client (e.g. on page load)
+                const isAlreadyInHistory = tradeHistory.some(t => t.id === tradeResult.id);
+                if (isAlreadyInHistory) return;
+
+                // Process the result from the server
+                handleTradeResultFromServer(tradeResult);
+            });
+        }
+        
         async function initApp(user) {
             const uid = user.uid;
             
@@ -12405,7 +12291,11 @@ Please check the admin panel to approve.
             initTradeOptionsModal();
 
 
+            // Call the new listener for real-money trade results
+            listenForTradeResults(uid);
+
             if (tradeResolutionInterval) clearInterval(tradeResolutionInterval);
+            // This interval now ONLY handles local demo/tournament trades
             tradeResolutionInterval = setInterval(() => {
                 resolveExpiredBets(false); 
                 setTimeout(() => resolveExpiredBets(true), 500); 
