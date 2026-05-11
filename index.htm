@@ -58,7 +58,7 @@
     
     <!-- 2FA & QR Code Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/otplib@12.0.1/otplib-browser.js"></script>
+    <script src="https://unpkg.com/@otplib/preset-browser@12.0.1/build/otplib-browser.js"></script>
         
     <style>
     
@@ -13821,47 +13821,63 @@ Please check the admin panel to approve.
             
             // ================= 2FA SETUP LOGIC =================
             let temp2FASecret = '';
-            document.getElementById('setup-2fa-btn').addEventListener('click', () => {
-                if (currentUserData.twoFactorEnabled) {
-                    if(confirm('2FA is currently ENABLED. Do you want to disable it?')) {
-                        database.ref(`users/${auth.currentUser.uid}`).update({ twoFactorEnabled: false, twoFactorSecret: null });
-                        showNotification('2FA has been disabled.', 'info');
+            
+            // Using event delegation to ensure click works even on child elements (like SVG/span)
+            document.body.addEventListener('click', async (e) => {
+                const setupBtn = e.target.closest('#setup-2fa-btn');
+                if (setupBtn) {
+                    e.preventDefault();
+                    if (!window.otplib) {
+                        showNotification('2FA Library is still loading. Please try again.', 'loss');
+                        return;
                     }
-                    return;
+                    
+                    if (currentUserData.twoFactorEnabled) {
+                        if(confirm('2FA is currently ENABLED. Do you want to disable it?')) {
+                            await database.ref(`users/${auth.currentUser.uid}`).update({ twoFactorEnabled: false, twoFactorSecret: null });
+                            showNotification('2FA has been disabled.', 'info');
+                            document.getElementById('2fa-status-badge').textContent = 'DISABLED';
+                            document.getElementById('2fa-status-badge').className = 'status-badge status-unverified';
+                        }
+                        return;
+                    }
+                    
+                    // Generate Secret
+                    temp2FASecret = window.otplib.authenticator.generateSecret();
+                    const otpauth = window.otplib.authenticator.keyuri(currentUserData.email, 'ICTEX_Trade', temp2FASecret);
+                    
+                    // Render QR Code
+                    const qrContainer = document.getElementById('qrcode-container');
+                    qrContainer.innerHTML = '';
+                    new QRCode(qrContainer, { text: otpauth, width: 150, height: 150 });
+                    document.getElementById('secret-key-display').textContent = temp2FASecret;
+                    document.getElementById('setup-2fa-code').value = '';
+                    
+                    document.getElementById('two-fa-setup-modal').classList.add('visible');
                 }
                 
-                // Generate Secret
-                temp2FASecret = otplib.authenticator.generateSecret();
-                const otpauth = otplib.authenticator.keyuri(currentUserData.email, 'ICTEX Trade', temp2FASecret);
-                
-                // Render QR Code
-                const qrContainer = document.getElementById('qrcode-container');
-                qrContainer.innerHTML = '';
-                new QRCode(qrContainer, { text: otpauth, width: 150, height: 150 });
-                document.getElementById('secret-key-display').textContent = temp2FASecret;
-                document.getElementById('setup-2fa-code').value = '';
-                
-                document.getElementById('two-fa-setup-modal').classList.add('visible');
-            });
-
-            document.getElementById('cancel-2fa-setup').addEventListener('click', () => {
-                document.getElementById('two-fa-setup-modal').classList.remove('visible');
-            });
-
-            document.getElementById('confirm-2fa-setup').addEventListener('click', async () => {
-                const code = document.getElementById('setup-2fa-code').value;
-                if(code.length !== 6) { showNotification('Enter 6 digit code.', 'loss'); return; }
-                
-                const isValid = otplib.authenticator.check(code, temp2FASecret);
-                if (isValid) {
-                    await database.ref(`users/${auth.currentUser.uid}`).update({
-                        twoFactorEnabled: true,
-                        twoFactorSecret: temp2FASecret
-                    });
+                if (e.target.id === 'cancel-2fa-setup') {
                     document.getElementById('two-fa-setup-modal').classList.remove('visible');
-                    showNotification('2FA Successfully Enabled!', 'win');
-                } else {
-                    showNotification('Invalid code. Try again.', 'loss');
+                }
+                
+                if (e.target.id === 'confirm-2fa-setup') {
+                    const code = document.getElementById('setup-2fa-code').value;
+                    if(code.length !== 6) { showNotification('Enter 6 digit code.', 'loss'); return; }
+                    
+                    const isValid = window.otplib.authenticator.check(code, temp2FASecret);
+                    if (isValid) {
+                        await database.ref(`users/${auth.currentUser.uid}`).update({
+                            twoFactorEnabled: true,
+                            twoFactorSecret: temp2FASecret
+                        });
+                        document.getElementById('two-fa-setup-modal').classList.remove('visible');
+                        showNotification('2FA Successfully Enabled!', 'win');
+                        
+                        document.getElementById('2fa-status-badge').textContent = 'ENABLED';
+                        document.getElementById('2fa-status-badge').className = 'status-badge status-verified';
+                    } else {
+                        showNotification('Invalid code. Try again.', 'loss');
+                    }
                 }
             });
             // ===================================================
