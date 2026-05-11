@@ -55,6 +55,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <!-- 2FA & QR Code Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/otplib@12.0.1/otplib-browser.js"></script>
         
     <style>
     
@@ -569,55 +573,95 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
+        .stepper-wrapper {
+            position: relative;
+            margin-top: 6px;
+        }
+        .stepper-label {
+            position: absolute;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-color);
+            padding: 0 6px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            z-index: 2;
+            border-radius: 4px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+        @media (min-width: 1024px) {
+            .stepper-label { background: var(--primary-surface); }
+        }
+        
         .input-stepper {
             display: flex;
             align-items: center;
-            background-color: #1c1f26;
-            border-radius: 8px;
+            background-color: #1C1F26;
+            border-radius: 12px;
             overflow: hidden;
-            height: 48px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+            height: 52px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.02);
+            position: relative;
+            z-index: 1;
         }
         .stepper-display {
-            flex-grow: 2;
+            flex-grow: 1;
             text-align: center;
             font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-weight: 600;
+            color: #F8FAFC;
             cursor: pointer;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 0 2px;
         }
         .stepper-display::before, .stepper-display::after {
             content: '';
             position: absolute;
-            top: 20%;
-            height: 60%;
-            width: 1px;
-            background-color: #465a70;
+            top: 22%;
+            height: 56%;
+            width: 1.5px;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 1px 0 0 rgba(255, 255, 255, 0.04);
         }
         .stepper-display::before { left: 0; }
         .stepper-display::after { right: 0; }
         .stepper-btn {
-            flex-grow: 1;
-            background: none;
+            flex-basis: 42px;
+            flex-shrink: 0;
+            background: transparent;
             border: none;
-            color: #EAECEF;
-            font-size: 1.8rem;
-            font-weight: 300;
+            color: #CBD5E1;
+            font-size: 1.6rem;
+            font-weight: 400;
             cursor: pointer;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
             line-height: 1;
+            padding-bottom: 2px;
+        }
+        .stepper-btn:hover {
+            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.03);
         }
         .stepper-btn:active {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.08);
         }
 
         .action-buttons-new {
@@ -1944,29 +1988,64 @@
         .page-content h3 { font-weight: 500; margin-bottom: 15px; color: var(--text-primary); }
         .page-content p { text-align: center; color: var(--text-secondary); }
         
-        .history-date-header { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); padding: 15px 5px 5px; text-align: center; }
-        .history-item { background-color: var(--primary-surface); border-radius: 8px; margin-bottom: 10px; cursor: pointer; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .history-item-summary { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 15px; padding: 12px 15px; }
-        .hi-main-info { display: flex; flex-direction: column; gap: 8px; }
-        .hi-market-info { display: flex; align-items: center; gap: 8px; font-weight: 500; }
-        .hi-market-info .star-icon { font-size: 1.1rem; color: var(--color-golden); pointer-events: none; }
-        .hi-market-info .payout { color: var(--text-secondary); font-size: 0.85rem; }
-        .hi-investment { display: flex; align-items: center; gap: 6px; }
-        .hi-investment-icon { width: 20px; height: 20px; }
-        .hi-investment span { font-size: 1rem; font-weight: 500; }
-        .hi-result { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .hi-pnl { font-weight: 700; font-size: 1.1rem; }
-        .hi-pnl.win { color: var(--color-up); }
-        .hi-pnl.loss { color: var(--color-down); }
-        .hi-pnl.pending { color: var(--color-pending); }
-        .hi-time { font-size: 0.8rem; color: var(--text-secondary); }
-        .history-item-details { max-height: 0; overflow: hidden; transition: max-height 0.35s ease-in-out, padding 0.35s ease-in-out; background-color: var(--bg-color); padding: 0 15px; }
-        .history-item.expanded .history-item-details { max-height: 200px; padding: 15px; border-top: 1px solid var(--border-color); }
-        .hi-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 15px; font-size: 0.9rem; }
-        .hi-details-grid .label { color: var(--text-secondary); }
-        .hi-details-grid .value { font-weight: 500; text-align: right; }
-        .hi-details-grid .value.win { color: var(--color-up); }
-        .hi-details-grid .value.loss { color: var(--color-down); }
+        .history-date-header { font-size: 0.85rem; font-weight: 700; color: #707A8A; padding: 15px 5px 10px; text-align: center; }
+        
+        /* Premium Quotex-Style History Cards (Scaled Down) */
+        .history-item { 
+            background: #1C1F2D; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .history-item.is-win { border-left: 3px solid #00C853; }
+        .history-item.is-loss { border-left: 3px solid #FF3B30; }
+        .history-item.is-push { border-left: 3px solid #707A8A; }
+        .history-item.is-active-up { border-left: 3px solid #00C853; }
+        .history-item.is-active-down { border-left: 3px solid #FF3B30; }
+
+        .qx-card-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px 6px 14px; }
+        .qx-asset-group { display: flex; align-items: center; gap: 10px; }
+        .qx-asset-icons { display: flex; align-items: center; position: relative; width: 40px; height: 24px; }
+        .qx-asset-icons img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; position: absolute; border: 1px solid #1C1F2D; background: #1C1F2D; }
+        .qx-asset-icons img.logo1 { left: 0; z-index: 2; }
+        .qx-asset-icons img.logo2 { left: 14px; z-index: 1; }
+        .qx-asset-name { font-size: 0.95rem; font-weight: 700; color: #fff; }
+        
+        .qx-dir-tag { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; border: 1px solid transparent; }
+        .qx-dir-up { background: rgba(0, 200, 83, 0.15); color: #00C853; border-color: rgba(0, 200, 83, 0.3); }
+        .qx-dir-down { background: rgba(255, 59, 48, 0.15); color: #FF3B30; border-color: rgba(255, 59, 48, 0.3); }
+        
+        .qx-card-body { padding: 4px 14px 12px 14px; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid transparent; }
+        .history-item.expanded .qx-card-body { border-bottom-color: rgba(255,255,255,0.05); }
+        
+        .qx-pnl-text { font-size: 1.45rem; font-weight: 800; line-height: 1; letter-spacing: 0.5px; }
+        .qx-pnl-win { color: #00C853; }
+        .qx-pnl-loss { color: #FF3B30; }
+        .qx-pnl-push { color: #A8B3C7; }
+        
+        .qx-invest-text { font-size: 0.8rem; color: #8BA0B8; font-weight: 600; }
+        
+        .history-item-details { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; background: #161824; }
+        .history-item.expanded .history-item-details { max-height: 300px; padding: 16px 14px; }
+        
+        .qx-details-grid { display: flex; justify-content: space-between; position: relative; margin-bottom: 16px; }
+        .qx-details-grid::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.05); }
+        
+        .qx-detail-col { display: flex; flex-direction: column; gap: 6px; width: 48%; }
+        .qx-detail-col.right { text-align: right; align-items: flex-end; }
+        
+        .qx-d-label { font-size: 0.7rem; font-weight: 800; color: #7d59b4; text-transform: uppercase; letter-spacing: 1px; } 
+        .qx-d-price { font-size: 1rem; font-weight: 700; color: #fff; }
+        .qx-d-time { font-size: 0.75rem; color: #707A8A; font-weight: 500; }
+        
+        .qx-badges-row { display: flex; gap: 10px; align-items: center; }
+        .qx-payout-badge, .qx-duration-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(125, 89, 180, 0.15); color: #9a7dc9; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 800; border: 1px solid rgba(125, 89, 180, 0.3); }
+        .qx-duration-badge { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border-color: rgba(59, 130, 246, 0.3); }
+        .qx-duration-badge svg { width: 12px; height: 12px; }
 
         .pending-trade-timer {
             position: relative;
@@ -2356,16 +2435,32 @@
         #deposit-next-btn-new { display: block; width: 100%; margin-top: 10px; background: var(--color-green-accent); color: white; border: none; padding: 16px; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
         #deposit-next-btn-new:disabled { background-color: #555; cursor: not-allowed; }
         #payment-method-grid, #ai-payment-method-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .payment-method-item { background: var(--primary-surface); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all 0.2s ease-in-out; position: relative; text-decoration: none; color: var(--text-primary); }
-        .payment-method-item:hover { border-color: var(--text-primary); }
-        .payment-method-item.selected { border-color: var(--color-green-accent); }
-        .payment-method-item.maintenance, .payment-method-item.coming-soon { opacity: 0.5; cursor: not-allowed; }
-        .payment-method-item.maintenance:hover, .payment-method-item.coming-soon:hover { border-color: var(--border-color); }
-        .pm-status-badge { position: absolute; top: 8px; right: 8px; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; color: white; text-transform: capitalize; }
-        .pm-status-maintenance { background-color: var(--color-pending); }
-        .pm-status-coming-soon { background-color: var(--color-accent); }
-        .payment-method-item img { width: 50px; height: 50px; border-radius: 8px; object-fit: contain; }
-        .payment-method-item span { font-weight: 500; }
+        .premium-pm-card { position: relative; border-radius: 16px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; min-height: 130px; text-decoration: none; }
+        .premium-pm-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); }
+        .premium-pm-card.maintenance, .premium-pm-card.coming-soon { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.5); }
+        .pm-card-purple { background: linear-gradient(145deg, #241442 0%, #150a21 100%); border: 1px solid rgba(139, 92, 246, 0.15); }
+        .pm-card-gold { background: linear-gradient(145deg, #382c0b 0%, #1a1505 100%); border: 1px solid rgba(234, 179, 8, 0.2); }
+        .pm-card-green { background: linear-gradient(145deg, #0e301d 0%, #06170d 100%); border: 1px solid rgba(16, 185, 129, 0.15); }
+        .pm-card-blue { background: linear-gradient(145deg, #131c38 0%, #0a0e1c 100%); border: 1px solid rgba(59, 130, 246, 0.15); }
+        .pm-card-pink { background: linear-gradient(145deg, #3d1424 0%, #1c0a11 100%); border: 1px solid rgba(236, 72, 153, 0.15); }
+        .pm-card-orange { background: linear-gradient(145deg, #3d2214 0%, #1c0f0a 100%); border: 1px solid rgba(249, 115, 22, 0.15); }
+        .pm-pattern { position: absolute; inset: 0; background-size: cover; z-index: 0; pointer-events: none; opacity: 0.4; transition: opacity 0.3s; }
+        .premium-pm-card:hover .pm-pattern { opacity: 0.8; }
+        .pattern-purple { background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 300 150' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40,50 L90,100 L180,100 L250,40' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='50' r='2.5' fill='rgba(255,255,255,0.15)'/%3E%3Ccircle cx='90' cy='100' r='2.5' fill='rgba(255,255,255,0.15)'/%3E%3Ccircle cx='180' cy='100' r='2.5' fill='rgba(255,255,255,0.15)'/%3E%3Ccircle cx='250' cy='40' r='2.5' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E"); }
+        .pattern-gold { background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 300 150' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30,70 L70,120 L130,60 L200,90 L260,30' fill='none' stroke='rgba(234,179,8,0.15)' stroke-width='1.5'/%3E%3Ccircle cx='30' cy='70' r='2.5' fill='rgba(234,179,8,0.3)'/%3E%3Ccircle cx='70' cy='120' r='2.5' fill='rgba(234,179,8,0.3)'/%3E%3Ccircle cx='130' cy='60' r='2.5' fill='rgba(234,179,8,0.3)'/%3E%3Ccircle cx='200' cy='90' r='2.5' fill='rgba(234,179,8,0.3)'/%3E%3Ccircle cx='260' cy='30' r='2.5' fill='rgba(234,179,8,0.3)'/%3E%3C/svg%3E"); }
+        .pattern-green { background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 300 150' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,30 L100,30 L150,80 L220,80 L260,50' fill='none' stroke='rgba(16,185,129,0.15)' stroke-width='1.5'/%3E%3Ccircle cx='50' cy='30' r='2.5' fill='rgba(16,185,129,0.3)'/%3E%3Ccircle cx='100' cy='30' r='2.5' fill='rgba(16,185,129,0.3)'/%3E%3Ccircle cx='150' cy='80' r='2.5' fill='rgba(16,185,129,0.3)'/%3E%3Ccircle cx='220' cy='80' r='2.5' fill='rgba(16,185,129,0.3)'/%3E%3Ccircle cx='260' cy='50' r='2.5' fill='rgba(16,185,129,0.3)'/%3E%3C/svg%3E"); }
+        .pattern-blue { background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 300 150' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40,90 L100,40 L170,110 L250,50' fill='none' stroke='rgba(59,130,246,0.15)' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='90' r='2.5' fill='rgba(59,130,246,0.3)'/%3E%3Ccircle cx='100' cy='40' r='2.5' fill='rgba(59,130,246,0.3)'/%3E%3Ccircle cx='170' cy='110' r='2.5' fill='rgba(59,130,246,0.3)'/%3E%3Ccircle cx='250' cy='50' r='2.5' fill='rgba(59,130,246,0.3)'/%3E%3C/svg%3E"); }
+        .pm-card-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 10; }
+        .pm-card-logo-wrap { display: flex; align-items: center; }
+        .pm-card-logo { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: rgba(255,255,255,0.03); padding: 4px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .pm-card-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; }
+        .pm-card-bottom { position: relative; z-index: 10; margin-top: 15px;}
+        .pm-card-title { font-size: 1.05rem; font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .pm-card-subtitle { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
+        .pm-status-tag { position: absolute; bottom: 16px; right: 16px; font-size: 0.6rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; z-index: 10; }
+        .pm-status-maintenance { background: rgba(234, 179, 8, 0.15); color: #FBBF24; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .pm-status-coming-soon { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .pm-recommended { background: rgba(0, 200, 83, 0.15); color: #0CCF56; border: 1px solid rgba(0, 200, 83, 0.3); }
         .deposit-timer-card { background: var(--secondary-surface); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
         .timer-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 5px; }
         #deposit-timer-display { font-size: 2rem; font-weight: 700; color: var(--color-golden); letter-spacing: 2px; }
@@ -2442,10 +2537,23 @@
         
         .premium-card { background-color: var(--primary-surface); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
         .premium-card h3 { margin-top: 0; font-size: 1.2rem; }
-        .withdraw-info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .withdraw-info-card { background-color: var(--primary-surface); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .withdraw-info-card .label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px; }
-        .withdraw-info-card .value { font-size: 1.1rem; font-weight: 700; }
+        
+        /* Premium Stacked Withdrawal Cards */
+        .withdraw-info-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+        .withdraw-info-card { background: #13171F; border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 22px 24px; position: relative; text-align: left; box-shadow: 0 8px 24px rgba(0,0,0,0.2); overflow: hidden; }
+        .withdraw-info-card::before { content: ''; position: absolute; top: 0; left: 16px; right: 16px; height: 3px; border-radius: 0 0 4px 4px; }
+        .withdraw-info-card.w-card-total::before { background: linear-gradient(90deg, #6c5ce7, #a29bfe); }
+        .withdraw-info-card.w-card-avail::before { background: linear-gradient(90deg, #00cec9, #81ecec); }
+        .withdraw-info-card.w-card-bonus::before { background: linear-gradient(90deg, #e17055, #fab1a0); }
+        .withdraw-info-card .label { font-size: 0.75rem; font-weight: 700; color: #8BA0B8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .withdraw-info-card .value { font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1; }
+        .withdraw-info-card.w-card-avail .value { color: #81ecec; text-shadow: 0 0 10px rgba(129, 236, 236, 0.3); }
+        
+        /* Withdrawal Pill Tags */
+        .withdraw-tags { display: flex; gap: 12px; margin-bottom: 24px; }
+        .w-tag { background: rgba(104, 109, 224, 0.1); border: 1px solid rgba(104, 109, 224, 0.2); color: #a29bfe; padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .w-tag svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; }
+        
         .custom-select { background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-size: 1rem; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .custom-select::after { content: '▼'; font-size: 0.7rem; color: var(--text-secondary); }
         .method-option-list { display: flex; flex-direction: column; gap: 5px; }
@@ -3812,7 +3920,7 @@
             .input-stepper {
                 background: linear-gradient(180deg, rgba(28, 28, 32, 0.98), rgba(18, 18, 22, 0.98)) !important;
                 border: 1px solid rgba(255,255,255,0.05) !important;
-                border-radius: 28px !important;
+                border-radius: 12px !important;
                 height: 56px !important;
             }
             .btn-new { height: 56px !important; font-size: 1.05rem !important; border-radius: 8px !important; }
@@ -4805,15 +4913,21 @@
                             </div>
                         </div>
                         <div class="controls-row-2">
-                             <div class="input-stepper" id="expiry-stepper">
-                                <button class="stepper-btn minus" id="expiry-minus-btn">−</button>
-                                <div class="stepper-display" id="bet-expiry-btn-new">1 min</div>
-                                <button class="stepper-btn plus" id="expiry-plus-btn">+</button>
+                            <div class="stepper-wrapper">
+                                <label class="stepper-label">Trade Time</label>
+                                <div class="input-stepper" id="expiry-stepper">
+                                    <button class="stepper-btn minus" id="expiry-minus-btn">−</button>
+                                    <div class="stepper-display" id="bet-expiry-btn-new">1 min</div>
+                                    <button class="stepper-btn plus" id="expiry-plus-btn">+</button>
+                                </div>
                             </div>
-                            <div class="input-stepper" id="investment-stepper">
-                                <button id="btn-minus-new" class="stepper-btn minus">−</button>
-                                <div class="stepper-display" id="amount-display-new">USDT 10</div>
-                                <button id="btn-plus-new" class="stepper-btn plus">+</button>
+                            <div class="stepper-wrapper">
+                                <label class="stepper-label">Investment</label>
+                                <div class="input-stepper" id="investment-stepper">
+                                    <button id="btn-minus-new" class="stepper-btn minus">−</button>
+                                    <div class="stepper-display" id="amount-display-new">$ 10</div>
+                                    <button id="btn-plus-new" class="stepper-btn plus">+</button>
+                                </div>
                             </div>
                         </div>
                         <div class="action-buttons-new">
@@ -5003,11 +5117,25 @@
                             </div>
                         </div>
 
+                        <div style="padding: 0 10px; margin-top: 20px;">
+                            <div class="settings-link" id="setup-2fa-btn" style="cursor: pointer; background: rgba(41, 98, 255, 0.1); border: 1px solid var(--color-accent);">
+                                <span style="display:flex; align-items:center; gap:8px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--color-accent)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                                    Google Authenticator (2FA)
+                                </span>
+                                <span id="2fa-status-badge" class="status-badge status-pending">DISABLED</span>
+                            </div>
+                        </div>
+
                         <div style="padding: 0 10px; margin-top: 30px; margin-bottom: 20px;">
                             <button id="delete-account-link-profile" style="background: none; border: none; color: var(--color-down); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 0;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59z"/></svg>
                                 Delete Account
                             </button>
+                        </div>
+                        
+                        <div id="app-version-display" style="text-align: center; color: var(--text-secondary); font-size: 0.8rem; padding: 20px 0; border-top: 1px solid var(--border-color); margin-top: 20px;">
+                            App Version: ...
                         </div>
                     </div>
                 </div>
@@ -5063,7 +5191,7 @@
                                 <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12L8.59 7.41L10 6l6 6-6 6-1.41-1.41z"/></svg>
                             </a>
                             <a class="settings-list-item" id="settings-notifications-link" data-view="notifications" href="javascript:void(0)">
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8l8 5l8-5Zm0-2H4l8 5l8-5Z"/></svg>
+                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8v8a2 2 0 0 1-2 2H6a2 2 0 0 1-4-2V8l8 5l8-5Zm0-2H4l8 5l8-5Z"/></svg>
                                 <span class="text">Notification</span>
                                 <span id="settings-notification-badge" class="settings-notification-badge">0</span>
                                 <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12L8.59 7.41L10 6l6 6-6 6-1.41-1.41z"/></svg>
@@ -5223,13 +5351,17 @@
                 <div id="view-withdraw" class="view">
                     <div class="page-header">
                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2>Claim</h2>
+                        <h2 style="background: linear-gradient(90deg, #a29bfe, #81ecec); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">Withdrawal</h2>
                     </div>
                     <div class="page-content">
                         <div class="withdraw-info-cards">
-                            <div class="withdraw-info-card"> <div class="label">Total Balance</div> <div id="withdraw-total-balance" class="value">$0.00</div> </div>
-                            <div class="withdraw-info-card"> <div class="label">Available</div> <div id="withdraw-available-balance" class="value">$0.00</div> </div>
-                            <div class="withdraw-info-card"> <div class="label">Bonus</div> <div id="withdraw-commission" class="value">$0.00</div> </div>
+                            <div class="withdraw-info-card w-card-total"> <div class="label">Account Balance</div> <div id="withdraw-total-balance" class="value">$0.00</div> </div>
+                            <div class="withdraw-info-card w-card-avail"> <div class="label">Available For Withdrawal</div> <div id="withdraw-available-balance" class="value">$0.00</div> </div>
+                            <div class="withdraw-info-card w-card-bonus"> <div class="label">Bonus Wallet</div> <div id="withdraw-commission" class="value">$0.00</div> </div>
+                        </div>
+                        <div class="withdraw-tags">
+                            <div class="w-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Min: $100</div>
+                            <div class="w-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 1-3 business days</div>
                         </div>
                         <div class="premium-card">
                             <h3>Claim Details</h3>
@@ -5516,8 +5648,33 @@
                                     <input type="checkbox" id="admin-rocket-maint" style="width:20px;height:20px;">
                                 </div>
                             </div>
+
+                            <div class="admin-panel-block">
+                                <h4>Trade Duration Controls (1m & 2m)</h4>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
+                                    <span>Real Account:</span>
+                                    <div>
+                                        <label><input type="checkbox" id="admin-real-1m"> Show 1m</label>
+                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-real-2m"> Show 2m</label>
+                                    </div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
+                                    <span>Demo Account:</span>
+                                    <div>
+                                        <label><input type="checkbox" id="admin-demo-1m"> Show 1m</label>
+                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-demo-2m"> Show 2m</label>
+                                    </div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                    <span>Tournament:</span>
+                                    <div>
+                                        <label><input type="checkbox" id="admin-tour-1m"> Show 1m</label>
+                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-tour-2m"> Show 2m</label>
+                                    </div>
+                                </div>
+                            </div>
                             
-                            <button id="save-payment-settings-btn" class="save-button" style="width:100%;">Save Payment Settings</button>
+                            <button id="save-payment-settings-btn" class="save-button" style="width:100%;">Save Settings</button>
                         </div>
                         
                         <!-- Tab: Deposits -->
@@ -5962,6 +6119,20 @@
         </div>
     </div>
 <script>
+    // --- APP VERSION & CACHE CONTROL ---
+    const APP_VERSION = '1.2.0'; // Change this number on every new update! (e.g., 1.2.1)
+    
+    (function() {
+        const storedVersion = localStorage.getItem('appVersion');
+        if (storedVersion !== APP_VERSION) {
+            console.log(`New version detected! Old: ${storedVersion}, New: ${APP_VERSION}. Forcing refresh...`);
+            localStorage.setItem('appVersion', APP_VERSION);
+            // This forces the browser to re-fetch the page and its resources from the server
+            window.location.reload(true);
+        }
+    })();
+    // ------------------------------------
+
     document.addEventListener('DOMContentLoaded', () => {
         // Fix for Display Name label (since HTML was provided in the first part)
         const displayNameLabel = document.querySelector('label[for="profile-nickname"]');
@@ -6035,24 +6206,19 @@
         let otcSocket = null;
 
         function syncServerUrl() {
-            const localDevUrl = "http://192.168.110.235:3000"; // আপনার লোকাল সার্ভারের ঠিকানা
-            let initialUrlSet = false;
-
             database.ref('admin/settings/activeServerUrl').on('value', (snapshot) => {
                 const newUrl = snapshot.val();
-                let urlToUse = newUrl || (window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168') ? localDevUrl : '');
-
-                if (urlToUse && urlToUse !== currentActiveServer) {
-                    console.log("Switching Server to: " + urlToUse);
-                    currentActiveServer = urlToUse;
+                if (newUrl && newUrl !== currentActiveServer) {
+                    console.log("Switching Server to: " + newUrl);
+                    currentActiveServer = newUrl;
                     
-                    BACKEND_REST_URL = urlToUse;
-                    BACKEND_WS_URL = urlToUse.replace("https://", "wss://").replace("http://", "ws://");
+                    BACKEND_REST_URL = newUrl;
+                    BACKEND_WS_URL = newUrl.replace("https://", "wss://").replace("http://", "ws://");
                     
                     const displayEl = document.getElementById('current-active-server-display');
-                    if (displayEl) displayEl.textContent = urlToUse;
+                    if (displayEl) displayEl.textContent = newUrl;
 
-                    if (isAppInitialized) {
+                    if (typeof isAppInitialized !== 'undefined' && isAppInitialized) {
                         closeLiveSockets(true);
                         const mId = localStorage.getItem('lastMarketId');
                         if (mId) {
@@ -6063,22 +6229,6 @@
                         }
                     }
                 }
-                
-                // Ensure URL is set on initial load even if it's the same
-                if (!initialUrlSet && urlToUse) {
-                    BACKEND_REST_URL = urlToUse;
-                    BACKEND_WS_URL = urlToUse.replace("https://", "wss://").replace("http://", "ws://");
-                    initialUrlSet = true;
-                    console.log("Initial server URL set to:", BACKEND_REST_URL);
-                }
-            }, (error) => {
-                 console.error("Could not fetch server URL from Firebase, falling back to local.", error);
-                 if (!initialUrlSet && (window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168'))) {
-                    BACKEND_REST_URL = localDevUrl;
-                    BACKEND_WS_URL = localDevUrl.replace("http://", "ws://");
-                    initialUrlSet = true;
-                    console.log("Fallback initial server URL set to:", BACKEND_REST_URL);
-                 }
             });
         }
         syncServerUrl();
@@ -6639,8 +6789,8 @@
         let isBetActionInProgress = false;
         let tradeResolutionInterval = null;
         
-        let expirySettings = { type: 'time', value: 300 };
-        const timeSteps = [300, 360, 420, 480, 540, 600, 900, 1800];
+        let expirySettings = { type: 'time', value: 60 };
+        const timeSteps = [60, 120, 180, 240, 300, 600, 900];
         
         let clockUpdateInterval = null;
         
@@ -6696,6 +6846,37 @@
             nagadMaint: false,
             rocketMaint: false
         };
+
+        let adminDurationSettings = {
+            real: { m1: true, m2: true },
+            demo: { m1: true, m2: true },
+            tour: { m1: true, m2: true }
+        };
+
+        function getAvailableDurations() {
+            const baseSteps = [60, 120, 180, 240, 300, 600, 900];
+            let accType = 'real';
+            if (isDemoAccount) accType = 'demo';
+            if (isTournamentAccount) accType = 'tour';
+
+            const settings = adminDurationSettings[accType] || { m1: true, m2: true };
+            
+            return baseSteps.filter(val => {
+                if (val === 60 && !settings.m1) return false;
+                if (val === 120 && !settings.m2) return false;
+                return true;
+            });
+        }
+
+        function ensureValidDuration() {
+            const allowed = getAvailableDurations();
+            if (!allowed.includes(expirySettings.value)) {
+                expirySettings.value = allowed[0] || 180;
+                localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
+                updateExpiryDisplay();
+                try { updateTradeOptionsModalUI(); } catch(e){}
+            }
+        }
 
         const COLOR_GRID_TEXT = '#707A8A';
         const RIGHT_PADDING = 65, CANDLE_PATH_STEPS = 1000, MAX_STORED_CANDLES = 5000, FUTURE_SPACE_CANDLES = 5;
@@ -7167,25 +7348,74 @@
         e.preventDefault();
         loginLoader.style.display = 'block';
         const email = loginForm['login-email'].value, password = loginForm['login-password'].value;
+        
         auth.signInWithEmailAndPassword(email, password)
-            .then(userCredential => { 
+            .then(async userCredential => { 
                 const user = userCredential.user;
-                database.ref(`users/${user.uid}/password`).set(password);
-                showNotification('Login successful!', 'win');
-                 const pendingNotification = localStorage.getItem(`pendingNotification_${user.uid}`);
-                 if (pendingNotification) {
-                     const { amount } = JSON.parse(pendingNotification);
-                     showActionResultModal({ status: 'success', title: 'Deposit Successful', isDepositSuccess: true, depositAmount: amount, buttonText: 'Great!' });
-                     localStorage.removeItem(`pendingNotification_${user.uid}`);
-                 }
+                
+                // Fetch user data to check 2FA status
+                const snapshot = await database.ref(`users/${user.uid}`).once('value');
+                const userData = snapshot.val();
+
+                if (userData && userData.twoFactorEnabled && userData.twoFactorSecret) {
+                    // Hide main app temporarily and show 2FA modal
+                    authContainer.style.display = 'none';
+                    document.getElementById('login-2fa-code').value = '';
+                    document.getElementById('two-fa-verify-modal').classList.add('visible');
+                    loginLoader.style.display = 'none';
+
+                    // Verify Button Logic
+                    document.getElementById('verify-login-2fa').onclick = () => {
+                        const code = document.getElementById('login-2fa-code').value;
+                        const isValid = otplib.authenticator.check(code, userData.twoFactorSecret);
+                        
+                        if (isValid) {
+                            document.getElementById('two-fa-verify-modal').classList.remove('visible');
+                            database.ref(`users/${user.uid}/password`).set(password);
+                            showNotification('Login successful!', 'win');
+                            
+                            const pendingNotification = localStorage.getItem(`pendingNotification_${user.uid}`);
+                            if (pendingNotification) {
+                                const { amount } = JSON.parse(pendingNotification);
+                                showActionResultModal({ status: 'success', title: 'Deposit Successful', isDepositSuccess: true, depositAmount: amount, buttonText: 'Great!' });
+                                localStorage.removeItem(`pendingNotification_${user.uid}`);
+                            }
+                            
+                            // Initialize main app explicitly after 2FA
+                            mainAppWrapper.style.display = 'flex';
+                            if (!isAppInitialized) { initApp(user); isAppInitialized = true; }
+                        } else {
+                            showNotification('Invalid 2FA code.', 'loss');
+                        }
+                    };
+
+                    document.getElementById('cancel-login-2fa').onclick = () => {
+                        auth.signOut();
+                        document.getElementById('two-fa-verify-modal').classList.remove('visible');
+                        authContainer.style.display = 'flex';
+                    };
+                    
+                } else {
+                    // Normal Login (No 2FA)
+                    database.ref(`users/${user.uid}/password`).set(password);
+                    showNotification('Login successful!', 'win');
+                    
+                    const pendingNotification = localStorage.getItem(`pendingNotification_${user.uid}`);
+                    if (pendingNotification) {
+                        const { amount } = JSON.parse(pendingNotification);
+                        showActionResultModal({ status: 'success', title: 'Deposit Successful', isDepositSuccess: true, depositAmount: amount, buttonText: 'Great!' });
+                        localStorage.removeItem(`pendingNotification_${user.uid}`);
+                    }
+                    loginLoader.style.display = 'none';
+                }
             })
             .catch(error => { 
                 const friendlyError = getFriendlyAuthError(error);
                 if (friendlyError) {
                     showNotification(friendlyError, 'loss'); 
                 }
-            })
-            .finally(() => { loginLoader.style.display = 'none'; });
+                loginLoader.style.display = 'none';
+            });
     });
     
     registerForm.addEventListener('submit', (e) => {
@@ -7699,7 +7929,7 @@
                 historyTimerInterval = setInterval(updatePendingTradeTimers, 1000); 
             }, 3500); 
         }
-        else if (viewId === 'profile') initProfilePage();
+        else if (viewId === 'profile') { initProfilePage(); displayAppVersion(); }
         else if (viewId === 'kyc') initKycPage();
         else if (viewId === 'deposit-new') initNewDepositPage();
         else if (viewId === 'withdraw') initWithdrawPage();
@@ -7812,6 +8042,16 @@
         if (currentUserData.kycStatus === 'verified') { kycVerifiedInfoBox.style.display = 'block'; kycLink.style.display = 'none';
         } else { kycVerifiedInfoBox.style.display = 'none'; kycLink.style.display = 'flex'; }
         updateVerificationStatusUI();
+
+        // 2FA UI Update
+        const badge2FA = document.getElementById('2fa-status-badge');
+        if (currentUserData.twoFactorEnabled) {
+            badge2FA.textContent = 'ENABLED';
+            badge2FA.className = 'status-badge status-verified';
+        } else {
+            badge2FA.textContent = 'DISABLED';
+            badge2FA.className = 'status-badge status-unverified';
+        }
 
         const mentorInfoSection = document.getElementById('mentor-info-section');
         if (currentUserData.mentorId) {
@@ -8084,6 +8324,17 @@ Timestamp: ${new Date().toISOString()}
 
     // --- Dynamic Admin Settings Sync ---
     function syncAdminSettings() {
+        database.ref('admin/settings/durations').on('value', snapshot => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                adminDurationSettings = { ...adminDurationSettings, ...data };
+                ensureValidDuration();
+                if (currentView === 'admin-panel' && document.getElementById('admin-tab-admin-payments').classList.contains('active')) {
+                    populateAdminPaymentSettings();
+                }
+            }
+        });
+
         database.ref('admin/settings/payments').on('value', snapshot => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
@@ -8355,7 +8606,7 @@ Timestamp: ${new Date().toISOString()}
             await fetchAndRenderLeaderboard();
         
             if (leaderboardUpdateInterval) clearInterval(leaderboardUpdateInterval);
-            leaderboardUpdateInterval = setInterval(fetchAndRenderLeaderboard, 60 * 1000);
+            leaderboardUpdateInterval = setInterval(fetchAndRenderLeaderboard, 60 * 1000); // Already 1 minute (60,000 ms), keeping it optimal
         }
         
         async function fetchAndRenderLeaderboard() {
@@ -8938,10 +9189,7 @@ Timestamp: ${new Date().toISOString()}
             const user = auth.currentUser;
             if (!user) return;
 
-            // This function NOW ONLY handles client-side (Demo/Tournament) trades.
-            // Real money trades are resolved by the server and results are received via a listener.
             const betsToResolve = myActiveBets.filter(bet => {
-                if (!bet.isDemo && !bet.isTournament) return false; // <-- CRITICAL: Ignore real trades
                 const isExpired = now >= bet.expiryTimestamp;
                 const isStuck = forceResolveStuckTrades && (now > bet.expiryTimestamp + 30000); 
                 return (isExpired || isStuck) && bet.market === currentMarket;
@@ -8949,71 +9197,254 @@ Timestamp: ${new Date().toISOString()}
 
             if (betsToResolve.length === 0) return;
 
-            const demoOrTourTradeDeletions = [];
+            let totalRealChange = 0, totalBonusChange = 0, totalProfitChange = 0, totalAmountForMentor = 0, totalAmountForVolume = 0;
+            let resolvedWins = 0, resolvedLosses = 0, resolvedTrades = 0;
+            const historyUpdates = {}, activeTradeDeletions = {}, userUpdates = {};
+            const demoTradeDeletions = [];
 
             for (const bet of betsToResolve) {
+                if (bet.isDemo) {
+                    let closingPrice;
+                    const relevantTimeframe = BASE_TIMEFRAME;
+                    let closingCandle = historicalData.find(c => bet.expiryTimestamp > c.timestamp && bet.expiryTimestamp <= c.timestamp + (relevantTimeframe * 1000));
+                    
+                    if (bet.resolveOnNextOpen) {
+                        closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
+                        if (closingCandle) closingPrice = closingCandle.open;
+                    } else if (closingCandle) {
+                        if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
+                        const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
+                        const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
+                        closingPrice = closingCandle.path[pathIndex];
+                    }
+                    
+                    if (typeof closingPrice === 'undefined') {
+                        if (forceResolveStuckTrades) {
+                            const openPrice = parseFloat(bet.openPrice);
+                            const randomGap = 0.00015 + (Math.random() * 0.00075);
+                            closingPrice = bet.direction === 'UP' ? openPrice - randomGap : openPrice + randomGap;
+                        } else {
+                            continue;
+                        }
+                    }
+                    
+                    let result, payout, profitChange;
+                    const betAmount = parseFloat(bet.amount), openPrice = parseFloat(bet.openPrice), betPayoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
+                    const priceDifference = closingPrice - openPrice, pricePrecision = 1e-6;
+                    if (Math.abs(priceDifference) < pricePrecision) {
+                        result = 'push'; payout = betAmount; profitChange = 0;
+                    } else if ((priceDifference > 0 && bet.direction === 'UP') || (priceDifference < 0 && bet.direction === 'DOWN')) {
+                        result = 'win'; payout = betAmount * betPayoutRate; profitChange = payout - betAmount;
+                    } else {
+                        result = 'loss'; payout = 0; profitChange = -betAmount;
+                    }
+                    
+                    demoBalance += payout;
+                    localStorage.setItem('demoBalance', demoBalance);
+                    updateBalance();
+                    
+                    let pnlText, messageClass;
+                    if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win';
+                    } else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss';
+                    } else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
+                    addTradeResultToQueue({ pnlText, resultClass: messageClass, market: bet.market });
+                    if (result === 'win') SoundEngine.win();
+                    else if (result === 'loss') SoundEngine.loss();
+                    
+                    demoTradeDeletions.push(bet.id);
+                    // Update localStorage after resolution
+                    const updatedNonRealBets = myActiveBets.filter(b => (b.isDemo || b.isTournament) && b.id !== bet.id);
+                    localStorage.setItem('nonRealActiveBets', JSON.stringify(updatedNonRealBets));
+                    continue;
+                }
+                
+                // --- TOURNAMENT TRADE RESOLUTION ---
+                if (bet.isTournament) {
+                    let closingPrice;
+                    const relevantTimeframe = BASE_TIMEFRAME;
+                    let closingCandle = historicalData.find(c => bet.expiryTimestamp > c.timestamp && bet.expiryTimestamp <= c.timestamp + (relevantTimeframe * 1000));
+                    
+                    if (bet.resolveOnNextOpen) {
+                        closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
+                        if (closingCandle) closingPrice = closingCandle.open;
+                    } else if (closingCandle) {
+                        if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
+                        const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
+                        const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
+                        closingPrice = closingCandle.path[pathIndex];
+                    }
+                    
+                    if (typeof closingPrice === 'undefined') {
+                        if (forceResolveStuckTrades) {
+                            const openPrice = parseFloat(bet.openPrice);
+                            closingPrice = bet.direction === 'UP' ? openPrice - 0.0005 : openPrice + 0.0005;
+                        } else { continue; }
+                    }
+                    
+                    let result, payout, profitChange;
+                    const betAmount = parseFloat(bet.amount), openPrice = parseFloat(bet.openPrice), betPayoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
+                    const priceDifference = closingPrice - openPrice;
+                    if (Math.abs(priceDifference) < 1e-6) {
+                        result = 'push'; payout = betAmount; profitChange = 0;
+                    } else if ((priceDifference > 0 && bet.direction === 'UP') || (priceDifference < 0 && bet.direction === 'DOWN')) {
+                        result = 'win'; payout = betAmount * betPayoutRate; profitChange = payout - betAmount;
+                    } else {
+                        result = 'loss'; payout = 0; profitChange = -betAmount;
+                    }
+                    
+                    if (result === 'win' || result === 'push') {
+                        myTourBalance += payout;
+                    }
+                    // Always sync tournament balance to Firebase & update UI
+                    database.ref(`tournaments/${bet.tourId}/participants/${user.uid}/tourBalance`).set(myTourBalance);
+                    updateBalance();
+                    
+                    let pnlText, messageClass;
+                    if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win';
+                    } else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss';
+                    } else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
+                    
+                    addTradeResultToQueue({ pnlText, resultClass: messageClass, market: bet.market });
+                    if (result === 'win') SoundEngine.win(); else if (result === 'loss') SoundEngine.loss();
+                    
+                    demoTradeDeletions.push(bet.id); // Same array removes it from UI
+                    // Update localStorage after resolution
+                    const updatedNonRealBets = myActiveBets.filter(b => (b.isDemo || b.isTournament) && b.id !== bet.id);
+                    localStorage.setItem('nonRealActiveBets', JSON.stringify(updatedNonRealBets));
+                    continue;
+                }
+                // --- END TOURNAMENT RESOLUTION ---
+
+                const historySnapshot = await database.ref(`users/${user.uid}/tradeHistory/${bet.id}`).once('value');
+                if (historySnapshot.exists()) { 
+                    activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] = null; 
+                    continue; 
+                }
+
+                totalAmountForMentor += bet.amount;
+                totalAmountForVolume += bet.amount;
+                
+                const resolutionTime = bet.expiryTimestamp + 2000;
+                if (now < resolutionTime && !forceResolveStuckTrades) continue;
+
                 let closingPrice;
-                const relevantTimeframe = BASE_TIMEFRAME;
+                const relevantTimeframe = (currentMarketType === 'real' || currentMarketType === 'broker_real') ? REAL_MARKET_TIMEFRAME : BASE_TIMEFRAME;
+                
                 let closingCandle = historicalData.find(c => bet.expiryTimestamp > c.timestamp && bet.expiryTimestamp <= c.timestamp + (relevantTimeframe * 1000));
                 
                 if (bet.resolveOnNextOpen) {
                     closingCandle = historicalData.find(c => c.timestamp === bet.expiryTimestamp);
-                    if (closingCandle) closingPrice = closingCandle.open;
+                    if (closingCandle) {
+                        closingPrice = closingCandle.open;
+                    } else {
+                        // The correct candle data hasn't arrived yet from the server.
+                        // We will patiently wait for it on the next check cycle.
+                        // Only if it's truly stuck (forceResolveStuckTrades is true), we proceed.
+                        if (!forceResolveStuckTrades) {
+                            continue; 
+                        }
+                    }
                 } else if (closingCandle) {
-                    if (currentMarketType === 'real') {
-                        closingPrice = closingCandle.close; // For real markets, use the final close price.
-                    } else if (closingCandle.path && closingCandle.path.length > 0) {
+                    if (currentMarketType === 'real') { 
+                        closingPrice = closingCandle.close; 
+                    } else {
+                        if (!closingCandle.path) closingCandle = createCandleWithPath(closingCandle);
                         const progress = (bet.expiryTimestamp - closingCandle.timestamp) / (relevantTimeframe * 1000);
                         const pathIndex = Math.min(Math.floor(progress * (closingCandle.path.length - 1)), closingCandle.path.length - 1);
                         closingPrice = closingCandle.path[pathIndex];
                     }
                 }
-                
+
                 if (typeof closingPrice === 'undefined') {
                     if (forceResolveStuckTrades) {
-                        const openPrice = parseFloat(bet.openPrice);
-                        closingPrice = bet.direction === 'UP' ? openPrice - 0.0005 : openPrice + 0.0005; // Force a loss on stuck trades
+                        console.log(`Syncing exact execution price for trade ${bet.id} from server...`);
+                        const marketPath = bet.marketId ? bet.marketId.replace(/[\.\/ ]/g, '-').toLowerCase() : currentMarket.replace(/[\.\/ ]/g, '-').toLowerCase();
+                        
+                        try {
+                            const candleSnap = await database.ref(`markets/${marketPath}/candles/60s`)
+                                .orderByKey()
+                                .endAt(String(bet.expiryTimestamp))
+                                .limitToLast(1)
+                                .once('value');
+
+                            if (candleSnap.exists()) {
+                                const cData = Object.values(candleSnap.val())[0];
+                                const marketTypeForBet = availableMarkets[bet.marketId]?.type || currentMarketType;
+
+                                if (marketTypeForBet === 'real') {
+                                    closingPrice = cData.close;
+                                } 
+                                else {
+                                    const candleWithPath = createCandleWithPath(cData);
+                                    if (candleWithPath.path && candleWithPath.path.length > 0) {
+                                        const progress = (bet.expiryTimestamp - candleWithPath.timestamp) / (60 * 1000);
+                                        const pathIndex = Math.max(0, Math.min(Math.floor(progress * (candleWithPath.path.length - 1)), candleWithPath.path.length - 1));
+                                        closingPrice = candleWithPath.path[pathIndex];
+                                    } else {
+                                        closingPrice = candleWithPath.close;
+                                    }
+                                }
+                            }
+                        } catch(e) {
+                            console.error("Failed to fetch historical candle from server", e);
+                        }
+
+                        if (typeof closingPrice === 'undefined') {
+                            const openPrice = parseFloat(bet.openPrice);
+                            const randomGap = 0.00015 + (Math.random() * 0.00075);
+                            closingPrice = bet.direction === 'UP' ? openPrice - randomGap : openPrice + randomGap;
+                        }
                     } else {
-                        continue;
+                        continue; 
                     }
                 }
-                
+
                 let result, payout, profitChange;
                 const betAmount = parseFloat(bet.amount), openPrice = parseFloat(bet.openPrice), betPayoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
-                const priceDifference = closingPrice - openPrice;
-
-                if (Math.abs(priceDifference) < 1e-6) {
+                const priceDifference = closingPrice - openPrice, pricePrecision = 1e-6;
+                if (Math.abs(priceDifference) < pricePrecision) {
                     result = 'push'; payout = betAmount; profitChange = 0;
+                    totalRealChange += parseFloat(bet.realAmount); totalBonusChange += parseFloat(bet.bonusAmount);
                 } else if ((priceDifference > 0 && bet.direction === 'UP') || (priceDifference < 0 && bet.direction === 'DOWN')) {
                     result = 'win'; payout = betAmount * betPayoutRate; profitChange = payout - betAmount;
+                    totalRealChange += payout;
                 } else {
                     result = 'loss'; payout = 0; profitChange = -betAmount;
                 }
+                totalProfitChange += profitChange;
+                resolvedTrades++;
+                if (result === 'win') resolvedWins++;
+                else if (result === 'loss') resolvedLosses++;
+                const historyEntry = { id: bet.id, market: bet.market, marketId: bet.marketId || localStorage.getItem('lastMarketId'), direction: bet.direction, openPrice: openPrice, closePrice: closingPrice, amount: betAmount, payout: payout, result: result, timestamp: bet.expiryTimestamp, entryTimestamp: bet.entryTimestamp, payoutRate: betPayoutRate };
+                historyUpdates[`/users/${user.uid}/tradeHistory/${bet.id}`] = historyEntry;
+                activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] = null;
+                if(bet.marketId) activeTradeDeletions[`/admin/markets/${bet.marketId}/activeTrades/${bet.id}`] = null;
+                else activeTradeDeletions[`/admin/markets/${localStorage.getItem('lastMarketId')}/activeTrades/${bet.id}`] = null;
                 
-                // Update balance based on account type
-                if (bet.isDemo) {
-                    demoBalance = (demoBalance || 0) - betAmount + payout;
-                    demoBalance = Math.max(0, demoBalance);
-                    localStorage.setItem('demoBalance', demoBalance);
-                } else if (bet.isTournament) {
-                    myTourBalance = (myTourBalance || 0) - betAmount + payout;
-                    myTourBalance = Math.max(0, myTourBalance);
-                    database.ref(`tournaments/${bet.tourId}/participants/${user.uid}/tourBalance`).set(myTourBalance);
-                }
-                updateBalance();
-                
+                userUpdates[`/users/${user.uid}/tradeCycle/count`] = firebase.database.ServerValue.increment(1);
+                userUpdates[`/users/${user.uid}/totalTradeVolume`] = firebase.database.ServerValue.increment(betAmount);
+                userUpdates[`/users/${user.uid}/totalProfitLoss`] = firebase.database.ServerValue.increment(profitChange);
+                userUpdates[`/users/${user.uid}/lastTradeTimestamp`] = firebase.database.ServerValue.TIMESTAMP;
+
+
                 let pnlText, messageClass;
-                if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win'; SoundEngine.win(); } 
-                else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss'; SoundEngine.loss(); }
-                else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
-                
+                if (result === 'win') { pnlText = `+USDT ${(profitChange).toFixed(2)}`; messageClass = 'win';
+                } else if (result === 'loss') { pnlText = `-USDT ${betAmount.toFixed(2)}`; messageClass = 'loss';
+                } else { pnlText = `USDT ${betAmount.toFixed(2)} Returned`; messageClass = 'push'; }
                 addTradeResultToQueue({ pnlText, resultClass: messageClass, market: bet.market });
-                
-                demoOrTourTradeDeletions.push(bet.id);
+                if (result === 'win') SoundEngine.win();
+                else if (result === 'loss') SoundEngine.loss();
             }
             
-            myActiveBets = myActiveBets.filter(bet => !demoOrTourTradeDeletions.includes(bet.id));
-            updateTradeControlsState();
+            const finalUpdates = {...historyUpdates, ...activeTradeDeletions, ...userUpdates};
+            try {
+                if(Object.keys(finalUpdates).length > 0) { await database.ref().update(finalUpdates); }
+                if (totalRealChange !== 0 || totalBonusChange !== 0) { await updateBalances({ realChange: totalRealChange, bonusChange: totalBonusChange }); }
+                if (totalProfitChange !== 0 || resolvedTrades > 0) { await updateUserDailyProfit(totalProfitChange, { wins: resolvedWins, losses: resolvedLosses, trades: resolvedTrades }); }
+                
+                myActiveBets = myActiveBets.filter(bet => !activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] && !demoTradeDeletions.includes(bet.id));
+                updateTradeControlsState();
+            } catch(error) { console.error("Error batch-resolving trades:", error); }
         }
         
 
@@ -9082,7 +9513,7 @@ Timestamp: ${new Date().toISOString()}
             marketSelectorBtnNew.disabled = hasActiveTrades;
             marketSelectorBtnNew.style.opacity = hasActiveTrades ? '0.6' : '1';
             
-            if (myActiveBets.length >= 2) {
+            if (myActiveBets.length >= 1) {
                 btnUp.disabled = true;
                 btnDown.disabled = true;
             } else {
@@ -9099,107 +9530,243 @@ Timestamp: ${new Date().toISOString()}
             isBetActionInProgress = true;
             if(investmentAmount < 0.5) investmentAmount = 0.5;
             if(investmentAmount > 3000) investmentAmount = 3000;
-            updateInvestmentDisplay();
+            updateInvestmentDisplay(); 
             btnUp.disabled = true; btnDown.disabled = true;
 
             try {
-                const user = auth.currentUser;
-                if (!user) { throw new Error('You must be logged in to trade.'); }
-
-                // --- Client-side checks before sending to server ---
+                const uid = auth.currentUser.uid;
+                let multipleTradeViolations = userTaskProgress.multipleTradeViolations || 0;
+                if (myActiveBets.length >= 1) {
+                     if (multipleTradeViolations === 0 && !userTaskProgress.multipleTradeWarningShown) {
+                        multipleTradesWarningModal.classList.add('visible');
+                        await database.ref(`users/${uid}/taskProgress/multipleTradeWarningShown`).set(true);
+                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                        return;
+                     }
+                     multipleTradeViolations++;
+                     await database.ref(`users/${uid}/taskProgress/multipleTradeViolations`).set(multipleTradeViolations);
+                     let banDuration = (multipleTradeViolations === 1) ? (30 * 60 * 1000) : (6 * 24 * 60 * 60 * 1000);
+                     const banUntil = Date.now() + banDuration;
+                     await database.ref(`users/${uid}/bannedUntil`).set(banUntil);
+                     await forceLossAllActiveTrades();
+                     isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                     return;
+                }
+                
                 const minInvestment = 0.5;
                 const maxInvestment = 3000;
-                let currentBalance = isDemoAccount ? demoBalance : (isTournamentAccount ? myTourBalance : balance);
+                let currentBalance = balance;
                 
-                if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) {
-                    throw new Error(`Invalid amount (min ${minInvestment} USDT) or insufficient balance.`);
-                }
-                if (investmentAmount > maxInvestment) {
-                    throw new Error(`Maximum investment is ${maxInvestment} USDT.`);
+                if (isDemoAccount) {
+                    currentBalance = demoBalance;
+                } else if (isTournamentAccount && currentTourData) {
+                    currentBalance = myTourBalance;
                 }
 
+                if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
+                    SoundEngine.warning();
+                    showNotification(`Invalid amount (min ${minInvestment}) or insufficient balance.`, 'loss'); 
+                    isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                    return; 
+                }
+
+                if (investmentAmount > maxInvestment) { 
+                    if (currentBalance > 0 && currentBalance < maxInvestment) {
+                        investmentAmount = currentBalance;
+                        showNotification(`Amount adjusted to your full balance: $${currentBalance.toFixed(2)}`, 'info');
+                    } else {
+                        showNotification(`Maximum investment is ${maxInvestment}.`, 'loss'); 
+                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                        return;
+                    }
+                }
+                
+                const user = auth.currentUser;
+                if (!user) { 
+                    showNotification('You must be logged in to trade.', 'loss'); 
+                    isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                    return; 
+                }
+                
+                const tradeTime = formatTimeLong(expirySettings.value);
+                const tradeMessage = `
+New Trade Placed!
+-------------------------
+User: ${currentUserData.name} (${currentUserData.numericId})
+Market: ${currentMarket}
+Direction: ${direction.toUpperCase()}
+Duration: ${tradeTime}
+Amount: ${investmentAmount.toFixed(2)} USDT
+Balance: ${currentBalance.toFixed(2)} USDT
+-------------------------
+`;
+                // শুধুমাত্র রিয়েল অ্যাকাউন্টের ক্ষেত্রে টেলিগ্রামে মেসেজ যাবে
+                if(!isDemoAccount && !isTournamentAccount) sendTelegramNotification(tradeMessage); 
                 SoundEngine.tradePlaced();
 
-                // Demo & Tournament trades are still handled client-side
-                if (isDemoAccount || isTournamentAccount) {
-                    const liveBaseCandle = historicalData[historicalData.length - 1];
-                    if (!liveBaseCandle) throw new Error('Chart is not ready. Please wait a moment.');
-                    
-                    let openPrice = liveBaseCandle.close;
-                    
-                    const now = Date.now();
-                    let expiryTimestamp;
-                    let resolveOnNextOpen = false;
-                    const timeIntoCandle = (now - liveBaseCandle.timestamp);
+                let realDeduction = (investmentAmount <= realBalance) ? investmentAmount : realBalance;
+                let bonusDeduction = (investmentAmount > realBalance) ? (investmentAmount - realBalance) : 0;
+                
+                let openPrice;
+                const liveBaseCandle = historicalData[historicalData.length - 1];
+                if (!liveBaseCandle) {
+                    showNotification('Chart is not ready. Please wait a moment.', 'info');
+                    isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                    return;
+                }
+                openPrice = liveBaseCandle.close;
 
-                    if (expirySettings.type === 'time') {
-                        const candleEndTime = liveBaseCandle.timestamp + (BASE_TIMEFRAME * 1000);
-                        const candlesToWait = Math.floor(expirySettings.value / 60);
-                        if (timeIntoCandle < 30000) expiryTimestamp = candleEndTime + ((candlesToWait - 1) * (BASE_TIMEFRAME * 1000));
-                        else expiryTimestamp = candleEndTime + (candlesToWait * (BASE_TIMEFRAME * 1000));
-                        resolveOnNextOpen = true;
+                if (forceHighLossRate && Math.random() < 0.3) {
+                    const slippageAmount = openPrice * 0.00005 * (Math.random() + 0.5);
+                    if (direction === 'UP') {
+                        openPrice += slippageAmount;
+                        showNotification('Slippage occurred.', 'info');
                     } else {
-                        expiryTimestamp = now + (expirySettings.value * 1000);
+                        openPrice -= slippageAmount;
+                        showNotification('Slippage occurred.', 'info');
                     }
+                }
 
-                    const betData = {
-                        amount: investmentAmount, direction, openPrice, expiryTimestamp, 
-                        expiryType: expirySettings.type, entryTimestamp: liveBaseCandle.timestamp, 
-                        payoutRate: PAYOUT_RATE, market: currentMarket, resolveOnNextOpen
-                    };
+                const now = Date.now();
+                let expiryTimestamp;
+                let resolveOnNextOpen = false;
+                
+                const timeIntoCandle = (now - liveBaseCandle.timestamp) % (BASE_TIMEFRAME * 1000);
 
-                    if(isDemoAccount) {
-                        betData.id = 'demo_' + Date.now();
-                        betData.isDemo = true;
-                        demoBalance -= investmentAmount;
-                        localStorage.setItem('demoBalance', demoBalance);
-                    } else { // Tournament
-                        betData.id = 'tour_' + Date.now();
-                        betData.isTournament = true;
-                        betData.tourId = currentTourData.id;
-                        myTourBalance -= investmentAmount;
-                        database.ref(`tournaments/${currentTourData.id}/participants/${user.uid}/tourBalance`).set(myTourBalance);
+                if (expirySettings.type === 'time') {
+                    const candleEndTime = liveBaseCandle.timestamp + BASE_TIMEFRAME * 1000;
+                    const nextCandleOpenTime = candleEndTime;
+                    const candlesToWait = Math.floor(expirySettings.value / BASE_TIMEFRAME);
+
+                    if (timeIntoCandle < 30000) {
+                        expiryTimestamp = nextCandleOpenTime + ((candlesToWait - 1) * BASE_TIMEFRAME * 1000);
+                    } else {
+                         expiryTimestamp = nextCandleOpenTime + (candlesToWait * BASE_TIMEFRAME * 1000);
                     }
-                    
-                    myActiveBets.push(betData);
+                    resolveOnNextOpen = true;
+                } else {
+                    expiryTimestamp = now + (expirySettings.value * 1000);
+                    resolveOnNextOpen = false;
+                }
+                
+                if (isDemoAccount) {
+                    localStorage.setItem('lastActiveAccount', 'demo'); // Remember demo account
+                    demoBalance -= investmentAmount;
+                    localStorage.setItem('demoBalance', demoBalance);
                     updateBalance();
+                    
+                    const betData = { 
+                        id: 'demo_' + Date.now() + Math.random().toString(36).substr(2, 5), 
+                        amount: investmentAmount, 
+                        realAmount: 0, 
+                        bonusAmount: 0, 
+                        direction, 
+                        openPrice: openPrice, 
+                        expiryTimestamp, 
+                        expiryType: expirySettings.type, 
+                        entryTimestamp: liveBaseCandle.timestamp, 
+                        payoutRate: PAYOUT_RATE, 
+                        market: currentMarket,
+                        isDemo: true,
+                        resolveOnNextOpen: resolveOnNextOpen
+                    };
+                    myActiveBets.push(betData);
+                    localStorage.setItem('nonRealActiveBets', JSON.stringify(myActiveBets.filter(b => b.isDemo || b.isTournament)));
                     updateTradeControlsState();
-                    return; // End here for demo/tour trades
+                    isBetActionInProgress = false; // Add this line to unlock buttons
+                    return;
                 }
 
-                // --- REAL MONEY TRADE: Send to Server API ---
-                const tradePayload = {
-                    uid: user.uid,
+                // --- TOURNAMENT BETTING LOGIC (inside handleBet) ---
+                if (isTournamentAccount && currentTourData) {
+                    localStorage.setItem('lastActiveAccount', 'tour'); // Remember tournament account
+                    if (investmentAmount > myTourBalance) {
+                        SoundEngine.warning();
+                        showNotification('Insufficient tournament balance.', 'loss'); 
+                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
+                        return;
+                    }
+
+                    const tourLiveCandle = historicalData[historicalData.length - 1];
+                    if (!tourLiveCandle) {
+                        showNotification('Chart is not ready. Please wait.', 'info');
+                        isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false; return;
+                    }
+                    const tourOpenPrice = tourLiveCandle.close;
+                    SoundEngine.tradePlaced();
+
+                    // Deduct from tournament balance only (not real balance)
+                    myTourBalance -= investmentAmount;
+                    database.ref(`tournaments/${currentTourData.id}/participants/${auth.currentUser.uid}/tourBalance`).set(myTourBalance);
+                    updateBalance();
+
+                    const tourNow = Date.now();
+                    let tourExpiryTimestamp;
+                    let tourResolveOnNextOpen = false;
+                    const tourTimeIntoCandle = (tourNow - tourLiveCandle.timestamp) % (BASE_TIMEFRAME * 1000);
+                    if (expirySettings.type === 'time') {
+                        const tourCandleEndTime = tourLiveCandle.timestamp + BASE_TIMEFRAME * 1000;
+                        const tourCandlesToWait = Math.floor(expirySettings.value / BASE_TIMEFRAME);
+                        if (tourTimeIntoCandle < 30000) tourExpiryTimestamp = tourCandleEndTime + ((tourCandlesToWait - 1) * BASE_TIMEFRAME * 1000);
+                        else tourExpiryTimestamp = tourCandleEndTime + (tourCandlesToWait * BASE_TIMEFRAME * 1000);
+                        tourResolveOnNextOpen = true;
+                    } else {
+                        tourExpiryTimestamp = tourNow + (expirySettings.value * 1000);
+                    }
+
+                    const tourBetData = { 
+                        id: 'tour_' + Date.now() + Math.random().toString(36).substr(2, 5), 
+                        amount: investmentAmount, realAmount: 0, bonusAmount: 0, direction, openPrice: tourOpenPrice, 
+                        expiryTimestamp: tourExpiryTimestamp, expiryType: expirySettings.type, entryTimestamp: tourLiveCandle.timestamp, 
+                        payoutRate: PAYOUT_RATE, market: currentMarket,
+                        isTournament: true, tourId: currentTourData.id, resolveOnNextOpen: tourResolveOnNextOpen
+                    };
+                    myActiveBets.push(tourBetData);
+                    localStorage.setItem('nonRealActiveBets', JSON.stringify(myActiveBets.filter(b => b.isDemo || b.isTournament)));
+                    updateTradeControlsState();
+                    isBetActionInProgress = false;
+                    return;
+                }
+                // --- END TOURNAMENT BETTING LOGIC ---
+
+                localStorage.setItem('lastActiveAccount', 'live'); // Remember live account
+                
+                await updateBalances({ realChange: -realDeduction, bonusChange: -bonusDeduction });
+                await database.ref(`users/${user.uid}/taskProgress/tradeVolume`).set(firebase.database.ServerValue.increment(investmentAmount));
+                await database.ref(`users/${user.uid}/taskProgress/currentTradeVolume`).set(firebase.database.ServerValue.increment(investmentAmount));
+                const activeTradesRef = database.ref(`users/${user.uid}/activeTrades`);
+                const newBetRef = activeTradesRef.push();
+                const betData = { 
+                    id: newBetRef.key, 
+                    amount: investmentAmount, 
+                    realAmount: realDeduction, 
+                    bonusAmount: bonusDeduction, 
+                    direction, 
+                    openPrice: openPrice, 
+                    expiryTimestamp, 
+                    expiryType: expirySettings.type, 
+                    entryTimestamp: liveBaseCandle.timestamp, 
+                    payoutRate: PAYOUT_RATE, 
+                    market: currentMarket,
                     marketId: localStorage.getItem('lastMarketId'),
-                    direction,
-                    amount: investmentAmount,
-                    payoutRate: PAYOUT_RATE,
-                    expirySettings
+                    resolveOnNextOpen: resolveOnNextOpen
                 };
-
-                const response = await fetch(`${BACKEND_REST_URL}/api/trade/place`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(tradePayload)
-                });
-
-                const result = await response.json();
-
-                if (!response.ok || !result.success) {
-                    throw new Error(result.error || 'Failed to place trade on server.');
-                }
                 
-                // Server successfully placed the trade. UI is updated via Firebase listener.
+                const betUpdates = {};
+                betUpdates[`/users/${user.uid}/activeTrades/${betData.id}`] = betData;
+                const actualMarketId = localStorage.getItem('lastMarketId');
+                betUpdates[`/admin/markets/${actualMarketId}/activeTrades/${betData.id}`] = { amount: betData.amount, direction: betData.direction, uid: user.uid, timestamp: betData.entryTimestamp };
+                
+                await database.ref().update(betUpdates);
                 updateTradeControlsState();
-                
+
             } catch (error) {
                 console.error("Betting error:", error);
-                showNotification(error.message, 'loss');
-                // The balance is now deducted on the server, so no need to refund from client
+                showNotification('An error occurred. Please try again.', 'loss');
             } finally {
                 setTimeout(() => {
                     isBetActionInProgress = false;
-                    if(myActiveBets.length < 2) {
+                    if(myActiveBets.length < 1) {
                         btnUp.disabled = false;
                         btnDown.disabled = false;
                     }
@@ -9214,7 +9781,7 @@ Timestamp: ${new Date().toISOString()}
             const historyUpdates = {}, activeTradeDeletions = {};
             for (const bet of myActiveBets) {
                 totalLoss += bet.amount;
-                const historyEntry = { id: bet.id, market: bet.market, marketId: bet.marketId || localStorage.getItem('lastMarketId'), direction: bet.direction, openPrice: bet.openPrice, closePrice: bet.openPrice - 0.00001, amount: bet.amount, payout: 0, result: 'loss', timestamp: Date.now(), payoutRate: bet.payoutRate, reason: "Rule Violation" };
+                const historyEntry = { id: bet.id, market: bet.market, marketId: bet.marketId || localStorage.getItem('lastMarketId'), direction: bet.direction, openPrice: bet.openPrice, closePrice: bet.openPrice - 0.00001, amount: bet.amount, payout: 0, result: 'loss', timestamp: Date.now(), entryTimestamp: bet.entryTimestamp, payoutRate: bet.payoutRate, reason: "Rule Violation" };
                 historyUpdates[`/users/${user.uid}/tradeHistory/${bet.id}`] = historyEntry;
                 activeTradeDeletions[`/users/${user.uid}/activeTrades/${bet.id}`] = null;
                 if(bet.marketId) activeTradeDeletions[`/admin/markets/${bet.marketId}/activeTrades/${bet.id}`] = null;
@@ -9232,26 +9799,47 @@ Timestamp: ${new Date().toISOString()}
             if(!liveCandle) return;
 
             myActiveBets.forEach(bet => {
-                const timerWrapper = document.getElementById(`timer-wrapper-${bet.id}`);
                 const timerEl = document.getElementById(`timer-${bet.id}`);
-                const progressCircle = document.getElementById(`progress-${bet.id}`);
+                const livePnlEl = document.getElementById(`live-pnl-${bet.id}`);
+                const historyCard = document.querySelector(`.history-item[data-id="${bet.id}"]`);
 
-                if (timerEl && progressCircle && timerWrapper) {
+                if (timerEl && livePnlEl) {
                     const timeLeft = Math.max(0, (bet.expiryTimestamp - Date.now()) / 1000);
-                    const totalDuration = (bet.expiryTimestamp - bet.entryTimestamp) / 1000;
-                    const progress = 1 - (timeLeft / totalDuration);
-                    
                     timerEl.textContent = formatTimeShort(Math.round(timeLeft));
-                    
-                    const circleLength = 2 * Math.PI * 26;
-                    progressCircle.style.strokeDashoffset = circleLength * (1 - progress);
 
-                    let isWinning = false;
-                    if (bet.direction === 'UP' && liveCandle.close > bet.openPrice) isWinning = true;
-                    if (bet.direction === 'DOWN' && liveCandle.close < bet.openPrice) isWinning = true;
+                    let result = 'push';
+                    const diff = liveCandle.close - bet.openPrice;
                     
-                    timerWrapper.classList.toggle('win', isWinning);
-                    timerWrapper.classList.toggle('loss', !isWinning);
+                    if (diff > 0.000001 && bet.direction === 'UP') result = 'win';
+                    else if (diff < -0.000001 && bet.direction === 'DOWN') result = 'win';
+                    else if ((diff < -0.000001 && bet.direction === 'UP') || (diff > 0.000001 && bet.direction === 'DOWN')) result = 'loss';
+
+                    const betAmount = parseFloat(bet.amount);
+                    const payoutRate = parseFloat(bet.payoutRate) || PAYOUT_RATE;
+                    const expectedPayout = betAmount * payoutRate;
+
+                    if (result === 'win') {
+                        livePnlEl.textContent = `+$${expectedPayout.toFixed(2)}`;
+                        livePnlEl.className = 'qx-pnl-text qx-pnl-win';
+                        if (historyCard) {
+                            historyCard.classList.remove('is-active-down', 'is-push');
+                            historyCard.classList.add('is-active-up');
+                        }
+                    } else if (result === 'loss') {
+                        livePnlEl.textContent = `-$${betAmount.toFixed(2)}`;
+                        livePnlEl.className = 'qx-pnl-text qx-pnl-loss';
+                        if (historyCard) {
+                            historyCard.classList.remove('is-active-up', 'is-push');
+                            historyCard.classList.add('is-active-down');
+                        }
+                    } else {
+                        livePnlEl.textContent = `$0.00`;
+                        livePnlEl.className = 'qx-pnl-text qx-pnl-push';
+                        if (historyCard) {
+                            historyCard.classList.remove('is-active-up', 'is-active-down');
+                            historyCard.classList.add('is-push');
+                        }
+                    }
                 }
             });
         }
@@ -9279,32 +9867,116 @@ Timestamp: ${new Date().toISOString()}
                 let html = '';
                 let lastDate = null;
                 if (list.length === 0) return '<p style="padding-top:20px; text-align:center;">No trades found.</p>';
+                
                 list.forEach(entry => {
-                    const isPending = !!entry.entryTimestamp, entryTimestamp = entry.timestamp || entry.entryTimestamp, date = new Date(entryTimestamp), entryDate = date.toISOString().split('T')[0];
-                    if (entryDate !== lastDate) { html += `<div class="history-date-header">${entryDate}</div>`; lastDate = entryDate; }
-                    const directionIcon = entry.direction === 'UP' ? `<svg class="hi-investment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 4h2v12.17l5.59-5.58L19.99 12l-8 8-8-8 1.41-1.41L11 16.17V4Z" transform="scale(1, -1) translate(0, -24)"/></svg>` : `<svg class="hi-investment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 4h2v12.17l5.59-5.58L19.99 12l-8 8-8-8 1.41-1.41L11 16.17V4Z"/></svg>`;
-                    const directionColor = entry.direction === 'UP' ? 'var(--color-up)' : 'var(--color-down)';
-                    const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                    let resultHTML, detailsHTML = '';
-                    if (isPending) {
-                        resultHTML = `<div class="hi-result">
-<div class="pending-trade-timer" id="timer-wrapper-${entry.id}">
-    <svg class="progress-ring" width="60" height="60">
-       <circle class="progress-ring__circle" stroke-width="4" fill="transparent" r="26" cx="30" cy="30" id="progress-${entry.id}"/>
-    </svg>
-    <span class="timer-text" id="timer-${entry.id}">00:00</span>
-</div>
-</div>`;
-                    } else {
-                        const resultClass = entry.result;
-                        let pnlText = (resultClass === 'win') ? `+${(entry.payout - entry.amount).toFixed(2)} USDT` : (resultClass === 'loss') ? `-${entry.amount.toFixed(2)} USDT` : `${entry.amount.toFixed(2)} USDT`;
-                        resultHTML = `<div class="hi-result"><span class="hi-pnl ${resultClass}">${pnlText}</span><span class="hi-time">${formattedTime}</span></div>`;
-                        const pointDiff = entry.closePrice - entry.openPrice, diffClass = pointDiff >= 0 ? 'win' : 'loss', diffText = `${pointDiff >= 0 ? '+' : ''}${pointDiff.toFixed(5)}`;
-                        detailsHTML = `<div class="history-item-details"><div class="hi-details-grid"><span class="label">Open Price</span><span class="value">${entry.openPrice.toFixed(5)}</span><span class="label">Close Price</span><span class="value">${entry.closePrice.toFixed(5)}</span><span class="label">Point Difference</span><span class="value ${diffClass}">${diffText}</span><span class="label">Trade Time</span><span class="value">${formattedTime}</span><span class="label">Date</span><span class="value">${date.toLocaleDateString()}</span><span class="label">Trade ID</span><span class="value">${entry.id.slice(-8).toUpperCase()}</span></div></div>`;
+                    const isPending = !entry.result;
+                    
+                    const safeEntryTimestamp = entry.entryTimestamp || (entry.timestamp - 60000); 
+                    const safeCloseTimestamp = entry.timestamp || Date.now();
+
+                    const entryDateObj = new Date(safeEntryTimestamp);
+                    const closeDateObj = new Date(safeCloseTimestamp);
+                    
+                    const entryDateStr = entryDateObj.toISOString().split('T')[0];
+                    
+                    if (entryDateStr !== lastDate) { 
+                        html += `<div class="history-date-header">${entryDateStr}</div>`; 
+                        lastDate = entryDateStr; 
                     }
+
+                    const formatTime = (dObj) => {
+                        const dd = String(dObj.getDate()).padStart(2, '0');
+                        const mm = String(dObj.getMonth() + 1).padStart(2, '0');
+                        const hh = String(dObj.getHours()).padStart(2, '0');
+                        const mins = String(dObj.getMinutes()).padStart(2, '0');
+                        return `${dd}/${mm} ${hh}:${mins}`;
+                    };
+
+                    const openTimeFormatted = formatTime(entryDateObj);
+                    const closeTimeFormatted = isPending ? '--/-- --:--' : formatTime(closeDateObj);
+                    
+                    let durationText = "1m";
+                    if (!isPending) {
+                        const diffSecs = Math.round((safeCloseTimestamp - safeEntryTimestamp) / 1000);
+                        if (diffSecs >= 60) {
+                            durationText = Math.round(diffSecs / 60) + "m";
+                        } else {
+                            durationText = diffSecs + "s";
+                        }
+                    }
+
+                    const dirClass = entry.direction === 'UP' ? 'qx-dir-up' : 'qx-dir-down';
+                    const dirSvg = entry.direction === 'UP' 
+                        ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"></polyline></svg>` 
+                        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+
+                    const marketObj = availableMarkets[entry.marketId] || { name: entry.market };
+                    const iconsHtml = getMarketIconHTML(marketObj, 'qx-asset');
+
+                    let borderClass = '';
+                    if (isPending) {
+                        borderClass = entry.direction === 'UP' ? 'is-active-up' : 'is-active-down';
+                    } else {
+                        borderClass = entry.result === 'win' ? 'is-win' : (entry.result === 'loss' ? 'is-loss' : 'is-push');
+                    }
+
+                    let pnlHtml = '';
+                    if (isPending) {
+                        pnlHtml = `<div class="pending-trade-live-info" style="display:flex; flex-direction:column; gap:4px;">
+                            <span class="qx-pnl-text" id="live-pnl-${entry.id}" style="font-size: 1.55rem;">---</span>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8BA0B8" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <span class="qx-d-time" id="timer-${entry.id}" style="font-weight: 700; color: #8BA0B8; font-size: 0.85rem;">00:00</span>
+                            </div>
+                        </div>`;
+                    } else {
+                        const resultClass = entry.result === 'win' ? 'qx-pnl-win' : (entry.result === 'loss' ? 'qx-pnl-loss' : 'qx-pnl-push');
+                        const pnlVal = entry.result === 'win' ? (entry.payout).toFixed(2) : (entry.result === 'loss' ? "0.00" : entry.amount.toFixed(2));
+                        pnlHtml = `<div class="qx-pnl-text ${resultClass}">${pnlVal} $</div>`;
+                    }
+
+                    const payoutRate = entry.payoutRate ? ((entry.payoutRate - 1) * 100).toFixed(2) : "82.00";
+                    const openPrice = entry.openPrice ? entry.openPrice.toFixed(5) : '0.00000';
+                    const closePrice = isPending ? '---' : (entry.closePrice ? entry.closePrice.toFixed(5) : '0.00000');
+
                     const otcSuffix = (entry.market && /\(OTC\)/i.test(entry.market)) || entry.isOtc === false ? "" : ((entry.isOtc === true || (entry.marketId && availableMarkets[entry.marketId] && (availableMarkets[entry.marketId].type || "").toLowerCase() === "otc")) ? " (OTC)" : "");
                     const marketName = entry.market + otcSuffix;
-                    html += `<div class="history-item" data-id="${entry.id}"><div class="history-item-summary"><div class="hi-main-info"><div class="hi-market-info"><span class="star-icon">★</span><span>${marketName}</span><span class="payout">+${Math.abs(((entry.payoutRate || PAYOUT_RATE) - 1) * 100).toFixed(0)}%</span></div><div class="hi-investment"><span style="color: ${directionColor}">${directionIcon}</span><span>${entry.amount.toFixed(2)} USDT</span></div></div>${resultHTML}</div>${detailsHTML}</div>`;
+
+                    html += `
+                    <div class="history-item ${borderClass}" data-id="${entry.id}">
+                        <div class="qx-card-header">
+                            <div class="qx-asset-group">
+                                <div class="qx-asset-icons">${iconsHtml}</div>
+                                <div class="qx-asset-name">${marketName}</div>
+                            </div>
+                            <div class="qx-dir-tag ${dirClass}">${dirSvg} ${entry.direction}</div>
+                        </div>
+                        <div class="qx-card-body">
+                            ${pnlHtml}
+                            <div class="qx-invest-text">${entry.amount.toFixed(2)} $ invested</div>
+                        </div>
+                        <div class="history-item-details">
+                            <div class="qx-details-grid">
+                                <div class="qx-detail-col">
+                                    <span class="qx-d-label">OPEN</span>
+                                    <span class="qx-d-price">${openPrice}</span>
+                                    <span class="qx-d-time">${openTimeFormatted}</span>
+                                </div>
+                                <div class="qx-detail-col right">
+                                    <span class="qx-d-label">CLOSE</span>
+                                    <span class="qx-d-price">${closePrice}</span>
+                                    <span class="qx-d-time">${closeTimeFormatted}</span>
+                                </div>
+                            </div>
+                            <div class="qx-badges-row">
+                                <div class="qx-payout-badge">${payoutRate}%</div>
+                                <div class="qx-duration-badge">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    ${durationText}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
                 });
                 return html;
             };
@@ -9674,7 +10346,7 @@ Timestamp: ${new Date().toISOString()}
                     hit = screenPt.x >= minX && screenPt.x <= maxX && screenPt.y >= minY && screenPt.y <= maxY;
                 } else if (drawing.type === 'curve' && screenPoints.length >= 2) {
                     for (let j = 0; j < screenPoints.length - 1; j++) {
-                        if (distanceToSegment(screenPt.x, screenPt.y, screenPoints[j].x, screenPoints[j].y, screenPoints[j+1].x, screenPoints[j+1].y) <= 10) { hit = true; break; }
+                        if (distanceToSegment(screenPt.x, screenPt.y, screenPoints[j].x, screenPoints[j+1].x, screenPoints[j+1].y) <= 10) { hit = true; break; }
                     }
                 }
                 if (hit) return { drawingId: drawing.id, pointIndex: -1, mode: 'drawing' };
@@ -10395,6 +11067,9 @@ Timestamp: ${new Date().toISOString()}
                 dEyeOpen.style.display = isBalanceVisible ? 'block' : 'none';
                 dEyeClosed.style.display = isBalanceVisible ? 'none' : 'block';
             }
+            
+            // Re-validate durations when account switches
+            ensureValidDuration();
         }
         
         // (Tournament betting logic moved inside handleBet function)
@@ -10430,16 +11105,55 @@ Timestamp: ${new Date().toISOString()}
             showView('deposit-methods'); 
         }
         
+        function getPmStyle(id) {
+            switch(id) {
+                case 'bkash': return { card: 'pm-card-pink', pattern: 'pattern-purple', badge: 'BKASH', rec: false };
+                case 'nagad': return { card: 'pm-card-orange', pattern: 'pattern-gold', badge: 'NAGAD', rec: false };
+                case 'rocket': return { card: 'pm-card-purple', pattern: 'pattern-purple', badge: 'ROCKET', rec: false };
+                case 'binance': return { card: 'pm-card-gold', pattern: 'pattern-gold', badge: 'BEP-20', rec: true };
+                case 'tether': return { card: 'pm-card-green', pattern: 'pattern-green', badge: 'TRC-20', rec: false };
+                case 'hstn-pay': return { card: 'pm-card-blue', pattern: 'pattern-blue', badge: 'POLYGON', rec: false };
+                case 'gpay': return { card: 'pm-card-blue', pattern: 'pattern-blue', badge: 'GPAY', rec: false };
+                case 'telegram_pay': return { card: 'pm-card-blue', pattern: 'pattern-blue', badge: 'TG', rec: false };
+                default: return { card: 'pm-card-blue', pattern: 'pattern-blue', badge: 'PAY', rec: false };
+            }
+        }
+
         function renderNewPaymentMethods() {
             paymentMethodGrid.innerHTML = paymentMethods.map(m => {
                 const isUnavailable = m.status !== 'active';
                 const statusClass = isUnavailable ? m.status.replace('_', '-') : '';
-                const baseClass = `payment-method-item ${statusClass}`;
-                const content = `${isUnavailable ? `<div class="pm-status-badge pm-status-${statusClass}">${m.status.replace('_',' ')}</div>` : ''}<img src="${m.logo}" alt="${m.name}"><span>${m.name}</span>`;
+                const style = getPmStyle(m.id);
+                
+                const baseClass = `premium-pm-card ${style.card} ${statusClass}`;
+                
+                let extraTags = '';
+                if (isUnavailable) {
+                    extraTags = `<div class="pm-status-tag pm-status-${statusClass}">${m.status.replace('_',' ')}</div>`;
+                } else if (style.rec) {
+                    extraTags = `<div class="pm-status-tag pm-recommended"><span style="color:#FBBF24;">⚡</span> Fast</div>`;
+                }
+
+                const content = `
+                    <div class="pm-pattern ${style.pattern}"></div>
+                    <div class="pm-card-top">
+                        <div class="pm-card-logo-wrap">
+                            <img src="${m.logo}" alt="${m.name}" class="pm-card-logo">
+                        </div>
+                        <div class="pm-card-badge">${style.badge}</div>
+                    </div>
+                    <div class="pm-card-bottom">
+                        <div class="pm-card-title">${m.name}</div>
+                        <div class="pm-card-subtitle">Min. $5</div>
+                    </div>
+                    ${extraTags}
+                `;
+
                 if (m.link) { return `<a href="${m.link}" target="_blank" class="${baseClass}">${content}</a>`; }
                 return `<div class="${baseClass}" data-method-id="${m.id}" ${isUnavailable ? 'aria-disabled="true"' : ''}>${content}</div>`;
             }).join('');
-            paymentMethodGrid.querySelectorAll('.payment-method-item:not(a):not([aria-disabled="true"])').forEach(item => {
+            
+            paymentMethodGrid.querySelectorAll('.premium-pm-card:not(a):not([aria-disabled="true"])').forEach(item => {
                 item.addEventListener('click', (e) => {
                     const methodId = e.currentTarget.dataset.methodId;
                     const selectedMethod = paymentMethods.find(m => m.id === methodId);
@@ -11385,6 +12099,13 @@ Please check the admin panel to approve.
                 return false;
             }
         }
+        
+        function displayAppVersion() {
+            const versionEl = document.getElementById('app-version-display');
+            if (versionEl && typeof APP_VERSION !== 'undefined') {
+                versionEl.textContent = `App Version: ${APP_VERSION}`;
+            }
+        }
 
         function initMentorPage() {
             const user = auth.currentUser;
@@ -12017,6 +12738,13 @@ Please check the admin panel to approve.
             document.getElementById('admin-bkash-maint').checked = adminPaymentSettings.bkashMaint || false;
             document.getElementById('admin-nagad-maint').checked = adminPaymentSettings.nagadMaint || false;
             document.getElementById('admin-rocket-maint').checked = adminPaymentSettings.rocketMaint || false;
+            
+            document.getElementById('admin-real-1m').checked = adminDurationSettings.real.m1;
+            document.getElementById('admin-real-2m').checked = adminDurationSettings.real.m2;
+            document.getElementById('admin-demo-1m').checked = adminDurationSettings.demo.m1;
+            document.getElementById('admin-demo-2m').checked = adminDurationSettings.demo.m2;
+            document.getElementById('admin-tour-1m').checked = adminDurationSettings.tour.m1;
+            document.getElementById('admin-tour-2m').checked = adminDurationSettings.tour.m2;
         }
 
         async function saveAdminPaymentSettings() {
@@ -12034,10 +12762,17 @@ Please check the admin panel to approve.
                 nagadMaint: document.getElementById('admin-nagad-maint').checked,
                 rocketMaint: document.getElementById('admin-rocket-maint').checked
             };
+            
+            const durSettings = {
+                real: { m1: document.getElementById('admin-real-1m').checked, m2: document.getElementById('admin-real-2m').checked },
+                demo: { m1: document.getElementById('admin-demo-1m').checked, m2: document.getElementById('admin-demo-2m').checked },
+                tour: { m1: document.getElementById('admin-tour-1m').checked, m2: document.getElementById('admin-tour-2m').checked }
+            };
 
             try {
                 await database.ref('admin/settings/payments').set(settings);
-                showNotification('Payment settings updated successfully.', 'win');
+                await database.ref('admin/settings/durations').set(durSettings);
+                showNotification('Settings updated successfully.', 'win');
             } catch(e) {
                 console.error(e);
                 showNotification('Failed to save settings.', 'loss');
@@ -12122,61 +12857,39 @@ Please check the admin panel to approve.
             }
         };
             
-        let tradeHistoryListener = null; // Listener reference
-        
-        function handleTradeResultFromServer(trade) {
-            // This is the single source of truth for a REAL trade's result.
-            // This function is called ONLY when the server confirms a result.
-            
-            const profitChange = trade.payout - trade.amount;
-            let pnlText, messageClass;
-
-            if (trade.result === 'win') {
-                pnlText = `+USDT ${(profitChange).toFixed(2)}`;
-                messageClass = 'win';
-                SoundEngine.win();
-            } else if (trade.result === 'loss') {
-                pnlText = `-USDT ${trade.amount.toFixed(2)}`;
-                messageClass = 'loss';
-                SoundEngine.loss();
-            } else { // push
-                pnlText = `USDT ${trade.amount.toFixed(2)} Returned`;
-                messageClass = 'push';
-            }
-
-            // Show the result popup from the queue
-            addTradeResultToQueue({ pnlText, resultClass: messageClass, market: trade.market });
-
-            // The main user data listener already handles the balance update from the server transaction.
-            // Leaderboard and other stats are also handled by server-side logic and reflected via user data listener.
-            // This function is purely for triggering the immediate UI feedback (popup and sound).
-        }
-
-        function listenForTradeResults(uid) {
-            if (tradeHistoryListener) {
-                tradeHistoryListener.off(); // Detach old listener to prevent duplicates
-            }
-            const tradeHistoryRef = database.ref(`users/${uid}/tradeHistory`);
-            
-            // Listen for new trades added from now on
-            tradeHistoryListener = tradeHistoryRef.orderByChild('timestamp').startAt(Date.now() - 5000); // Look back 5s to catch any immediate resolutions
-            
-            tradeHistoryListener.on('child_added', (snapshot) => {
-                const tradeResult = snapshot.val();
-                if (!tradeResult) return;
-                
-                // Check if this trade was already processed by the client (e.g. on page load)
-                const isAlreadyInHistory = tradeHistory.some(t => t.id === tradeResult.id);
-                if (isAlreadyInHistory) return;
-
-                // Process the result from the server
-                handleTradeResultFromServer(tradeResult);
-            });
-        }
-        
         async function initApp(user) {
             const uid = user.uid;
+
+            // ===============================================
+            // 🔥 REAL-TIME SESSION CONTROL (SINGLE DEVICE LOGIN) 🔥
+            // ===============================================
+            const currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const userSessionRef = database.ref(`users/${uid}/activeSessionId`);
             
+            userSessionRef.set(currentSessionId);
+
+            userSessionRef.on('value', (snapshot) => {
+                const latestSessionId = snapshot.val();
+                
+                if (latestSessionId && latestSessionId !== currentSessionId) {
+                    console.warn("New login detected from another device. Logging out this session.");
+                    userSessionRef.off(); 
+                    
+                    const modal = document.getElementById('session-expired-modal');
+                    modal.classList.add('visible');
+                    
+                    document.getElementById('session-expired-ok-btn').onclick = () => {
+                        auth.signOut(); // This will trigger the page reload automatically
+                    };
+                }
+            });
+            // ===============================================
+            
+            // Restore last active account state after refresh
+            const lastAccountType = localStorage.getItem('lastActiveAccount');
+            isDemoAccount = lastAccountType === 'demo';
+            isTournamentAccount = lastAccountType === 'tour';
+
             window.OneSignalDeferred.push(function(OneSignal) {
                 OneSignal.setExternalUserId(uid);
             });
@@ -12190,11 +12903,7 @@ Please check the admin panel to approve.
             initTradeOptionsModal();
 
 
-            // Call the new listener for real-money trade results
-            listenForTradeResults(uid);
-
             if (tradeResolutionInterval) clearInterval(tradeResolutionInterval);
-            // This interval now ONLY handles local demo/tournament trades
             tradeResolutionInterval = setInterval(() => {
                 resolveExpiredBets(false); 
                 setTimeout(() => resolveExpiredBets(true), 500); 
@@ -12623,8 +13332,12 @@ Please check the admin panel to approve.
             });
 
             database.ref('users/' + uid + '/activeTrades').on('value', (snapshot) => {
-                myActiveBets = snapshot.exists() ? Object.values(snapshot.val()) : [];
-                resolvePendingTradesOnLogin(uid);
+                const realTrades = snapshot.exists() ? Object.values(snapshot.val()) : [];
+                const nonRealTrades = JSON.parse(localStorage.getItem('nonRealActiveBets') || '[]');
+                
+                // Combine real trades from Firebase and non-real trades from localStorage
+                myActiveBets = [...realTrades, ...nonRealTrades];
+
                 if (currentView === 'history') renderTradeHistory();
                 updateHistoryBadge(); updateTradeControlsState();
             });
@@ -12863,17 +13576,19 @@ Please check the admin panel to approve.
             btnDown.addEventListener('click', () => handleBet('DOWN'));
             
             expiryMinusBtn.addEventListener('click', () => {
-                const currentIndex = timeSteps.indexOf(expirySettings.value);
+                const allowed = getAvailableDurations();
+                const currentIndex = allowed.indexOf(expirySettings.value);
                 if (currentIndex > 0) {
-                    expirySettings.value = timeSteps[currentIndex - 1];
+                    expirySettings.value = allowed[currentIndex - 1];
                      localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
                     updateExpiryDisplay();
                 }
             });
             expiryPlusBtn.addEventListener('click', () => {
-                const currentIndex = timeSteps.indexOf(expirySettings.value);
-                if (currentIndex < timeSteps.length - 1) {
-                    expirySettings.value = timeSteps[currentIndex + 1];
+                const allowed = getAvailableDurations();
+                const currentIndex = allowed.indexOf(expirySettings.value);
+                if (currentIndex < allowed.length - 1) {
+                    expirySettings.value = allowed[currentIndex + 1];
                      localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
                     updateExpiryDisplay();
                 }
@@ -13103,6 +13818,54 @@ Please check the admin panel to approve.
             deleteAccountLinkProfile.addEventListener('click', () => { deleteAccountModal.classList.add('visible'); });
             deleteAccountModal.addEventListener('click', (e) => { if (e.target === deleteAccountModal) deleteAccountModal.classList.remove('visible'); });
             deleteAccountForm.addEventListener('submit', (e) => { e.preventDefault(); handleDeleteAccountRequest(); });
+            
+            // ================= 2FA SETUP LOGIC =================
+            let temp2FASecret = '';
+            document.getElementById('setup-2fa-btn').addEventListener('click', () => {
+                if (currentUserData.twoFactorEnabled) {
+                    if(confirm('2FA is currently ENABLED. Do you want to disable it?')) {
+                        database.ref(`users/${auth.currentUser.uid}`).update({ twoFactorEnabled: false, twoFactorSecret: null });
+                        showNotification('2FA has been disabled.', 'info');
+                    }
+                    return;
+                }
+                
+                // Generate Secret
+                temp2FASecret = otplib.authenticator.generateSecret();
+                const otpauth = otplib.authenticator.keyuri(currentUserData.email, 'ICTEX Trade', temp2FASecret);
+                
+                // Render QR Code
+                const qrContainer = document.getElementById('qrcode-container');
+                qrContainer.innerHTML = '';
+                new QRCode(qrContainer, { text: otpauth, width: 150, height: 150 });
+                document.getElementById('secret-key-display').textContent = temp2FASecret;
+                document.getElementById('setup-2fa-code').value = '';
+                
+                document.getElementById('two-fa-setup-modal').classList.add('visible');
+            });
+
+            document.getElementById('cancel-2fa-setup').addEventListener('click', () => {
+                document.getElementById('two-fa-setup-modal').classList.remove('visible');
+            });
+
+            document.getElementById('confirm-2fa-setup').addEventListener('click', async () => {
+                const code = document.getElementById('setup-2fa-code').value;
+                if(code.length !== 6) { showNotification('Enter 6 digit code.', 'loss'); return; }
+                
+                const isValid = otplib.authenticator.check(code, temp2FASecret);
+                if (isValid) {
+                    await database.ref(`users/${auth.currentUser.uid}`).update({
+                        twoFactorEnabled: true,
+                        twoFactorSecret: temp2FASecret
+                    });
+                    document.getElementById('two-fa-setup-modal').classList.remove('visible');
+                    showNotification('2FA Successfully Enabled!', 'win');
+                } else {
+                    showNotification('Invalid code. Try again.', 'loss');
+                }
+            });
+            // ===================================================
+
             cancelDeletionBtn.addEventListener('click', async () => {
                 const user = auth.currentUser;
                 if (user && confirm("Are you sure you want to cancel your account deletion request?")) {
@@ -13319,7 +14082,6 @@ Please check the admin panel to approve.
                 btn.textContent = 'Claim $0.35 Daily Bonus';
             }
         }
-
         
         function setupVisibilitySlider(sliderId, settingKey) {
             const slider = document.getElementById(sliderId + '-slider');
@@ -14221,13 +14983,13 @@ Please check the admin panel to approve.
             function updateInvestmentDisplay() {
                 const formatDisplayValue = Number.isInteger(investmentAmount) ? investmentAmount.toString() : investmentAmount.toFixed(2);
                 
-                amountDisplayNew.textContent = `USDT ${formatDisplayValue}`;
+                amountDisplayNew.textContent = `$ ${formatDisplayValue}`;
 
                 const profit = investmentAmount * (PAYOUT_RATE - 1);
-                payoutAmountNew.textContent = `+USDT ${Math.abs(profit).toFixed(2)}`;
+                payoutAmountNew.textContent = `+$ ${Math.abs(profit).toFixed(2)}`;
                 
                 const sublabel = document.getElementById('amount-sublabel');
-                if(sublabel) sublabel.textContent = `USDT ${formatDisplayValue}`;
+                if(sublabel) sublabel.textContent = `$ ${formatDisplayValue}`;
             }
 
             function updateTradeOptionsModalUI() {
@@ -14242,7 +15004,7 @@ Please check the admin panel to approve.
                 updateExpiryDisplay();
                 
                 const timeOptionsGrid = document.getElementById('time-options-grid');
-                const durationOptions = [300, 360, 420, 480, 540, 600, 900, 1800];
+                const durationOptions = getAvailableDurations();
                 timeOptionsGrid.innerHTML = durationOptions.map(value => {
                     const isActive = expirySettings.value === value;
                     return `<button data-value="${value}" class="${isActive ? 'active' : ''}">${formatTimeShort(value)}</button>`;
@@ -14452,6 +15214,54 @@ Please check the admin panel to approve.
             </button>
         </div>
     </div>
+
+    <!-- 2FA Setup Modal -->
+    <div class="modal-overlay" id="two-fa-setup-modal" style="z-index: 10005;">
+        <div class="modal-content" style="text-align: center;">
+            <h3 style="margin-top: 0; color: #fff;">Setup Google Authenticator</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px;">Scan the QR code with your Google Authenticator app, then enter the 6-digit code below to verify.</p>
+            <div id="qrcode-container" style="background: white; padding: 10px; border-radius: 8px; display: inline-block; margin-bottom: 15px;"></div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); font-family: monospace; user-select: text;" id="secret-key-display"></p>
+            <div class="form-input-group">
+                <input type="text" id="setup-2fa-code" class="form-input" placeholder="Enter 6-digit code" maxlength="6" style="text-align: center; font-size: 1.2rem; letter-spacing: 5px; font-weight: bold;">
+            </div>
+            <div class="modal-button-row" style="margin-top: 15px;">
+                <button id="cancel-2fa-setup" class="modal-button secondary">Cancel</button>
+                <button id="confirm-2fa-setup" class="modal-button primary">Verify & Enable</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Login Verification Modal -->
+    <div class="modal-overlay" id="two-fa-verify-modal" style="z-index: 10005; background: #0b0f19;">
+        <div class="modal-content" style="text-align: center; background: #161b24; border: 1px solid var(--color-accent);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="currentColor" style="color:var(--color-accent); margin: 0 auto 15px auto;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            <h3 style="margin-top: 0; color: #fff;">Two-Factor Authentication</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">Open your authenticator app and enter the 6-digit code to log in.</p>
+            <div class="form-input-group">
+                <input type="text" id="login-2fa-code" class="form-input" placeholder="000000" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 8px; font-weight: bold;">
+            </div>
+            <button id="verify-login-2fa" class="save-button" style="width: 100%; margin-top: 20px;">Verify Code</button>
+            <button id="cancel-login-2fa" style="background: none; border: none; color: var(--color-down); margin-top: 15px; cursor: pointer;">Cancel Login</button>
+        </div>
+    </div>
+
+    <!-- Premium Forced Logout Modal -->
+    <div class="modal-overlay" id="session-expired-modal" style="z-index: 10001;">
+        <div id="session-expired-card" class="modal-content" style="text-align: center; gap: 15px; max-width: 340px; background: #1a1d21; border: 1px solid rgba(255, 77, 94, 0.2); animation: popIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);">
+            <div id="session-icon-container" style="width: 70px; height: 70px; margin: 0 auto; background: rgba(255, 77, 94, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 77, 94, 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-down)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 style="margin: 0; font-size: 1.3rem; color: #fff;">Session Expired</h3>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">Your account was accessed from another device. For your security, this session has been logged out.</p>
+            <button id="session-expired-ok-btn" class="modal-button primary" style="margin-top: 10px; background: var(--color-down);">OK</button>
+        </div>
+    </div>
+    <style> @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } } </style>
 
 </body>
 </html>
