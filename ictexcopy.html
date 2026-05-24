@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Social Trading - ICTEX</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0B0E14', surface: '#1A1F2A', surfaceLight: '#242B38',
+                        ictexGreen: '#0CCF56', ictexBlue: '#2962FF', textDim: '#8BA0B8',
+                        cardBg: '#161A23', tourRed: '#E53935', gold: '#FFC107'
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        body { background-color: #0B0E14; color: #ffffff; -webkit-tap-highlight-color: transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .modal-active { opacity: 1 !important; pointer-events: auto !important; }
+        .modal-active > div { transform: scale(1) !important; }
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(30, 37, 50, 0.9), rgba(15, 20, 28, 0.95));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        /* Top Navigation (Header) */
+        .top-nav {
+            position: sticky; top: 0; left: 0; width: 100%;
+            background: rgba(11, 14, 20, 0.95); backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px 5px; z-index: 50;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #8BA0B8; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            transition: all 0.3s; flex: 1;
+        }
+        .nav-item svg { width: 22px; height: 22px; transition: transform 0.3s; opacity: 0.7; }
+        .nav-item.active { color: #2962FF; }
+        .nav-item.active svg { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 4px 6px rgba(41,98,255,0.4)); }
+        
+        /* View Switching */
+        .view-section { display: none; height: calc(100vh - 65px); overflow-y: auto; padding-bottom: 20px; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .search-bar-wrap { position: sticky; top: 0; z-index: 40; background: #0B0E14; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        /* Power Button inside settings */
+        .settings-power-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #8BA0B8; }
+        .settings-power-btn.active { color: #0CCF56; box-shadow: inset 0 0 15px rgba(12, 207, 86, 0.4), 0 0 10px rgba(12, 207, 86, 0.2); border-color: rgba(12, 207, 86, 0.5); }
+        .settings-power-btn.inactive { color: #E53935; box-shadow: inset 0 0 15px rgba(229, 57, 53, 0.4), 0 0 10px rgba(229, 57, 53, 0.2); border-color: rgba(229, 57, 53, 0.5); }
+
+        /* Profile Pic with Flag */
+        .trader-pfp-wrapper { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+        .trader-pfp { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #2962FF; object-fit: cover; background: #1A1F2A; padding: 2px; }
+        .trader-flag { position: absolute; bottom: -2px; right: -2px; width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: 2px solid #161A23; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
+        .badge-icon-img { width: 16px; height: 16px; object-fit: contain; margin-left: 6px; display: inline-block; vertical-align: middle; margin-top: -2px; }
+
+        /* Request Badge */
+        .req-badge { font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .req-pending { background: rgba(245, 158, 11, 0.2); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.4); }
+    </style>
+</head>
+<body class="antialiased flex flex-col h-screen overflow-hidden bg-[url('https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/bg-blur.jpg')] bg-cover bg-center">
+    <div class="absolute inset-0 bg-[#0B0E14]/90 z-[-1]"></div>
+
+    <!-- TOP NAVIGATION (HEADER) -->
+    <nav class="top-nav">
+        <button onclick="window.parent.postMessage({ type: 'GO_BACK_FROM_COPY_TRADING' }, '*');" class="flex flex-col items-center gap-1 text-white/50 hover:text-white transition w-12 ml-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Back</span>
+        </button>
+        <div class="flex flex-1 justify-around">
+            <button class="nav-item active" data-nav="traders">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Find Master
+            </button>
+            <button class="nav-item" data-nav="trades">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                History
+            </button>
+            <button class="nav-item" data-nav="management">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                Manage
+            </button>
+            <button class="nav-item" data-nav="settings">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Settings
+            </button>
+        </div>
+    </nav>
+
+    <!-- Generic Notice Modal -->
+    <div id="custom-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card rounded-2xl w-full max-w-sm p-6 transform scale-95 transition-transform duration-300 relative overflow-hidden">
+            <h3 id="custom-modal-title" class="text-xl font-bold mb-2 text-center text-white relative z-10">Notice</h3>
+            <p id="custom-modal-message" class="text-textDim text-sm mb-6 leading-relaxed text-center relative z-10"></p>
+            <button onclick="closeCustomModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-ictexBlue to-[#1C44B2] text-white font-bold transition active:scale-95 shadow-[0_4px_15px_rgba(41,98,255,0.3)] relative z-10">OK</button>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWS CONTAINER -->
+    <div id="main-views-container" class="flex-1 w-full relative">
+
+        <!-- ======================= -->
+        <!-- VIEW 1: TRADERS (FEED)  -->
+        <!-- ======================= -->
+        <div id="view-traders" class="view-section active hide-scrollbar">
+            <div class="search-bar-wrap">
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <h3 class="text-white font-black text-lg">Search Master</h3>
+                </div>
+                <div class="relative">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-textDim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="trader-search-input" onkeyup="filterTraders()" class="w-full bg-[#0B0E14]/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white text-sm focus:border-ictexBlue focus:outline-none transition-colors" placeholder="Enter Exact Trader UID...">
+                </div>
+                <p class="text-[10px] text-textDim text-center mt-3">You must know a Trader's specific UID to find and join them.</p>
+            </div>
+
+            <div class="p-4 flex flex-col gap-4" id="traders-feed-list">
+                <!-- Search state empty prompt -->
+                <div class="text-center pt-16 pb-10">
+                    <div class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4 shadow-lg mx-auto">
+                        <svg class="w-8 h-8 opacity-40 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-lg tracking-wide mb-2">Search to Connect</h3>
+                    <p class="text-xs text-textDim px-6 leading-relaxed">Enter a master trader's unique ID above to view their profile and send a join request.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- VIEW 2: TRADES (HISTORY)-->
+        <!-- ======================= -->
+        <div id="view-trades" class="view-section hide-scrollbar">
+            <div class="p-4 pt-6">
+                <h3 class="text-[11px] font-bold text-textDim uppercase tracking-widest mb-3">Live Active Trades</h3>
+                <div id="copy-active-trades-list" class="flex flex-col gap-3 mb-8">
+                    <!-- Active copied trades -->
+                </div>
+
+                <h3 class="text-[11px] font-bold text-textDim uppercase tracking-widest mb-3 border-b border-white/10 pb-2">Trade History</h3>
+                <div id="copy-history-trades-list" class="flex flex-col gap-2">
+                    <!-- Past copied trades -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- VIEW 3: MANAGEMENT      -->
+        <!-- ======================= -->
+        <div id="view-management" class="view-section hide-scrollbar">
+            <div class="p-4 pt-6">
+                <h3 class="text-[11px] font-bold text-textDim uppercase tracking-widest mb-3">My Connected Masters</h3>
+                <div id="active-subs-list" class="flex flex-col gap-4 mb-8">
+                    <!-- Active Connections -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- VIEW 4: SETTINGS        -->
+        <!-- ======================= -->
+        <div id="view-settings" class="view-section hide-scrollbar">
+            <div class="p-4 pt-6">
+                <!-- Dashboard Top -->
+                <div class="glass-card rounded-[20px] p-5 relative overflow-hidden mb-6">
+                    <div class="absolute top-[-20px] right-[-20px] w-[150px] h-[150px] bg-ictexBlue/20 blur-3xl rounded-full pointer-events-none"></div>
+                    <div class="flex justify-between items-center mb-2 relative z-10">
+                        <span class="text-[11px] font-bold text-textDim uppercase tracking-widest">Copy Wallet</span>
+                        
+                        <!-- Power Icon for Auto Trade inside wallet box -->
+                        <button id="settings-power-btn" class="settings-power-btn w-9 h-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 shadow-lg" onclick="toggleAutoTradeGlobal()">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"></path></svg>
+                        </button>
+                    </div>
+                    <div class="text-3xl font-black text-white mb-5 tracking-tight relative z-10" id="setting-wallet-bal">$0.00</div>
+                    <div class="flex gap-3 relative z-10">
+                        <button onclick="openTransferModal('in')" class="flex-1 bg-green-500/10 border border-green-500/30 text-green-400 font-bold py-3 rounded-xl text-sm transition hover:bg-green-500/20">Add Funds</button>
+                        <button onclick="openTransferModal('out')" class="flex-1 bg-red-500/10 border border-red-500/30 text-red-400 font-bold py-3 rounded-xl text-sm transition hover:bg-red-500/20">Transfer Out</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-6">
+                    <div class="bg-surfaceLight rounded-xl border border-white/5 p-3 text-center">
+                        <span class="block text-[9px] text-textDim font-bold uppercase mb-1">Overall P/L</span>
+                        <span class="block text-lg font-black text-ictexGreen" id="set-total-earned">$0.00</span>
+                    </div>
+                    <div class="bg-surfaceLight rounded-xl border border-white/5 p-3 text-center">
+                        <span class="block text-[9px] text-textDim font-bold uppercase mb-1">Active Connections</span>
+                        <span class="block text-lg font-black text-white" id="set-total-connections">0</span>
+                    </div>
+                </div>
+
+                <!-- Master Mode Button -->
+                <button onclick="openMasterDashboard()" class="w-full glass-card rounded-2xl p-4 flex justify-between items-center hover:bg-white/5 transition mb-3 group border border-white/10 shadow-lg">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-ictexBlue/20 rounded-full flex items-center justify-center text-ictexBlue group-hover:scale-110 transition shadow-[0_0_15px_rgba(41,98,255,0.3)]">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-white font-black text-[16px] tracking-wide mb-0.5">Master Dashboard</h3>
+                            <p class="text-[11px] text-textDim font-medium">Allow others to copy your trades</p>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-textDim group-hover:text-white transition transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <!-- My Copiers Button -->
+                <button onclick="openMasterCopiers()" class="w-full glass-card rounded-2xl p-4 flex justify-between items-center hover:bg-white/5 transition mb-8 group border border-white/10 shadow-lg">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-ictexGreen/20 rounded-full flex items-center justify-center text-ictexGreen group-hover:scale-110 transition shadow-[0_0_15px_rgba(12,207,86,0.3)]">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-white font-black text-[16px] tracking-wide mb-0.5">My Copy Users</h3>
+                            <p class="text-[11px] text-textDim font-medium">Manage followers & join requests</p>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-textDim group-hover:text-white transition transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- VIEW 5: MASTER DASHBOARD-->
+        <!-- ======================= -->
+        <div id="view-master-dashboard" class="view-section hide-scrollbar">
+            <div class="p-4 pt-4">
+                <button onclick="closeMasterDashboard()" class="flex items-center gap-2 text-textDim hover:text-white transition font-bold text-xs uppercase tracking-widest mb-5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg> Back to Settings
+                </button>
+
+                <div class="glass-card rounded-2xl p-5 relative overflow-hidden mb-6 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+                    <div class="flex justify-between items-center mb-4 relative z-10 border-b border-white/5 pb-3">
+                        <h2 class="text-lg font-black text-white">Master Profile Setup</h2>
+                        <span class="text-[10px] text-textDim font-mono">UID: <span id="master-uid-display"></span></span>
+                    </div>
+                    
+                    <div class="flex-col gap-5 mb-5 relative z-10 pt-2" id="master-visibility-container">
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[11px] font-bold text-white uppercase tracking-wider block">1. Profile Visibility</span>
+                                <span class="text-[9px] text-textDim">Turn on to allow users to search and find you via UID.</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="master-visibility-toggle" class="sr-only peer">
+                                <div class="w-9 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-ictexGreen"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[11px] font-bold text-white uppercase tracking-wider block">2. Broadcast Trades</span>
+                                <span class="text-[9px] text-textDim">Turn on to automatically copy your trades to connected users.</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="master-broadcast-toggle" class="sr-only peer">
+                                <div class="w-9 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-ictexBlue"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[11px] font-bold text-warning uppercase tracking-wider block">3. Require Approval</span>
+                                <span class="text-[9px] text-textDim">If ON, users must send a request to join you.</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="master-approval-toggle" class="sr-only peer">
+                                <div class="w-9 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-warning"></div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-4 relative z-10 border-t border-white/5 pt-4">
+                        <div id="master-req-warning" class="bg-tourRed/10 border border-tourRed/30 p-3 rounded-xl hidden">
+                            <p class="text-xs text-tourRed font-bold mb-1 flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> Requirement Not Met</p>
+                            <p class="text-[10px] text-tourRed/80">You need a minimum of <b>$100.00</b> in your Copy Wallet to activate Master Profile & Visibility.</p>
+                        </div>
+
+                        <div>
+                            <label class="text-[11px] font-bold text-textDim uppercase tracking-wider mb-2 block">Write a short post/bio</label>
+                            <textarea id="master-bio-input" class="w-full bg-[#0B0E14]/50 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:border-ictexBlue focus:outline-none transition-colors" rows="3" placeholder="Tell others about your trading strategy..."></textarea>
+                        </div>
+                        
+                        <button id="save-master-btn" onclick="saveMasterSettings()" class="w-full mt-2 py-3.5 rounded-xl bg-gradient-to-r from-ictexBlue to-[#1C44B2] text-white font-bold shadow-[0_4px_15px_rgba(41,98,255,0.3)] active:scale-95 transition">Save Master Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================= -->
+        <!-- VIEW 6: MY COPIERS      -->
+        <!-- ======================= -->
+        <div id="view-master-copiers" class="view-section hide-scrollbar">
+            <div class="p-4 pt-4">
+                <button onclick="closeMasterCopiers()" class="flex items-center gap-2 text-textDim hover:text-white transition font-bold text-xs uppercase tracking-widest mb-6">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg> Back to Settings
+                </button>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-5">
+                    <button id="tab-active-copiers" onclick="switchCopierTab('active')" class="flex-1 py-2 bg-ictexBlue text-white rounded-lg text-xs font-bold transition">Active Users</button>
+                    <button id="tab-pending-requests" onclick="switchCopierTab('requests')" class="flex-1 py-2 bg-[#0B0E14] text-textDim border border-white/10 rounded-lg text-xs font-bold transition">Pending Requests</button>
+                </div>
+
+                <div id="master-copiers-list-container">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-black text-white">Connected Users</h2>
+                        <span id="total-copiers-count" class="bg-ictexGreen text-black font-black text-[11px] px-3 py-1.5 rounded-xl shadow-[0_4px_10px_rgba(12,207,86,0.3)]">0</span>
+                    </div>
+                    <div id="master-copiers-list" class="flex flex-col gap-3 relative z-10 pb-10">
+                        <div class="text-center text-textDim text-xs py-5">Loading users...</div>
+                    </div>
+                </div>
+
+                <div id="master-requests-list-container" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-black text-warning">Join Requests</h2>
+                        <span id="total-requests-count" class="bg-warning text-black font-black text-[11px] px-3 py-1.5 rounded-xl shadow-[0_4px_10px_rgba(245,158,11,0.3)]">0</span>
+                    </div>
+                    <div id="master-requests-list" class="flex flex-col gap-3 relative z-10 pb-10">
+                        <!-- Requests load here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modals (Transfer) -->
+    <div id="transfer-modal" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card rounded-3xl w-full max-w-sm p-6 transform scale-95 transition-transform duration-300 relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.7)] border border-white/10">
+            <!-- Glow background -->
+            <div id="transfer-glow" class="absolute -top-10 -right-10 w-[150px] h-[150px] blur-3xl rounded-full pointer-events-none opacity-20"></div>
+            
+            <div class="flex justify-between items-center mb-6 relative z-10">
+                <h3 class="text-xl font-black text-white tracking-wide" id="transfer-title">Transfer</h3>
+                <button onclick="closeTransferModal()" class="text-textDim hover:text-white transition bg-white/5 p-2 rounded-xl border border-white/10">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="bg-[#0B0E14]/60 rounded-2xl p-4 mb-5 border border-white/5 relative z-10">
+                <div class="flex justify-between items-center mb-1 text-sm">
+                    <span class="text-textDim font-medium">From: <b class="text-white" id="transfer-from-lbl"></b></span>
+                    <span class="text-textDim font-medium">To: <b class="text-white" id="transfer-to-lbl"></b></span>
+                </div>
+            </div>
+
+            <div class="relative mb-2 z-10">
+                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-white/40 font-black text-2xl">$</span>
+                <input type="number" id="transfer-amount" class="w-full bg-[#0B0E14]/80 border border-white/10 rounded-2xl py-4 pl-10 pr-4 text-white font-bold text-lg focus:border-ictexBlue focus:outline-none transition-colors shadow-inner" placeholder="0.00" oninput="calculateRealTimeFee()">
+            </div>
+            
+            <!-- Real-time fee calculation box (Hidden by default) -->
+            <div id="realtime-fee-box" class="hidden flex-col gap-1 mb-6 px-2 relative z-10">
+                <div class="flex justify-between text-xs font-semibold">
+                    <span class="text-textDim">Network Fee (5%):</span>
+                    <span class="text-tourRed" id="fee-amount-display">-$0.00</span>
+                </div>
+                <div class="flex justify-between text-sm font-black border-t border-white/5 pt-1 mt-1">
+                    <span class="text-white">You will receive:</span>
+                    <span class="text-ictexGreen" id="receive-amount-display">$0.00</span>
+                </div>
+            </div>
+
+            <button id="confirm-transfer-btn" onclick="executeTransfer()" class="w-full py-4 rounded-xl text-white font-black text-[16px] active:scale-95 transition-all mt-4 relative z-10 shadow-lg tracking-wider">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Join Confirm Modal (User side) -->
+    <div id="join-session-modal" class="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card rounded-2xl w-full max-w-sm p-6 transform scale-95 transition-transform duration-300 flex flex-col">
+            <h3 class="text-lg font-bold text-white mb-2" id="join-modal-title">Join Trade Session</h3>
+            <p class="text-sm text-textDim mb-5">You are about to connect with <span id="join-master-name" class="font-bold text-white"></span>.</p>
+            
+            <div class="bg-ictexGreen/10 border border-ictexGreen/20 p-3 rounded-xl mb-5 text-center flex flex-col gap-2">
+                <p class="text-xs text-ictexGreen font-bold mb-1">Copy Wallet Requirement</p>
+                <p class="text-[10px] text-white/80">You must have a minimum of <b>$100.00</b> in your Copy Wallet to connect.</p>
+                <button id="add-funds-btn" onclick="closeJoinSessionModal(); document.querySelector('[data-nav=settings]').click(); openTransferModal('in');" class="hidden bg-ictexGreen text-black font-bold text-[10px] py-2 px-4 rounded-lg w-max mx-auto shadow-md transition hover:scale-105 active:scale-95">Add Funds Now</button>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeJoinSessionModal()" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition">Cancel</button>
+                <button id="confirm-join-btn" onclick="confirmJoinSession()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-ictexBlue to-[#1C44B2] text-white font-bold shadow-[0_4px_15px_rgba(41,98,255,0.3)] active:scale-95 transition">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Setup Trade Settings Modal -->
+    <div id="subscribe-modal" class="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card rounded-2xl w-full max-w-sm p-6 transform scale-95 transition-transform duration-300 flex flex-col">
+            <h3 class="text-lg font-bold text-white mb-1">Trade Settings</h3>
+            <p class="text-xs text-textDim mb-5">Configure parameters for <span id="sub-master-name" class="font-bold text-white"></span>.</p>
+
+            <div class="mb-4">
+                <label class="text-xs font-bold text-textDim mb-1.5 block">Trade Amount (Fixed per trade)</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 font-bold">$</span>
+                    <input type="number" id="sub-trade-amount" class="w-full bg-[#0B0E14]/50 border border-white/10 rounded-xl py-2.5 pl-7 pr-3 text-white font-bold text-sm focus:border-ictexBlue focus:outline-none transition-colors" placeholder="Min $1">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div>
+                    <label class="text-xs font-bold text-textDim mb-1.5 block">Stop Loss</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 font-bold">$</span>
+                        <input type="number" id="sub-stop-loss" class="w-full bg-[#0B0E14]/50 border border-white/10 rounded-xl py-2.5 pl-7 pr-3 text-white font-bold text-sm focus:border-ictexBlue focus:outline-none transition-colors" placeholder="0 = None">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-textDim mb-1.5 block">Take Profit</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 font-bold">$</span>
+                        <input type="number" id="sub-take-profit" class="w-full bg-[#0B0E14]/50 border border-white/10 rounded-xl py-2.5 pl-7 pr-3 text-white font-bold text-sm focus:border-ictexBlue focus:outline-none transition-colors" placeholder="0 = None">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeSubscribeModal()" class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition">Close</button>
+                <button id="confirm-sub-btn" onclick="confirmSetup()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-ictexGreen to-[#0aa645] text-white font-bold shadow-[0_4px_15px_rgba(12,207,86,0.3)] active:scale-95 transition">Save & Start</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FIREBASE & LOGIC SCRIPT -->
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyBUTMFblYIVovOe4F25XCFneJNTlVcoWCA", authDomain: "ictex-trade.firebaseapp.com", databaseURL: "https://ictex-trade-default-rtdb.firebaseio.com", projectId: "ictex-trade" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(); const database = firebase.database();
+
+        let myUID = null;
+        let myData = null;
+        let transferType = 'in';
+        
+        let searchedMasterData = null; // Holds currently searched master
+        
+        let hasActiveCopies = false;
+        let isAutoTradeActive = true; 
+        
+        // Master Dashboard Caches
+        let myCopiersCache = []; 
+        let myRequestsCache = [];
+
+        let pendingJoinMasterId = null;
+        let pendingSetupSubId = null;
+
+        function showCustomModal(title, message) {
+            document.getElementById('custom-modal-title').textContent = title;
+            document.getElementById('custom-modal-message').innerHTML = message;
+            document.getElementById('custom-modal').classList.add('modal-active');
+        }
+        function closeCustomModal() { document.getElementById('custom-modal').classList.remove('modal-active'); }
+
+        // Navigation Logic
+        document.querySelectorAll('.nav-item').forEach(nav => {
+            nav.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+                nav.classList.add('active');
+                document.getElementById(`view-${nav.dataset.nav}`).classList.add('active');
+            });
+        });
+
+        // Initialize User
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                myUID = user.uid;
+                
+                // Fetch Auto Trade Status
+                database.ref(`users/${myUID}/copySettings/isActive`).on('value', snap => {
+                    isAutoTradeActive = snap.exists() ? snap.val() : true;
+                    updateAutoTradeBtnUI();
+                });
+
+                database.ref('users/' + myUID).on('value', snap => {
+                    if (snap.exists()) {
+                        myData = snap.val();
+                        document.getElementById('setting-wallet-bal').innerText = `$${(myData.copyBalance || 0).toFixed(2)}`;
+                        
+                        // Dashboard P/L calculation
+                        let totalPl = myData.totalProfitLoss || 0;
+
+                        const plEl = document.getElementById('set-total-earned');
+                        if (plEl) {
+                            plEl.innerText = `${totalPl >= 0 ? '+' : ''}$${totalPl.toFixed(2)}`;
+                            plEl.className = `block text-lg font-black ${totalPl >= 0 ? 'text-ictexGreen' : 'text-tourRed'}`;
+                        }
+
+                        // Master Settings Initialization
+                        const mProfile = myData.copyProfile || {};
+                        document.getElementById('master-visibility-toggle').checked = mProfile.isSearchable !== false; // Default true
+                        document.getElementById('master-broadcast-toggle').checked = mProfile.isCopyActive !== false; // Default true
+                        document.getElementById('master-approval-toggle').checked = mProfile.requireApproval === true; // Default false
+                        
+                        document.getElementById('master-bio-input').value = mProfile.bio || '';
+                        document.getElementById('master-uid-display').innerText = myData.numericId || '------';
+
+                        // Management stat update
+                        let connections = 0;
+                        if(myData.activeCopies) connections = Object.keys(myData.activeCopies).length;
+                        document.getElementById('set-total-connections').innerText = connections;
+
+                        loadMyCopiesAndHistory();
+                        loadMySubscriptionsManagement();
+                        
+                        // If Master Dashboard is open, refresh copiers list
+                        if (document.getElementById('view-master-copiers').classList.contains('active')) {
+                            loadMasterCopiersAndRequests();
+                        }
+                    }
+                });
+            }
+        });
+
+        // --- Auto Trades Power Icon ---
+        function updateAutoTradeBtnUI() {
+            const powerBtn = document.getElementById('settings-power-btn');
+            
+            let hasFullyActive = false;
+            if (myData && myData.activeCopies) {
+                hasFullyActive = Object.keys(myData.activeCopies).length > 0;
+            }
+            
+            if (!hasFullyActive) {
+                powerBtn.classList.remove('active');
+                powerBtn.classList.add('inactive'); 
+            } else {
+                if (isAutoTradeActive) {
+                    powerBtn.classList.add('active'); powerBtn.classList.remove('inactive');
+                } else {
+                    powerBtn.classList.remove('active'); powerBtn.classList.add('inactive');
+                }
+            }
+        }
+        function toggleAutoTradeGlobal() {
+            let hasFullyActive = false;
+            if (myData && myData.activeCopies) hasFullyActive = Object.keys(myData.activeCopies).length > 0;
+            
+            if (!hasFullyActive) return showCustomModal('Info', 'You must connect to a Master first before turning on Auto Trade.');
+            const newState = !isAutoTradeActive;
+            database.ref(`users/${myUID}/copySettings/isActive`).set(newState).then(() => {
+                showCustomModal(newState ? 'Resumed' : 'Paused', `Auto Trading has been ${newState ? 'turned ON' : 'turned OFF'}.`);
+            });
+        }
+
+        // --- Transfer Logic ---
+        function openTransferModal(type) {
+            transferType = type;
+            const amtInput = document.getElementById('transfer-amount');
+            const feeBox = document.getElementById('realtime-fee-box');
+            amtInput.value = '';
+            
+            if(type === 'in') {
+                document.getElementById('transfer-title').innerText = "Add Funds";
+                document.getElementById('transfer-from-lbl').innerText = "Live Bal";
+                document.getElementById('transfer-to-lbl').innerText = "Copy Wallet";
+                document.getElementById('transfer-glow').className = "absolute -top-10 -right-10 w-[150px] h-[150px] blur-3xl rounded-full pointer-events-none opacity-20 bg-ictexGreen";
+                document.getElementById('confirm-transfer-btn').className = "w-full py-4 rounded-xl text-white font-black text-[16px] active:scale-95 transition-all mt-4 relative z-10 shadow-lg tracking-wider bg-gradient-to-r from-ictexGreen to-[#0aa645] shadow-[0_4px_15px_rgba(12,207,86,0.3)]";
+                feeBox.classList.add('hidden'); feeBox.classList.remove('flex');
+            } else {
+                document.getElementById('transfer-title').innerText = "Transfer Out";
+                document.getElementById('transfer-from-lbl').innerText = "Copy Wallet";
+                document.getElementById('transfer-to-lbl').innerText = "Live Bal";
+                document.getElementById('transfer-glow').className = "absolute -top-10 -right-10 w-[150px] h-[150px] blur-3xl rounded-full pointer-events-none opacity-20 bg-tourRed";
+                document.getElementById('confirm-transfer-btn').className = "w-full py-4 rounded-xl text-white font-black text-[16px] active:scale-95 transition-all mt-4 relative z-10 shadow-lg tracking-wider bg-gradient-to-r from-tourRed to-[#b71c1c] shadow-[0_4px_15px_rgba(229,57,53,0.3)]";
+                feeBox.classList.remove('hidden'); feeBox.classList.add('flex'); calculateRealTimeFee();
+            }
+            document.getElementById('transfer-modal').classList.add('modal-active');
+        }
+        function calculateRealTimeFee() {
+            if(transferType !== 'out') return;
+            const amt = parseFloat(document.getElementById('transfer-amount').value) || 0;
+            const fee = amt * 0.05;
+            const receiveAmt = amt - fee;
+            document.getElementById('fee-amount-display').innerText = `-$${fee.toFixed(2)}`;
+            document.getElementById('receive-amount-display').innerText = `$${receiveAmt.toFixed(2)}`;
+        }
+        function closeTransferModal() { document.getElementById('transfer-modal').classList.remove('modal-active'); }
+        async function executeTransfer() {
+            const amt = parseFloat(document.getElementById('transfer-amount').value);
+            if (isNaN(amt) || amt <= 0) return showCustomModal('Error', 'Enter a valid amount.');
+            const btn = document.getElementById('confirm-transfer-btn');
+            btn.disabled = true; btn.innerText = "Processing...";
+
+            try {
+                const now = Date.now();
+                const txId = `CT_${transferType.toUpperCase()}_${now}`;
+                const updates = {};
+                if (transferType === 'in') {
+                    if (amt > (myData.realBalance || 0)) throw new Error('Insufficient Live Balance.');
+                    updates[`users/${myUID}/realBalance`] = firebase.database.ServerValue.increment(-amt);
+                    updates[`users/${myUID}/copyBalance`] = firebase.database.ServerValue.increment(amt);
+                    updates[`users/${myUID}/transactions/${txId}`] = { id: txId, timestamp: now, status: 'succeeded', amount: -amt, method: 'Transfer to Copy Wallet', type: 'transfer' };
+                    await database.ref().update(updates);
+                    showCustomModal('Success', `$${amt.toFixed(2)} added to Copy Wallet.`);
+                } else {
+                    if (amt > (myData.copyBalance || 0)) throw new Error('Insufficient Copy Balance.');
+                    const fee = amt * 0.05; const receiveAmt = amt - fee;
+                    updates[`users/${myUID}/copyBalance`] = firebase.database.ServerValue.increment(-amt);
+                    updates[`users/${myUID}/realBalance`] = firebase.database.ServerValue.increment(receiveAmt);
+                    updates[`users/${myUID}/transactions/${txId}`] = { id: txId, timestamp: now, status: 'succeeded', amount: receiveAmt, method: 'Transfer from Copy Wallet', type: 'transfer' };
+                    await database.ref().update(updates);
+                    showCustomModal('Success', `$${receiveAmt.toFixed(2)} transferred to Live Balance.`);
+                }
+                closeTransferModal();
+            } catch (err) { showCustomModal('Error', err.message); }
+            finally { btn.disabled = false; btn.innerText = "Confirm"; }
+        }
+
+        // --- Master Mode Settings ---
+        async function saveMasterSettings() {
+            // Check $100 Requirement before saving
+            if ((myData.copyBalance || 0) < 100) {
+                document.getElementById('master-req-warning').classList.remove('hidden');
+                return showCustomModal('Insufficient Funds', 'You must have a minimum of $100 in your Copy Wallet to activate Master Profile.');
+            } else {
+                document.getElementById('master-req-warning').classList.add('hidden');
+            }
+
+            const bio = document.getElementById('master-bio-input').value.trim();
+            
+            if(!bio) return showCustomModal('Error', 'Please write a short bio for your post.');
+            
+            const btn = document.getElementById('save-master-btn');
+            btn.disabled = true; btn.innerText = "Saving Profile...";
+
+            const isSearchable = document.getElementById('master-visibility-toggle').checked;
+            const isCopyActive = document.getElementById('master-broadcast-toggle').checked;
+            const requireApproval = document.getElementById('master-approval-toggle').checked;
+
+            const profileData = {
+                bio: bio,
+                isSearchable: isSearchable,
+                isCopyActive: isCopyActive,
+                requireApproval: requireApproval
+            };
+
+            database.ref(`users/${myUID}/copyProfile`).set(profileData)
+            .then(() => {
+                showCustomModal('Success', 'Profile settings saved successfully!');
+            }).finally(() => {
+                btn.disabled = false; btn.innerText = "Save Master Profile";
+            });
+        }
+
+        // --- UID Search (Traders Feed) ---
+        function getTraderTier(profit = 0) {
+            if (profit >= 500000) return { key: 'master', label: 'Master', color: '#10B981' };
+            if (profit >= 100000) return { key: 'pro', label: 'Pro Trader', color: '#F59E0B' };
+            if (profit >= 10000) return { key: 'trader', label: 'Trader', color: '#0EA5E9' };
+            return { key: 'beginner', label: 'Beginner', color: '#94A3B8' };
+        }
+        
+        function getTierBadgeSVG(tierKey) {
+            const fallbackKey = ['beginner', 'trader', 'pro', 'master'].includes(tierKey) ? tierKey : 'beginner';
+            return `badges/${fallbackKey}.png`;
+        }
+
+        async function filterTraders() {
+            const query = document.getElementById('trader-search-input').value.trim();
+            const list = document.getElementById('traders-feed-list');
+            
+            if (!query) {
+                list.innerHTML = `
+                    <div class="text-center pt-16 pb-10">
+                        <div class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4 shadow-lg mx-auto">
+                            <svg class="w-8 h-8 opacity-40 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <h3 class="text-white font-semibold text-lg tracking-wide mb-2">Search to Connect</h3>
+                        <p class="text-xs text-textDim px-6 leading-relaxed">Enter a master trader's unique ID above to view their profile and send a join request.</p>
+                    </div>`;
+                searchedMasterData = null;
+                return;
+            }
+
+            list.innerHTML = '<div class="text-center text-textDim text-xs py-5 animate-pulse">Searching global database...</div>';
+
+            try {
+                // Strict search by exact numericId
+                const snap = await database.ref('users').orderByChild('numericId').equalTo(query).once('value');
+                if(!snap.exists()) {
+                    list.innerHTML = '<div class="text-center text-textDim mt-5">No trader found with this UID.</div>';
+                    searchedMasterData = null;
+                    return;
+                }
+
+                let foundData = null;
+                snap.forEach(child => { foundData = { key: child.key, ...child.val() }; });
+
+                const mProfile = foundData.copyProfile || {};
+                
+                // Block if not searchable (unless it's the user searching themselves)
+                if (mProfile.isSearchable === false && foundData.key !== myUID) {
+                    list.innerHTML = '<div class="text-center text-textDim mt-5">This profile is private or hidden.</div>';
+                    searchedMasterData = null;
+                    return;
+                }
+
+                searchedMasterData = foundData;
+                renderTraderCard(foundData, list);
+
+            } catch (err) {
+                list.innerHTML = '<div class="text-center text-tourRed mt-5">Search failed. Try again.</div>';
+            }
+        }
+
+        function renderTraderCard(data, container) {
+            const tier = getTraderTier(data.totalProfitLoss || 0);
+            const isMe = data.key === myUID;
+            const mProfile = data.copyProfile || {};
+            
+            // Check connections state
+            let isAlreadyJoined = false;
+            let isPendingRequest = false;
+
+            if (myData && myData.activeCopies && myData.activeCopies[data.key]) isAlreadyJoined = true;
+            if (myData && myData.pendingRequests && myData.pendingRequests[data.key]) isPendingRequest = true;
+
+            let actionBtn = '';
+            if (isMe) {
+                actionBtn = `<button onclick="document.querySelector('[data-nav=settings]').click()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-white/10 transition shadow-lg backdrop-blur-sm"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg> Edit Profile</button>`;
+            } else if (isAlreadyJoined) {
+                actionBtn = `<button class="flex items-center gap-1.5 bg-white/5 text-textDim font-extrabold px-5 py-2.5 rounded-xl text-xs border border-white/10 cursor-not-allowed opacity-80"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> Connected</button>`;
+            } else if (isPendingRequest) {
+                actionBtn = `<button class="flex items-center gap-1.5 bg-warning/10 text-warning font-extrabold px-5 py-2.5 rounded-xl text-xs border border-warning/30 cursor-not-allowed opacity-80">Request Pending</button>`;
+            } else {
+                const btnText = mProfile.requireApproval ? 'Send Join Request' : 'Join Copy Trade';
+                actionBtn = `<button onclick="openJoinSessionModal('${data.key}')" class="flex items-center gap-1.5 bg-gradient-to-r from-ictexBlue to-[#1C44B2] hover:brightness-110 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-[0_8px_20px_rgba(41,98,255,0.3)] border border-blue-500/30 active:scale-95 transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> ${btnText}</button>`;
+            }
+            
+            const profileImg = data.profilePicUrl || 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140253150_1000258938.png';
+            const countryCode = data.countryCode ? data.countryCode.toLowerCase() : 'un';
+            const verifiedIcon = data.kycStatus === 'verified' ? `<svg class="w-4 h-4 text-ictexBlue drop-shadow-[0_0_5px_rgba(41,98,255,0.4)]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>` : '';
+            const profitClass = (data.totalProfitLoss||0) >= 0 ? 'text-ictexGreen drop-shadow-[0_0_8px_rgba(12,207,86,0.3)]' : 'text-tourRed drop-shadow-[0_0_8px_rgba(229,57,53,0.3)]';
+
+            container.innerHTML = `
+                <div class="glass-card rounded-[20px] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] relative overflow-hidden mb-4 border border-white/10">
+                    <div class="absolute -top-12 -right-12 w-32 h-32 bg-ictexBlue/20 blur-[40px] rounded-full pointer-events-none z-0"></div>
+                    
+                    <div class="flex items-center gap-4 mb-3 relative z-10">
+                        <div class="trader-pfp-wrapper relative shadow-lg">
+                            <img src="${profileImg}" class="trader-pfp shadow-[0_0_15px_rgba(41,98,255,0.2)]">
+                            <img src="https://flagcdn.com/w40/${countryCode}.png" class="trader-flag" onerror="this.src='https://flagcdn.com/w20/un.png'">
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex items-center flex-wrap gap-1.5">
+                                <h4 class="text-white font-black text-lg tracking-tight">${data.name || 'Trader'}</h4>
+                                ${verifiedIcon}
+                                ${isMe ? `<span class="bg-tourRed/20 border border-tourRed/30 text-tourRed text-[9px] px-1.5 py-0.5 rounded uppercase font-black ml-1 shadow-sm">You</span>` : ''}
+                            </div>
+                            <span style="color:${tier.color}; text-shadow: 0 0 10px ${tier.color}40;" class="inline-block text-[9.5px] font-extrabold uppercase tracking-widest mt-0.5">${tier.label}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-[13px] text-textDim mb-4 leading-relaxed whitespace-pre-wrap font-medium relative z-10">${mProfile.bio || 'No bio provided.'}</p>
+
+                    <div class="flex justify-between items-center bg-[#0B0E14]/70 rounded-2xl p-3 my-4 border border-white/5 relative z-10 shadow-inner">
+                        <div class="text-center flex-1">
+                            <div class="${profitClass} font-black text-[16px]">${(data.totalProfitLoss||0) > 0 ? '+' : ''}$${(Math.abs(data.totalProfitLoss||0)).toFixed(0)}</div>
+                            <div class="text-[8px] text-textDim font-bold uppercase tracking-widest mt-1">Total P/L</div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center relative z-10 border-t border-white/5 pt-4 mt-1">
+                        <div class="flex items-center bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                            <span class="text-[11px] text-textDim uppercase tracking-widest font-bold font-mono">UID: ${data.numericId}</span>
+                        </div>
+                        ${actionBtn}
+                    </div>
+                </div>`;
+        }
+
+        // --- Join Connection Logic ---
+        function openJoinSessionModal(mId) {
+            if (!searchedMasterData || searchedMasterData.key !== mId) return;
+            
+            pendingJoinMasterId = mId;
+            const name = searchedMasterData.name || 'Trader';
+            const requireApproval = searchedMasterData.copyProfile?.requireApproval === true;
+            
+            document.getElementById('join-master-name').innerText = name;
+            document.getElementById('join-modal-title').innerText = requireApproval ? 'Send Join Request' : 'Join Copy Trade';
+            document.getElementById('confirm-join-btn').innerText = requireApproval ? 'Send Request' : 'Connect Instantly';
+            
+            const startBtn = document.getElementById('confirm-join-btn');
+            const addFundsBtn = document.getElementById('add-funds-btn');
+            const copyBalance = myData.copyBalance || 0;
+            
+            if (copyBalance < 100) {
+                addFundsBtn.classList.remove('hidden');
+                startBtn.disabled = true;
+                startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                addFundsBtn.classList.add('hidden');
+                startBtn.disabled = false;
+                startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+            
+            document.getElementById('join-session-modal').classList.add('modal-active');
+        }
+
+        function closeJoinSessionModal() { document.getElementById('join-session-modal').classList.remove('modal-active'); }
+
+        async function confirmJoinSession() {
+            if (!searchedMasterData || searchedMasterData.key !== pendingJoinMasterId) return;
+
+            const btn = document.getElementById('confirm-join-btn');
+            btn.disabled = true; btn.innerText = "Processing...";
+
+            const mId = pendingJoinMasterId;
+            const mName = searchedMasterData.name || 'Trader';
+            const requireApproval = searchedMasterData.copyProfile?.requireApproval === true;
+
+            try {
+                if (requireApproval) {
+                    // Send Request to Master
+                    await database.ref(`users/${mId}/copyRequests/${myUID}`).set({
+                        uid: myUID,
+                        name: myData.name || 'User',
+                        numericId: myData.numericId,
+                        timestamp: Date.now()
+                    });
+                    
+                    // Mark as pending locally to update button UI
+                    await database.ref(`users/${myUID}/pendingRequests/${mId}`).set(true);
+
+                    closeJoinSessionModal();
+                    showCustomModal('Request Sent', 'Your join request has been sent to the master. You will be notified once they accept it.');
+                    filterTraders(); // Refresh card UI
+                } else {
+                    // Join Instantly
+                    await connectToMaster(mId, mName);
+                }
+            } catch(e) { showCustomModal('Error', 'Action failed. Please try again.'); }
+            finally { btn.disabled = false; btn.innerText = "Confirm"; }
+        }
+
+        async function connectToMaster(mId, mName) {
+            try {
+                // Instantly add to active connections
+                await database.ref(`users/${myUID}/activeCopies/${mId}`).set({
+                    masterId: mId,
+                    masterName: mName,
+                    tradeAmount: 0,
+                    stopLoss: 0,
+                    takeProfit: 0,
+                    status: 'pending_setup', // Forces them to set Amount, TP, SL first
+                    startTime: Date.now()
+                });
+                
+                closeJoinSessionModal();
+                showCustomModal('Connected Successfully!', 'You are now linked to this master. Please set up your trade parameters to start copying.');
+                document.querySelector('[data-nav=management]').click(); 
+            } catch(e) { throw e; }
+        }
+
+        function openSetupModal(mId) {
+            pendingSetupSubId = mId;
+            const subData = myData.activeCopies[mId];
+            if(!subData) return;
+
+            document.getElementById('sub-master-name').innerText = subData.masterName;
+            document.getElementById('sub-trade-amount').value = subData.tradeAmount || '';
+            document.getElementById('sub-stop-loss').value = subData.stopLoss || '';
+            document.getElementById('sub-take-profit').value = subData.takeProfit || '';
+            
+            document.getElementById('subscribe-modal').classList.add('modal-active');
+        }
+        
+        function closeSubscribeModal() { document.getElementById('subscribe-modal').classList.remove('modal-active'); }
+
+        async function confirmSetup() {
+            const tradeAmt = parseFloat(document.getElementById('sub-trade-amount').value);
+            const sl = parseFloat(document.getElementById('sub-stop-loss').value) || 0;
+            const tp = parseFloat(document.getElementById('sub-take-profit').value) || 0;
+
+            if(isNaN(tradeAmt) || tradeAmt < 1) return showCustomModal('Error', 'Minimum trade amount is $1.');
+
+            const btn = document.getElementById('confirm-sub-btn');
+            btn.disabled = true; btn.innerText = "Processing...";
+
+            try {
+                await database.ref(`users/${myUID}/activeCopies/${pendingSetupSubId}`).update({
+                    tradeAmount: tradeAmt,
+                    stopLoss: sl,
+                    takeProfit: tp,
+                    status: 'active'
+                });
+
+                closeSubscribeModal();
+                showCustomModal('Trading Started!', 'Your auto-trading parameters are saved. Trades will mirror automatically.');
+                
+            } catch(e) { showCustomModal('Error', 'Setup failed.'); }
+            finally { btn.disabled = false; btn.innerText = "Save & Start"; }
+        }
+
+        // --- Load Trades (History / Active) ---
+        function loadMyCopiesAndHistory() {
+            // Active Live Copy Trades
+            database.ref(`users/${myUID}/activeTrades`).on('value', snap => {
+                const list = document.getElementById('copy-active-trades-list');
+                list.innerHTML = '';
+                let foundCopied = false;
+                if(snap.exists()) {
+                    snap.forEach(child => {
+                        const tr = child.val();
+                        if(tr.isCopied) {
+                            foundCopied = true;
+                            const displayMarket = tr.isHiddenDetails ? `Copying ${tr.masterName}` : tr.market;
+                            const displayDir = tr.isHiddenDetails ? "LOCKED" : tr.direction;
+                            const dirColor = tr.isHiddenDetails ? "text-gold" : "text-white/50";
+                            
+                            list.innerHTML += `
+                            <div class="glass-card border-l-[3px] border-ictexBlue p-3 rounded-xl flex justify-between items-center mb-2">
+                                <div><span class="text-white font-bold text-xs">${displayMarket}</span><span class="text-[9px] text-textDim block mt-0.5">Master: ${tr.masterName}</span></div>
+                                <div class="text-right"><span class="font-bold text-sm text-ictexGreen">$${tr.amount}</span><span class="text-[9px] block ${dirColor} uppercase font-black tracking-widest">${displayDir}</span></div>
+                            </div>`;
+                        }
+                    });
+                }
+                if(!foundCopied) list.innerHTML = '<div class="text-center text-textDim text-xs py-5">No live trades right now.</div>';
+            });
+
+            // Past History
+            const histRef = database.ref(`users/${myUID}/copyHistory`);
+            histRef.on('value', snap => {
+                const list = document.getElementById('copy-history-trades-list');
+                list.innerHTML = '';
+                if(!snap.exists()) { list.innerHTML = '<div class="text-center text-textDim text-sm py-8 bg-surfaceLight/50 rounded-2xl border border-white/5">No history found.</div>'; return; }
+                
+                const trades = [];
+                snap.forEach(child => trades.push({ id: child.key, ...child.val() }));
+                
+                const validTrades = trades.sort((a,b) => b.timestamp - a.timestamp).slice(0, 50);
+
+                validTrades.forEach(t => {
+                    const dateStr = new Date(t.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
+                    const isWin = t.result === 'win';
+                    
+                    const payoutDisplay = isWin ? `+$${(t.payout || (t.amount * 1.85)).toFixed(2)}` : `$0.00`;
+                    const resultTextClass = isWin ? 'text-ictexGreen' : 'text-tourRed';
+                    
+                    list.innerHTML += `
+                        <div class="glass-card border-l-[3px] ${isWin?'border-ictexGreen':'border-tourRed'} p-3.5 rounded-xl flex justify-between items-center mb-2">
+                            <div>
+                                <span class="text-white font-bold text-sm block mb-1">${t.market || 'EUR/USD (OTC)'}</span>
+                                <span class="text-[10px] text-textDim bg-[#0B0E14]/80 px-2 py-1 rounded-md border border-white/5">Master: ${t.masterName || 'Pro Trader'}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-black text-[15px] ${resultTextClass} mb-1 block">${payoutDisplay}</span>
+                                <span class="text-[9px] block text-textDim font-bold tracking-widest">INV: $${t.amount.toFixed(2)} &bull; ${dateStr}</span>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        // --- Subscriptions Management ---
+        function loadMySubscriptionsManagement() {
+            database.ref(`users/${myUID}/activeCopies`).on('value', async snap => {
+                const list = document.getElementById('active-subs-list');
+                list.innerHTML = '';
+                hasActiveCopies = snap.exists() && Object.keys(snap.val()).length > 0;
+                updateAutoTradeBtnUI();
+                
+                if(!hasActiveCopies) { list.innerHTML = '<div class="text-center text-textDim text-sm py-10 bg-surfaceLight/50 rounded-2xl border border-white/5 shadow-inner">No active connections.</div>'; return; }
+                
+                list.innerHTML = '<div class="text-center text-textDim text-xs py-5 animate-pulse">Syncing master data...</div>';
+                
+                const subs = [];
+                snap.forEach(child => { subs.push({ key: child.key, ...child.val() }); });
+                
+                let htmlContent = '';
+
+                for (const sub of subs) {
+                    const masterSnap = await database.ref(`users/${sub.masterId}`).once('value');
+                    const masterData = masterSnap.exists() ? masterSnap.val() : {};
+                    const mProfile = masterData.copyProfile || {};
+                    
+                    const profileImg = masterData.profilePicUrl || 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140253150_1000258938.png';
+                    const countryCode = masterData.countryCode ? masterData.countryCode.toLowerCase() : 'un';
+                    const verifiedIcon = masterData.kycStatus === 'verified' ? `<svg class="w-3.5 h-3.5 text-ictexBlue drop-shadow-[0_0_5px_rgba(41,98,255,0.4)]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>` : '';
+                    const tier = getTraderTier(masterData.totalProfitLoss || 0);
+                    const numericId = masterData.numericId || '------';
+                    
+                    // Warning tag if master paused broadcast
+                    const broadcastWarning = mProfile.isCopyActive === false ? `<span class="bg-tourRed/20 text-tourRed border border-tourRed/30 text-[9px] px-2 py-1 rounded-lg font-bold shadow-sm">Master Paused</span>` : '';
+
+                    if (sub.status === 'pending_setup') {
+                        htmlContent += `
+                        <div class="glass-card rounded-[20px] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] relative overflow-hidden mb-4 border border-warning/30">
+                            <div class="flex justify-between items-start mb-4 relative z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative w-12 h-12 shadow-lg rounded-full">
+                                        <img src="${profileImg}" class="w-full h-full rounded-full object-cover border border-warning/50 bg-[#1A1F2A] p-0.5">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <h4 class="text-white font-bold text-sm tracking-tight">${sub.masterName}</h4>
+                                            ${verifiedIcon}
+                                        </div>
+                                        <span style="color:${tier.color};" class="inline-block text-[9px] font-bold uppercase tracking-wider mt-0.5">${tier.label}</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1 items-end">
+                                    <span class="bg-warning/20 border border-warning/30 text-warning text-[10px] px-2 py-1 rounded-lg font-bold shadow-sm">Setup Required</span>
+                                    ${broadcastWarning}
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center relative z-10 border-t border-white/5 pt-3">
+                                <span class="text-[10px] text-textDim font-mono">ID: ${numericId}</span>
+                                <div class="flex gap-2">
+                                    <button onclick="stopCopying('${sub.masterId}')" class="text-xs text-textDim hover:text-tourRed transition">Drop</button>
+                                    <button onclick="openSetupModal('${sub.masterId}')" class="text-xs text-black font-extrabold bg-ictexGreen hover:bg-[#0aa645] px-4 py-2 rounded-xl transition active:scale-95 shadow-[0_4px_15px_rgba(12,207,86,0.3)]">Configure</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        htmlContent += `
+                        <div class="glass-card rounded-[20px] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] relative overflow-hidden mb-4 border border-ictexBlue/30">
+                            <div class="flex justify-between items-start mb-4 relative z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative w-12 h-12 shadow-lg rounded-full">
+                                        <img src="${profileImg}" class="w-full h-full rounded-full object-cover border border-ictexBlue/50 bg-[#1A1F2A] p-0.5">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <h4 class="text-white font-bold text-sm tracking-tight">${sub.masterName}</h4>
+                                            ${verifiedIcon}
+                                        </div>
+                                        <span style="color:${tier.color};" class="inline-block text-[9px] font-bold uppercase tracking-wider mt-0.5">${tier.label}</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1 items-end">
+                                    <span class="bg-ictexGreen/20 text-ictexGreen border border-ictexGreen/30 text-[10px] px-2 py-1 rounded-lg font-bold shadow-sm">ACTIVE</span>
+                                    ${broadcastWarning}
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center bg-[#0B0E14]/60 rounded-xl p-3 mb-3 border border-white/5 relative z-10 shadow-inner">
+                                <div class="text-center flex-1"><div class="text-white font-bold text-sm">$${sub.tradeAmount}</div><div class="text-[9px] text-textDim uppercase mt-0.5">Trade Size</div></div>
+                                <div class="w-px h-5 bg-white/10 mx-1"></div>
+                                <div class="text-center flex-1"><div class="text-ictexGreen font-bold text-sm">$${sub.takeProfit||'0'}</div><div class="text-[9px] text-textDim uppercase mt-0.5">Take P.</div></div>
+                                <div class="w-px h-5 bg-white/10 mx-1"></div>
+                                <div class="text-center flex-1"><div class="text-tourRed font-bold text-sm">$${sub.stopLoss||'0'}</div><div class="text-[9px] text-textDim uppercase mt-0.5">Stop L.</div></div>
+                            </div>
+
+                            <div class="flex justify-between items-center relative z-10 border-t border-white/5 pt-3">
+                                <span class="text-[10px] text-textDim font-mono font-bold tracking-widest bg-white/5 px-2 py-1 rounded">ID: ${numericId}</span>
+                                <div class="flex gap-2">
+                                    <button onclick="openSetupModal('${sub.masterId}')" class="text-[10px] text-ictexBlue font-bold bg-ictexBlue/10 hover:bg-ictexBlue/20 border border-ictexBlue/30 px-3 py-1.5 rounded-lg transition active:scale-95">Edit</button>
+                                    <button onclick="stopCopying('${sub.masterId}')" class="text-[10px] text-tourRed font-bold bg-tourRed/10 hover:bg-tourRed/20 border border-tourRed/30 px-3 py-1.5 rounded-lg transition active:scale-95">Disconnect</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                }
+                
+                list.innerHTML = htmlContent;
+            });
+        }
+
+        async function stopCopying(masterId) {
+            if(confirm("Are you sure you want to stop copying this trader?")) {
+                try {
+                    await database.ref(`users/${myUID}/activeCopies/${masterId}`).remove();
+                    showCustomModal('Disconnected', `You have stopped copying this trader.`);
+                } catch(e) {
+                    showCustomModal('Error', 'Failed to disconnect.');
+                }
+            }
+        }
+
+        // --- Master Dashboard Navigation & Data Fetching ---
+        function openMasterDashboard() {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-master-dashboard').classList.add('active');
+        }
+
+        function closeMasterDashboard() {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-settings').classList.add('active');
+        }
+
+        function openMasterCopiers() {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-master-copiers').classList.add('active');
+            loadMasterCopiersAndRequests();
+        }
+
+        function closeMasterCopiers() {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-settings').classList.add('active');
+            document.getElementById('copiers-search-input').value = '';
+        }
+
+        function switchCopierTab(tab) {
+            const activeTabBtn = document.getElementById('tab-active-copiers');
+            const reqTabBtn = document.getElementById('tab-pending-requests');
+            const activeList = document.getElementById('master-copiers-list-container');
+            const reqList = document.getElementById('master-requests-list-container');
+            
+            if (tab === 'active') {
+                activeTabBtn.className = "flex-1 py-2 bg-ictexBlue text-white rounded-lg text-xs font-bold transition";
+                reqTabBtn.className = "flex-1 py-2 bg-[#0B0E14] text-textDim border border-white/10 rounded-lg text-xs font-bold transition";
+                activeList.classList.remove('hidden');
+                reqList.classList.add('hidden');
+            } else {
+                reqTabBtn.className = "flex-1 py-2 bg-warning text-black rounded-lg text-xs font-bold transition";
+                activeTabBtn.className = "flex-1 py-2 bg-[#0B0E14] text-textDim border border-white/10 rounded-lg text-xs font-bold transition";
+                reqList.classList.remove('hidden');
+                activeList.classList.add('hidden');
+            }
+        }
+
+        function loadMasterCopiersAndRequests() {
+            // Load Requests
+            database.ref(`users/${myUID}/copyRequests`).on('value', snap => {
+                const reqList = document.getElementById('master-requests-list');
+                reqList.innerHTML = '';
+                const reqCountBadge = document.getElementById('total-requests-count');
+                
+                if (!snap.exists()) {
+                    reqCountBadge.innerText = '0';
+                    reqList.innerHTML = '<div class="text-center text-textDim text-sm py-10 bg-surfaceLight/50 rounded-2xl border border-white/5">No pending requests.</div>';
+                    return;
+                }
+
+                const requests = [];
+                snap.forEach(child => requests.push(child.val()));
+                reqCountBadge.innerText = requests.length;
+
+                let html = '';
+                requests.forEach(req => {
+                    html += `
+                        <div class="glass-card rounded-[16px] p-4 mb-3 border border-warning/30">
+                            <div class="flex justify-between items-center mb-2">
+                                <div>
+                                    <div class="font-bold text-white text-sm">${req.name}</div>
+                                    <div class="text-[9px] text-textDim font-mono mt-0.5">ID: ${req.numericId}</div>
+                                </div>
+                                <span class="req-badge req-pending">Pending</span>
+                            </div>
+                            <div class="flex gap-2 mt-3">
+                                <button onclick="acceptJoinRequest('${req.uid}', '${req.name}')" class="flex-1 py-2 bg-success hover:bg-green-500 text-black font-bold rounded-lg text-xs transition">Accept</button>
+                                <button onclick="rejectJoinRequest('${req.uid}')" class="flex-1 py-2 bg-transparent border border-danger text-danger hover:bg-danger hover:text-white font-bold rounded-lg text-xs transition">Reject</button>
+                            </div>
+                        </div>`;
+                });
+                reqList.innerHTML = html;
+            });
+
+            // Load Active Copiers
+            database.ref('users').once('value', async snap => {
+                const list = document.getElementById('master-copiers-list');
+                
+                if(!snap.exists()) { 
+                    document.getElementById('total-copiers-count').innerText = '0';
+                    list.innerHTML = '<div class="text-center text-textDim text-sm py-10 bg-surfaceLight/50 rounded-2xl border border-white/5 shadow-inner">You currently have no active copiers.</div>'; 
+                    return; 
+                }
+
+                list.innerHTML = '<div class="text-center text-textDim text-xs py-5 animate-pulse">Loading users...</div>';
+                
+                myCopiersCache = [];
+                let count = 0;
+                
+                snap.forEach(child => {
+                    const u = child.val();
+                    if(u.activeCopies && u.activeCopies[myUID]) {
+                        myCopiersCache.push({ uid: child.key, ...u });
+                        count++;
+                    }
+                });
+
+                document.getElementById('total-copiers-count').innerText = count;
+
+                if (count === 0) {
+                    list.innerHTML = '<div class="text-center text-textDim text-sm py-10 bg-surfaceLight/50 rounded-2xl border border-white/5 shadow-inner">You currently have no active copiers.</div>'; 
+                    return; 
+                }
+
+                filterCopiersList();
+            });
+        }
+
+        async function acceptJoinRequest(cId, cName) {
+            try {
+                // Delete request
+                await database.ref(`users/${myUID}/copyRequests/${cId}`).remove();
+                await database.ref(`users/${cId}/pendingRequests/${myUID}`).remove();
+
+                // Add to active copies (pending setup mode)
+                await database.ref(`users/${cId}/activeCopies/${myUID}`).set({
+                    masterId: myUID,
+                    masterName: myData.name || 'Trader',
+                    tradeAmount: 0, stopLoss: 0, takeProfit: 0,
+                    status: 'pending_setup',
+                    startTime: Date.now()
+                });
+
+                showNotification('Request accepted!', 'win');
+                loadMasterCopiersAndRequests(); // Refresh
+            } catch(e) { showNotification('Failed to accept request.', 'loss'); }
+        }
+
+        async function rejectJoinRequest(cId) {
+            if(!confirm("Reject this request?")) return;
+            try {
+                await database.ref(`users/${myUID}/copyRequests/${cId}`).remove();
+                await database.ref(`users/${cId}/pendingRequests/${myUID}`).remove();
+                showNotification('Request rejected.', 'info');
+            } catch(e) { showNotification('Failed to reject.', 'loss'); }
+        }
+
+        function filterCopiersList() {
+            const query = document.getElementById('copiers-search-input').value.toLowerCase();
+            const list = document.getElementById('master-copiers-list');
+            list.innerHTML = '';
+
+            const filtered = myCopiersCache.filter(copier => {
+                const nameMatch = (copier.name || '').toLowerCase().includes(query);
+                const uidMatch = (copier.numericId || '').includes(query);
+                return nameMatch || uidMatch;
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="text-center text-textDim text-sm py-10 bg-surfaceLight/50 rounded-2xl border border-white/5 shadow-inner">No copiers match your search.</div>';
+                return;
+            }
+
+            let htmlContent = '';
+
+            filtered.forEach(copier => {
+                const profileImg = copier.profilePicUrl || 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140253150_1000258938.png';
+                const countryCode = copier.countryCode ? copier.countryCode.toLowerCase() : 'un';
+                const verifiedIcon = copier.kycStatus === 'verified' ? `<svg class="w-3 h-3 text-ictexBlue drop-shadow-md" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>` : '';
+                const tier = getTraderTier(copier.totalProfitLoss || 0);
+                
+                const copyData = copier.activeCopies[myUID];
+                const statusTag = copyData.status === 'active' ? `<span class="bg-ictexGreen/20 text-ictexGreen border border-ictexGreen/30 text-[9px] uppercase px-2 py-1 rounded-lg font-bold">Copying You</span>` : `<span class="bg-warning/20 text-warning border border-warning/30 text-[9px] uppercase px-2 py-1 rounded-lg font-bold">Pending Setup</span>`;
+
+                htmlContent += `
+                    <div class="glass-card rounded-[16px] p-4 mb-3 border border-white/5 relative overflow-hidden bg-gradient-to-br from-[#161A23] to-[#0B0E14]">
+                        <div class="flex items-center gap-3">
+                            <div class="relative w-10 h-10 shadow-lg rounded-full">
+                                <img src="${profileImg}" class="w-full h-full rounded-full object-cover border border-white/10 bg-[#1A1F2A] p-0.5">
+                                <img src="https://flagcdn.com/w40/${countryCode}.png" class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full object-cover border border-[#161A23]">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-1.5">
+                                    <h4 class="text-white font-bold text-sm truncate max-w-[120px]">${copier.name || 'User'}</h4>
+                                    ${verifiedIcon}
+                                </div>
+                                <div class="flex gap-2 mt-0.5">
+                                    <span style="color:${tier.color};" class="text-[9px] font-bold uppercase tracking-wider">${tier.label}</span>
+                                    <span class="text-[9px] text-textDim font-mono">ID: ${copier.numericId}</span>
+                                </div>
+                            </div>
+                            ${statusTag}
+                        </div>
+                    </div>`;
+            });
+
+            list.innerHTML = htmlContent;
+        }
+    </script>
+</body>
+</html>
