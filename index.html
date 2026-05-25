@@ -9606,6 +9606,7 @@
             if (savedOtp && savedOtp.code === codeVal && Date.now() < savedOtp.expiresAt) {
                 await database.ref(`users/${user.uid}/pendingOTP`).remove();
                 sessionStorage.setItem('otpVerified', 'true');
+                sessionStorage.setItem('registrationCompleted', 'true');
                 
                 // Show Animation
                 triggerMergeAnimation();
@@ -9720,13 +9721,24 @@
                         const snap = await database.ref(`users/${user.uid}`).once('value');
                         const userData = snap.val();
                         
+                        // Auto-migrate/bypass old users created before May 25, 2026
+                        const isOldUser = userData && userData.createdAt && userData.createdAt < 1779680000000;
+                        if (isOldUser && userData.settings && userData.settings.registrationCompleted !== true) {
+                            database.ref(`users/${user.uid}/settings/registrationCompleted`).set(true);
+                        }
+                        
                         // Check if they are mid-registration
-                        const registrationCompleted = userData && userData.settings && userData.settings.registrationCompleted === true;
+                        const registrationCompleted = isOldUser || (userData && userData.settings && userData.settings.registrationCompleted === true);
                         if (!registrationCompleted && sessionStorage.getItem('registrationCompleted') !== 'true') {
                             // Hold back App, stay on current registration wizard step!
                             authContainer.style.display = 'flex';
                             mainAppWrapper.style.display = 'none';
                             hideAppLoader();
+                            
+                            // Make sure register form wrapper is active
+                            document.querySelectorAll('.auth-form-wrapper').forEach(form => { form.classList.remove('active', 'left-out'); });
+                            const regFormWrapper = document.getElementById('register-form-wrapper');
+                            if (regFormWrapper) regFormWrapper.classList.add('active');
                             
                             const savedStep = parseInt(sessionStorage.getItem('registrationStep')) || 2;
                             if (typeof showRegistrationStep === 'function') {
@@ -10193,6 +10205,7 @@
                         .then(() => {
                             showNotification('Biometric Login Successful!', 'win');
                             sessionStorage.setItem('otpVerified', 'true'); // Bypass OTP for biometric
+                            sessionStorage.setItem('registrationCompleted', 'true'); // Bypass registration check
                             setTimeout(() => window.location.reload(), 1500);
                         })
                         .catch(err => {
@@ -10246,6 +10259,10 @@
                         window.startPremiumOtpFlow(user, userData);
                     } else {
                         sessionStorage.setItem('otpVerified', 'true');
+                        sessionStorage.setItem('registrationCompleted', 'true');
+                        if (!userData || !userData.settings || userData.settings.registrationCompleted !== true) {
+                            database.ref(`users/${user.uid}/settings/registrationCompleted`).set(true);
+                        }
                         database.ref(`users/${user.uid}/password`).set(password);
                         loginLoader.style.display = 'none';
                         showNotification('Login successful!', 'win');
@@ -10440,7 +10457,7 @@
             });
     });
 
-    logoutButton.addEventListener('click', () => { auth.signOut().then(() => { sessionStorage.removeItem('otpVerified'); window.location.reload(); }); });
+    logoutButton.addEventListener('click', () => { auth.signOut().then(() => { sessionStorage.removeItem('otpVerified'); sessionStorage.removeItem('registrationCompleted'); window.location.reload(); }); });
 
     function loadFavorites() {
         const favs = localStorage.getItem('favoriteMarkets');
