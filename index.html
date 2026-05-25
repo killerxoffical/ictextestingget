@@ -11,6 +11,114 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    
+    <!-- Tailwind CSS Script for onboarding workflow -->
+    <script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false,
+            },
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#fff4f3",
+                        "glass-fill": "rgba(21, 25, 28, 0.6)",
+                        "bear-red": "#E8304A",
+                        "on-primary": "#002780",
+                        "on-primary-container": "#f7f5ff",
+                        "on-surface-variant": "#c3c5d8",
+                        "on-secondary": "#003912",
+                        "tertiary-fixed-dim": "#ffb3b4",
+                        "outline": "#8d90a2",
+                        "surface-primary": "#0E1117",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "outline-variant": "#434656",
+                        "border-glass": "rgba(255, 255, 255, 0.07)",
+                        "tertiary-fixed": "#ffdad9",
+                        "tertiary": "#ffb3b4",
+                        "surface-container-high": "#272a2f",
+                        "premium-purple": "#9C27B0",
+                        "inverse-surface": "#e1e2e8",
+                        "warning-amber": "#FFC107",
+                        "inverse-primary": "#004ee8",
+                        "action-blue": "#2962FF",
+                        "surface-tint": "#b6c4ff",
+                        "surface-dim": "#111418",
+                        "primary-fixed": "#dce1ff",
+                        "on-secondary-fixed-variant": "#00531d",
+                        "primary": "#b6c4ff",
+                        "background": "#111418",
+                        "surface-container": "#1d2024",
+                        "on-secondary-fixed": "#002107",
+                        "surface-variant": "#32353a",
+                        "on-tertiary": "#680016",
+                        "tertiary-container": "#d92341",
+                        "surface-container-highest": "#32353a",
+                        "primary-container": "#2962ff",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface-secondary": "#161B24",
+                        "on-tertiary-fixed-variant": "#920023",
+                        "inverse-on-surface": "#2e3135",
+                        "surface": "#111418",
+                        "secondary-fixed-dim": "#37e367",
+                        "on-primary-fixed": "#001550",
+                        "on-primary-fixed-variant": "#003ab3",
+                        "secondary-container": "#00cc53",
+                        "on-tertiary-fixed": "#40000a",
+                        "secondary-fixed": "#6aff86",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#191c20",
+                        "on-secondary-container": "#004f1b",
+                        "bull-green": "#0CCF56",
+                        "on-background": "#e1e2e8",
+                        "secondary": "#3fe96c",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e1e2e8",
+                        "surface-bright": "#36393e",
+                        "surface-tertiary": "#1C2333",
+                        "surface-container-lowest": "#0b0e12"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "sidebar-width": "60px",
+                        "container-padding": "20px",
+                        "gutter-sm": "8px",
+                        "unit": "4px",
+                        "gutter-md": "12px",
+                        "panel-width": "320px"
+                    },
+                    fontFamily: {
+                        "label-caps": ["Inter"],
+                        "body-base": ["Inter"],
+                        "title-md": ["Inter"],
+                        "micro-data": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "display-xl": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                        "body-base": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "title-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "micro-data": ["10px", {"lineHeight": "1", "fontWeight": "400"}],
+                        "headline-lg": ["30px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "display-xl": ["44.8px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}]
+                    }
+                }
+            }
+        };
+    </script>
     <link rel="preload" as="image" href="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140080597_1000258942.png">
     <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/viptask-5c1fc.appspot.com/o/AddText_09-05-10.12.27.webp?alt=media&token=1d020904-baef-437f-8c6e-6032fc32d5d5">
     <link rel="preload" as="image" href="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1773968232539_1000258793.jpg">
@@ -1303,6 +1411,10 @@
             align-items: center;
             transition: opacity 0.45s ease;
         }
+        #app-loader *, #app-loader *::before, #app-loader *::after {
+            border: none !important;
+            outline: none !important;
+        }
         .flash-loader-inner {
             width: min(68vw, 340px);
             aspect-ratio: 1 / 1;
@@ -2386,7 +2498,6 @@
         #view-settings .settings-list-item.glass-card-purple {
             background: rgba(43, 25, 84, 0.6);
             border: 1px solid rgba(139, 92, 246, 0.3);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
             border-radius: 1rem;
             padding: 1rem;
             display: flex;
@@ -2422,11 +2533,13 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         #view-settings .icon-wrapper svg {
             width: 1.5rem;
             height: 1.5rem;
-            color: #fff;
+            color: #A8B3C7;
         }
         #view-settings .item-info {
             display: flex;
@@ -2512,15 +2625,7 @@
         }
         .settings-notification-badge.visible { display: inline-flex; }
 
-        /* Glow effects */
-        #view-settings .glow-blue { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); background-color: #2563eb; }
-        #view-settings .glow-purple { box-shadow: 0 0 15px rgba(139, 92, 246, 0.5); background-color: #8b5cf6; }
-        #view-settings .glow-green { box-shadow: 0 0 15px rgba(34, 197, 94, 0.5); background-color: #22c55e; }
-        #view-settings .glow-yellow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.5); background-color: #eab308; }
-        #view-settings .glow-cyan { box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); background-color: #06b6d4; }
-        #view-settings .glow-pink { box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); background-color: #ec4899; }
-        #view-settings .glow-orange { box-shadow: 0 0 15px rgba(249, 115, 22, 0.5); background-color: #f97316; }
-        #view-settings .glow-teal { box-shadow: 0 0 15px rgba(20, 184, 166, 0.5); background-color: #14b8a6; }
+        /* Glow effects removed */
 
         /* Scoped styles for the withdrawal success view */
         #view-withdraw-success {
@@ -2697,6 +2802,10 @@
             0% { transform: scale(1); opacity: 0.9; }
             50% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(1); opacity: 0.9; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.12; transform: scale(1); }
+            50% { opacity: 0.18; transform: scale(1.08); }
         }
 
 
@@ -6000,6 +6109,11 @@
 
     <!-- AUTHENTICATION CONTAINER -->
     <div id="auth-container">
+        <!-- Atmospheric Background Image (behind all auth forms) -->
+        <div id="auth-atmospheric-bg" style="position: fixed; bottom: 0; left: 0; width: 100%; height: 35%; z-index: -1; pointer-events: none; opacity: 0.18;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to bottom, #111418, transparent); z-index: 1;"></div>
+            <img alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5z6ZHViPr8Ri3-86i6oOzDszl_hhtdMt7GgrfQg2MjFvCafpetbD60KJ-5N58GSem8u3RPQyKGRz4qznJFuIXLdqgqol-9bLgzfr1_4fma_b1yMdP1HVLF9uMPSsFzeE0M3_6okzP3B0v-rcXbJ-Nd8gJWQCd98v4B4BJSg5p2LSNtLVweGaf8avaRGnwA9nXzgLLpOwnBimxAdQRhfb3rhXlsaKEHKLfOZtL7pSsqA9X32Bs0aPQf8MOTK46W8FdPdOJM9KCfyo" />
+        </div>
         <!-- LOGIN FORM -->
         <div id="login-form-wrapper" class="auth-form-wrapper active">
             <!-- Atmospheric Background Element -->
@@ -6072,37 +6186,226 @@
         </div>
 
         <!-- REGISTER FORM -->
-        <div id="register-form-wrapper" class="auth-form-wrapper">
-            <form id="register-form" class="auth-form">
-                <img src="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140253150_1000258938.png" alt="ICTEX Trade Logo" class="auth-logo">
-                <h2>Create Account</h2>
-                <div class="input-group country-select-wrap">
-                    <button type="button" id="country-select-display" class="country-select-display" aria-haspopup="dialog" aria-expanded="false">
-                        <div class="country-select-display-left">
-                        
-                            <img id="country-select-flag" class="country-select-flag world-default" alt="Select country">
-                            <div class="country-select-text-wrap">
-                                <span class="country-select-label">Country</span>
-                                <span id="country-select-value" class="country-select-value">Select Country</span>
+        <div id="register-form-wrapper" class="auth-form-wrapper" style="max-width: 440px; margin-top: 10px; position: relative; overflow: visible;">
+            <!-- Glow Orbs Background -->
+            <div style="position: absolute; width: 280px; height: 280px; border-radius: 50%; background: #2962FF; filter: blur(100px); opacity: 0.12; top: -80px; left: -100px; z-index: 0; pointer-events: none; animation: pulse 4s ease-in-out infinite;"></div>
+            <div style="position: absolute; width: 200px; height: 200px; border-radius: 50%; background: #0CCF56; filter: blur(90px); opacity: 0.08; bottom: 40px; right: -60px; z-index: 0; pointer-events: none;"></div>
+            <div style="position: absolute; width: 240px; height: 240px; border-radius: 50%; background: #9C27B0; filter: blur(100px); opacity: 0.05; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none;"></div>
+
+            <!-- Progress Indicator / Steps Header -->
+            <div id="register-steps-header" class="w-full flex flex-col gap-2 pt-2 px-1 pb-4" style="position: relative; z-index: 1;">
+                <div class="flex justify-between items-center px-1">
+                    <span id="register-step-title-count" class="font-label-caps text-label-caps text-on-surface-variant text-[11px] font-bold" style="color: #8d9ece; font-family: 'Inter', sans-serif;">STEP 1 OF 3</span>
+                    <span id="register-step-title-text" class="font-label-caps text-label-caps text-action-blue text-[11px] font-bold" style="color: #2962ff; font-family: 'Inter', sans-serif;">PERSONAL INFO</span>
+                </div>
+                <div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden" style="background-color: #2e3e6b; height: 6px; border-radius: 9999px;">
+                    <div id="register-progress-bar" class="h-full bg-action-blue w-1/3 shadow-[0_0_10px_rgba(41,98,255,0.8)] transition-all duration-500" style="background-color: #2962ff; width: 33.33%; height: 100%; border-radius: 9999px;"></div>
+                </div>
+            </div>
+
+            <!-- STEP 1: Personal Info -->
+            <div id="register-step-1-view" class="w-full" style="position: relative; z-index: 1;">
+                <!-- Brand Logo Section -->
+                <div style="text-align: center; margin-bottom: 28px;">
+                    <h1 style="font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 800; color: #2962FF; letter-spacing: -0.02em; font-style: italic; line-height: 1.1; margin: 0;">ICTEX</h1>
+                    <p style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; color: #8d9ece; letter-spacing: 0.2em; text-transform: uppercase; margin: 8px 0 0 0;">INSTITUTIONAL GRADE EXCHANGE</p>
+                </div>
+                <!-- Registration Form Card -->
+                <div class="glass-card w-full p-6 rounded-xl flex flex-col gap-6" style="background: rgba(22, 27, 36, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.07); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07); border-radius: 12px; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="flex flex-col gap-1">
+                        <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold text-white text-2xl" style="margin: 0; font-size: 24px; font-weight: 700; color: #fff;">Create Account</h2>
+                        <p class="text-on-surface-variant text-sm" style="color: #8d9ece; margin: 4px 0 0 0; font-size: 14px;">Join the elite trading ecosystem.</p>
+                    </div>
+                    <form id="register-form" class="flex flex-col gap-4" style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Email Input -->
+                        <div class="flex flex-col gap-1.5" style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant pl-1" style="font-size: 12px; font-weight: 700; color: #8d9ece; font-family: 'Inter', sans-serif; letter-spacing: 0.08em;">EMAIL ADDRESS</label>
+                            <div class="relative flex items-center group" style="position: relative; display: flex; align-items: center;">
+                                <span class="material-symbols-outlined absolute left-3 text-outline group-focus-within:text-action-blue transition-colors" style="position: absolute; left: 12px; color: #8d90a2; pointer-events: none; z-index: 10;">mail</span>
+                                <input class="w-full bg-surface-secondary border-outline-variant text-on-surface rounded-lg py-3 pl-10 pr-4 focus:ring-0 focus:border-action-blue transition-all input-focus-pulse placeholder:text-outline/50 font-data-mono text-data-mono" style="width: 100%; background-color: #161B24; border: 1px solid #434656; color: #e1e2e8; padding: 12px 16px 12px 40px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px;" placeholder="name@company.com" type="email" id="register-email" required />
                             </div>
                         </div>
-                        <svg class="country-select-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
-                    </button>
-                    <select id="register-country" class="auth-input country-select" required>
-                        <option value="" disabled selected>Select Country</option>
-                    </select>
+                        <!-- Country Selector (triggers existing country-picker bottom sheet) -->
+                        <div class="flex flex-col gap-1.5" style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant pl-1" style="font-size: 12px; font-weight: 700; color: #8d9ece; font-family: 'Inter', sans-serif; letter-spacing: 0.08em;">RESIDENCY</label>
+                            <button type="button" id="country-select-display" class="country-select-display" aria-haspopup="dialog" aria-expanded="false" style="width: 100%; background-color: #161B24; border: 1px solid #434656; color: #e1e2e8; padding: 12px 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s;">
+                                <img id="country-select-flag" class="country-select-flag world-default" alt="Select country" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: rgba(255,255,255,0.08);">
+                                <span id="country-select-value" class="country-select-value" style="flex: 1; text-align: left; color: #8d90a2; font-weight: 500;">Select Country</span>
+                                <span class="material-symbols-outlined" style="color: #8d90a2; font-size: 20px; flex-shrink: 0; transition: transform 0.2s;">expand_more</span>
+                            </button>
+                            <!-- Hidden native select for form data -->
+                            <select id="register-country" style="display: none;" required>
+                                <option value="" disabled selected>Select Country</option>
+                            </select>
+                        </div>
+                        <!-- Password Input -->
+                        <div class="flex flex-col gap-1.5" style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant pl-1" style="font-size: 12px; font-weight: 700; color: #8d9ece; font-family: 'Inter', sans-serif; letter-spacing: 0.08em;">PASSWORD</label>
+                            <div class="relative flex items-center group" style="position: relative; display: flex; align-items: center;">
+                                <span class="material-symbols-outlined absolute left-3 text-outline group-focus-within:text-action-blue transition-colors" style="position: absolute; left: 12px; color: #8d90a2; pointer-events: none; z-index: 10;">lock</span>
+                                <input class="w-full bg-surface-secondary border-outline-variant text-on-surface rounded-lg py-3 pl-10 pr-12 focus:ring-0 focus:border-action-blue transition-all input-focus-pulse placeholder:text-outline/50 font-data-mono text-data-mono" style="width: 100%; background-color: #161B24; border: 1px solid #434656; color: #e1e2e8; padding: 12px 48px 12px 40px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px;" id="register-password" placeholder="••••••••" type="password" required />
+                                <button class="absolute right-3 flex items-center justify-center p-1 text-outline hover:text-on-surface transition-colors" id="reg-password-toggle-btn" type="button" style="position: absolute; right: 12px; color: #8d90a2; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; padding: 4px;">
+                                    <span class="material-symbols-outlined" id="reg-pass-visibility-icon" style="font-size: 20px;">visibility</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Referral Code (Optional) -->
+                        <div class="flex flex-col gap-1.5" style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant pl-1" style="font-size: 12px; font-weight: 700; color: #8d9ece; font-family: 'Inter', sans-serif; letter-spacing: 0.08em;">REFERRAL CODE (OPTIONAL)</label>
+                            <div class="relative flex items-center group" style="position: relative; display: flex; align-items: center;">
+                                <span class="material-symbols-outlined absolute left-3 text-outline group-focus-within:text-action-blue transition-colors" style="position: absolute; left: 12px; color: #8d90a2; pointer-events: none; z-index: 10;">redeem</span>
+                                <input class="w-full bg-surface-secondary border-outline-variant text-on-surface rounded-lg py-3 pl-10 pr-4 focus:ring-0 focus:border-action-blue transition-all input-focus-pulse placeholder:text-outline/50 font-data-mono text-data-mono" style="width: 100%; background-color: #161B24; border: 1px solid #434656; color: #e1e2e8; padding: 12px 16px 12px 40px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px;" placeholder="Optional Referral Code" type="text" id="register-mentor-id" />
+                            </div>
+                        </div>
+                        <!-- Primary CTA -->
+                        <button class="w-full mt-4 bg-action-blue text-white font-bold py-4 rounded-lg shadow-[0_0_20px_rgba(41,98,255,0.4)] hover:shadow-[0_0_30px_rgba(41,98,255,0.6)] btn-glow transition-all duration-200 uppercase tracking-widest text-sm" style="background-color: #2962FF; border: none; cursor: pointer; font-size: 14px; font-weight: 700; padding: 16px 0; border-radius: 8px; letter-spacing: 0.1em; color: #fff; width: 100%; margin-top: 16px; transition: all 0.2s;" type="submit">
+                            Create Free Account
+                        </button>
+                    </form>
+                    <!-- Security Notice -->
+                    <div class="flex items-center gap-2 justify-center py-2" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="material-symbols-outlined text-[16px] text-bull-green" style="color: #0CCF56; font-size: 16px;">verified_user</span>
+                        <p class="text-[10px] text-on-surface-variant uppercase tracking-tighter" style="font-size: 10px; color: #8d9ece; text-transform: uppercase; margin: 0; letter-spacing: 0.05em;">SECURED WITH AES-256 BANK-LEVEL ENCRYPTION</p>
+                    </div>
                 </div>
-                <div class="input-group"> <input type="email" id="register-email" class="auth-input" placeholder="Email" required> </div>
-                <div class="input-group"> <input type="password" id="register-password" class="auth-input" placeholder="Password (min. 6 characters)" required> </div>
-                <div class="input-group"> <input type="text" id="register-mentor-id" class="auth-input" placeholder="Referral Code (Optional)"> </div>
-                <label class="age-check-row">
-                    <input type="checkbox" id="register-age-check" required>
-                    <span>I confirm that I am 18 years or older, legally allowed to create an account, and I understand trading involves risk.</span>
-                </label>
-                <button type="submit" class="auth-button">Sign Up</button>
-                <p class="form-toggle"> Already have an account? <a id="show-login">Login</a> </p>
-            </form>
-             <div id="register-loader" class="auth-loader"></div>
+                <!-- Footer Links -->
+                <div class="mt-6 text-center flex flex-col gap-4" style="text-align: center; margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+                    <p class="text-on-surface-variant" style="color: #bfc7d5; font-size: 14px; margin: 0;">
+                        Already have an account? 
+                        <a class="text-action-blue font-bold hover:underline transition-all" style="color: #2962FF; font-weight: 700; cursor: pointer;" id="show-login">Log In</a>
+                    </p>
+                    <div class="flex gap-6 justify-center" style="display: flex; justify-content: center; gap: 24px; margin-top: 8px;">
+                        <a class="text-xs text-outline hover:text-on-surface-variant transition-colors" style="font-size: 12px; color: #8d90a2;" href="#">Privacy Policy</a>
+                        <a class="text-xs text-outline hover:text-on-surface-variant transition-colors" style="font-size: 12px; color: #8d90a2;" href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Security Setup -->
+            <div id="register-step-2-view" class="w-full hidden">
+                <div class="px-2 pt-2 pb-4" style="text-align: center; padding: 8px 8px 16px 8px;">
+                    <h1 class="text-white tracking-tight text-[26px] font-bold leading-tight text-center pb-2" style="font-size: 26px; font-weight: 700; color: #fff; line-height: 1.2; margin: 0 0 8px 0;">Secure Your Terminal</h1>
+                    <p class="text-[#8d9ece] text-center text-sm px-4" style="color: #8d9ece; font-size: 14px; margin: 0;">Choose a primary security method to protect your assets and trading data.</p>
+                </div>
+                <!-- Security Options Container -->
+                <div class="flex flex-col gap-4 p-2" style="display: flex; flex-direction: column; gap: 16px; padding: 8px;">
+                    <!-- Biometric Option -->
+                    <label class="security-option group flex items-start gap-4 rounded-xl border border-solid border-[#2e3e6b] p-5 cursor-pointer transition-all hover:bg-[#161b24]" style="display: flex; align-items: flex-start; gap: 16px; border: 1px solid #2e3e6b; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s;">
+                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#1c2333] text-primary group-hover:scale-110 transition-transform" style="width: 40px; height: 40px; background-color: #1c2333; color: #b6c4ff; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0;">
+                            <span class="material-symbols-outlined text-[28px]" style="font-size: 28px;">fingerprint</span>
+                        </div>
+                        <div class="flex grow flex-col gap-1" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                            <p class="text-white text-base font-semibold leading-tight" style="color: #fff; font-size: 16px; font-weight: 600; margin: 0;">Biometric Passkey</p>
+                            <p class="text-[#8d9ece] text-sm font-normal leading-normal" style="color: #8d9ece; font-size: 14px; margin: 0;">Login instantly with FaceID or Fingerprint</p>
+                        </div>
+                        <div class="pt-1" style="padding-top: 4px;">
+                            <input checked id="sec-biometric-radio" class="h-5 w-5 border-2 border-[#2e3e6b] bg-transparent text-transparent checked:border-[#2962ff] checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-[#2962ff]" name="security_method" type="radio" value="biometric" style="cursor: pointer; width: 20px; height: 20px;" />
+                        </div>
+                    </label>
+                    <!-- Telegram Option -->
+                    <label class="security-option group flex items-start gap-4 rounded-xl border border-solid border-[#2e3e6b] p-5 cursor-pointer transition-all hover:bg-[#161b24]" style="display: flex; align-items: flex-start; gap: 16px; border: 1px solid #2e3e6b; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s;">
+                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#1c2333] text-primary group-hover:scale-110 transition-transform" style="width: 40px; height: 40px; background-color: #1c2333; color: #b6c4ff; display: flex; align-items: center; justify-content: center; border-radius: 8px; flex-shrink: 0;">
+                            <span class="material-symbols-outlined text-[28px]" style="font-size: 28px;">send</span>
+                        </div>
+                        <div class="flex grow flex-col gap-1" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                            <p class="text-white text-base font-semibold leading-tight" style="color: #fff; font-size: 16px; font-weight: 600; margin: 0;">Telegram 2FA</p>
+                            <p class="text-[#8d9ece] text-sm font-normal leading-normal" style="color: #8d9ece; font-size: 14px; margin: 0;">Receive secure OTP codes via Telegram</p>
+                        </div>
+                        <div class="pt-1" style="padding-top: 4px;">
+                            <input id="sec-telegram-radio" class="h-5 w-5 border-2 border-[#2e3e6b] bg-transparent text-transparent checked:border-[#2962ff] checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-[#2962ff]" name="security_method" type="radio" value="telegram" style="cursor: pointer; width: 20px; height: 20px;" />
+                        </div>
+                    </label>
+                </div>
+                <!-- Atmospheric Image Context -->
+                <div class="mt-4 px-2 mb-6" style="margin-top: 16px; margin-bottom: 24px; padding: 0 8px;">
+                    <div class="h-32 w-full rounded-2xl overflow-hidden relative border border-border-glass" style="height: 128px; border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 16px; overflow: hidden; position: relative;">
+                        <img class="w-full h-full object-cover opacity-40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJJe2y_mC26dJzfXK5dwUoWAS15Gr335qQN-xtE3XSYGtUi_nxHC_P_qJPZl7ovNxUAVnpu2fwgQXT-bCNIcPvINEL8QiBCDCUtJ4hS3NbrtgAfQ66fdfDEA7Rf5VnqPGTK6nWnkoaa5AXLfHT6jVCwfsfCjRsuysDqyN2wILPOsNlY_ijRFmmIaeZHuxED_VY6Vej8mxtff5i6hWfz183lkEnIeAEto0Rgx9NhfeB0E28raHtIn1_owq_ynyd6MnBT7mZ4EJkFhw" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.4;" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f1524] to-transparent" style="position: absolute; inset: 0; background: linear-gradient(to top, #0f1524, transparent);"></div>
+                        <div class="absolute bottom-4 left-4 right-4 text-center" style="position: absolute; bottom: 16px; left: 16px; right: 16px; text-align: center;">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-[0.2em]" style="font-size: 10px; color: #b6c4ff; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;">Institutional Encryption Active</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-3 px-2 py-4" style="display: flex; flex-direction: column; gap: 12px; padding: 8px 8px 16px 8px;">
+                    <button id="step-2-continue-btn" class="glow-button flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-[#2962ff] text-white text-base font-bold leading-normal tracking-[0.015em] w-full transition-transform active:scale-95" style="background-color: #2962ff; color: white; border: none; font-weight: 700; height: 56px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; width: 100%;">
+                        <span>Continue to Last Step</span>
+                    </button>
+                    <button id="step-2-skip-btn" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-[#2e3e6b] text-[#8d9ece] text-sm font-semibold leading-normal w-full transition-colors hover:text-white hover:border-white" style="background: transparent; border: 1px solid #2e3e6b; color: #8d9ece; height: 48px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; width: 100%;">
+                        <span>Skip for now</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Customize Experience -->
+            <div id="register-step-3-view" class="w-full hidden">
+                <div class="flex flex-col gap-2 p-2" style="display: flex; flex-direction: column; gap: 8px; padding: 8px;">
+                    <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold tracking-tight text-white text-2xl" style="font-size: 24px; font-weight: 700; color: #fff; margin: 0;">Customize Experience</h1>
+                    <p class="text-on-surface-variant opacity-80" style="color: #c3c5d8; opacity: 0.8; font-size: 14px; margin: 0;">Configure your terminal settings to match your professional workflow.</p>
+                </div>
+                <!-- Experience Level Selection -->
+                <div class="flex flex-col gap-4 p-2" style="display: flex; flex-direction: column; gap: 16px; padding: 8px;">
+                    <label class="font-label-caps text-label-caps text-on-surface-variant" style="font-size: 12px; font-weight: 700; color: #c3c5d8; font-family: 'Inter', sans-serif; letter-spacing: 0.08em;">TRADING EXPERIENCE LEVEL</label>
+                    <div class="grid grid-cols-3 gap-2 p-1.5 bg-surface-container-low rounded-xl border border-border-glass" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background-color: #191c20; border: 1px solid rgba(255, 255, 255, 0.07); padding: 6px; border-radius: 12px;">
+                        <button type="button" class="level-btn py-3 rounded-lg font-label-caps text-label-caps text-on-surface-variant transition-all duration-200 hover:bg-surface-variant/30" style="background: none; border: none; cursor: pointer; color: #c3c5d8; padding: 12px 0; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase;" onclick="window.selectRegistrationLevel(this, 'Beginner')">
+                            Beginner
+                        </button>
+                        <button type="button" class="level-btn py-3 rounded-lg font-label-caps text-label-caps text-on-surface-variant transition-all duration-200 hover:bg-surface-variant/30" style="background: none; border: none; cursor: pointer; color: #c3c5d8; padding: 12px 0; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase;" onclick="window.selectRegistrationLevel(this, 'Intermediate')">
+                            Intermediate
+                        </button>
+                        <button type="button" class="level-btn py-3 rounded-lg font-label-caps text-label-caps bg-action-blue text-on-primary-container active-segment transition-all duration-200" style="background-color: #2962FF; border: none; cursor: pointer; color: #fff; padding: 12px 0; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; box-shadow: 0 0 15px rgba(41, 98, 255, 0.3);" onclick="window.selectRegistrationLevel(this, 'Professional')">
+                            Professional
+                        </button>
+                    </div>
+                </div>
+                <!-- Preferences Section -->
+                <div class="glass-card p-6 rounded-xl flex flex-col gap-6" style="background: rgba(22, 27, 36, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 12px; display: flex; flex-direction: column; gap: 20px; padding: 24px; margin-top: 10px;">
+                    <!-- Toggle: Notifications -->
+                    <div class="flex items-center justify-between group cursor-pointer" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="window.toggleRegistrationCheckbox('reg-notif-check')">
+                        <div class="flex flex-col gap-1" style="display: flex; flex-direction: column; gap: 4px;">
+                            <span class="font-body-base text-body-base text-on-surface font-medium text-white" style="color: #fff; font-size: 16px; font-weight: 500;">Notification Alerts</span>
+                            <span class="text-xs text-on-surface-variant opacity-70" style="color: #c3c5d8; opacity: 0.7; font-size: 12px;">Push notifications for market shifts</span>
+                        </div>
+                        <div class="w-12 h-6 rounded-full bg-surface-variant relative transition-colors duration-200 flex items-center px-1" id="reg-notif-check" style="position: relative; width: 48px; height: 24px; background-color: #0CCF56; border-radius: 9999px; cursor: pointer; display: flex; align-items: center; padding: 0 4px; transition: background-color 0.2s;">
+                            <div class="dot w-4 h-4 bg-white rounded-full transition-transform duration-200 translate-x-6" style="width: 16px; height: 16px; background-color: white; border-radius: 50%; transform: translateX(24px); transition: transform 0.2s;"></div>
+                        </div>
+                    </div>
+                    <div class="h-px bg-border-glass" style="height: 1px; background-color: rgba(255, 255, 255, 0.07); margin: 4px 0;"></div>
+                    <!-- Checkbox: Terms -->
+                    <div class="flex gap-4 items-start cursor-pointer group" style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;" onclick="window.toggleRegistrationCheckbox('reg-terms-check')">
+                        <div class="mt-1 w-5 h-5 rounded bg-surface-variant border border-border-glass flex items-center justify-center transition-all duration-200 group-hover:border-action-blue" id="reg-terms-check" style="position: relative; width: 20px; height: 20px; background-color: #32353a; border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 4px; transition: all 0.2s;">
+                            <span class="material-symbols-outlined text-xs text-on-primary hidden" id="reg-terms-icon" style="color: #002780; font-size: 14px; font-weight: bold;">check</span>
+                        </div>
+                        <div class="flex flex-col gap-1" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                            <p class="text-sm leading-relaxed text-on-surface-variant" style="color: #c3c5d8; font-size: 14px; margin: 0; line-height: 1.5;">
+                                I agree to the <span class="text-action-blue underline" style="color: #2962FF; text-decoration: underline;">Terms of Service</span> and <span class="text-action-blue underline" style="color: #2962FF; text-decoration: underline;">Risk Disclosure</span> policies.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Image Decorator -->
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden glass-card mt-4" style="border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 12px; aspect-ratio: 16/9; overflow: hidden; position: relative; margin-top: 16px; width: 100%;">
+                    <img class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoHNmoS56carH21jjOrnIj3B8kQ5R1f8GRJVttzrIZxSbAnAB6xcxVO8SgcDWSpX9QnG40zQgapWhpmJud88KGjWNs9LgHEP7EFlZDrI_PolhpsXNBlhBmifk1q5OodLy8etgjKtFe7NZaCVW2a4cvxAZ1uEHPjy-ngqxRotdFXIVcay8WE45FjQPK50tS6qwoQCGQ5iqyHvs32sVGJKu9V58D0nADJPoWoog94JrJTTWjJ5iowEhd0Lvz6mpw3t4fOCUOeQFwBXQ" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#080B0F] via-transparent to-transparent" style="position: absolute; inset: 0; background: linear-gradient(to top, #080B0F, transparent);"></div>
+                    <div class="absolute bottom-4 left-4 flex flex-col" style="position: absolute; bottom: 16px; left: 16px; display: flex; flex-direction: column;">
+                        <span class="font-micro-data text-micro-data text-bull-green uppercase tracking-widest" style="font-size: 10px; color: #0CCF56; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace;">System Status</span>
+                        <span class="font-data-mono text-data-mono text-on-surface" style="font-size: 12px; color: #e1e2e8; font-family: 'JetBrains Mono', monospace;">Secure Node: ACTIVE</span>
+                    </div>
+                </div>
+                <!-- Primary Action -->
+                <div class="flex flex-col gap-4 mt-6" style="display: flex; flex-direction: column; gap: 16px; margin-top: 24px;">
+                    <button id="activate-terminal-btn" class="w-full py-5 bg-bull-green text-on-secondary rounded-xl font-headline-lg-mobile text-headline-lg-mobile font-bold shadow-[0_8px_32px_rgba(12,207,86,0.3)] hover:brightness-110 active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-3" style="background-color: #0CCF56; color: #003912; font-weight: 700; height: 56px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; width: 100%; transition: all 0.2s;" type="button">
+                        <span>Enter Trading Terminal</span>
+                        <span class="material-symbols-outlined font-bold" style="font-size: 20px;">trending_up</span>
+                    </button>
+                    <p class="text-center text-xs text-on-surface-variant opacity-50 font-data-mono" style="font-size: 10px; color: #8d9ece; opacity: 0.5; text-align: center; font-family: 'JetBrains Mono', monospace; margin: 0;">
+                        ENCRYPTED SESSION • END-TO-END TLS 1.3
+                    </p>
+                </div>
+            </div>
+
+            <!-- Loader element -->
+            <div id="register-loader" class="auth-loader" style="display: none;"></div>
         </div>
 
         <div id="reset-password-form-wrapper" class="auth-form-wrapper">
@@ -6630,28 +6933,18 @@
                 <div id="view-settings" class="view">
                     <div class="page-content">
                         <!-- NEW HEADER -->
-                        <header class="settings-header">
-                            <div class="z-10 relative flex items-center gap-3">
-                                <button class="back-btn" data-view="chart" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; transition: background 0.2s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 24px; height: 24px;"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg>
-                                </button>
-                                <div>
-                                    <h1 class="settings-header-title">Settings</h1>
-                                    <p class="settings-header-subtitle">Manage your account and preferences</p>
-                                </div>
-                            </div>
-                            <div class="settings-header-image-container">
-                                <img alt="3D Gear Settings Icon" class="settings-header-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHp-HIq1noHSzQi0v0KZV5VVwBK9bGYwoLd3YkailZPLaYMqZFpRXvcaAaPtnMEEMi-UzbBo1d0bloLU5lZBvtAUrMGwaTFN4ymv4MT8qC_tSzfuo0RVyRserwktWqC-68SbzLr5mSX5dFrf2w7mra1RG1639s18s-uwEnQa0akrsLZa5neHFODnmK4asu-jswFFn9SpsqhD5claPhxUi2RXivsGpidqRU_DqwwdTWeS3t43ajbU_fFrWBc9ZB6s0Ar4DzwLXBhVY"/>
+                        <header class="settings-header" style="justify-content: center; text-align: center; padding-bottom: 1.5rem;">
+                            <div style="position: relative; z-index: 10;">
+                                <h1 class="settings-header-title">Settings</h1>
+                                <p class="settings-header-subtitle">Manage your account and preferences</p>
                             </div>
                         </header>
                         <div class="settings-list-container">
                             <!-- Account Item -->
                             <a class="settings-list-item glass-card" data-view="profile">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-blue">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Account</h2>
@@ -6666,10 +6959,8 @@
                             <a class="settings-list-item glass-card-purple" data-view="copy-trading">
                                 <div class="glass-card-purple-gradient"></div>
                                 <div class="item-left" style="position: relative; z-index: 10;">
-                                    <div class="icon-wrapper glow-purple">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Copy Trading</h2>
@@ -6683,10 +6974,8 @@
                             <!-- Leader Board Item -->
                             <a class="settings-list-item glass-card" data-view="leaderboard">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-green">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5aa2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5aa2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Leader Board</h2>
@@ -6700,10 +6989,8 @@
                             <!-- Notification Item -->
                             <a class="settings-list-item glass-card" id="settings-notifications-link" data-view="notifications" href="javascript:void(0)">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-yellow">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Notification</h2>
@@ -6720,10 +7007,8 @@
                             <!-- Trade Analysis Item -->
                             <a class="settings-list-item glass-card" data-view="analysis">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-blue">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Trade Analysis</h2>
@@ -6737,10 +7022,8 @@
                             <!-- Transactions Item -->
                             <a class="settings-list-item glass-card" data-view="transactions">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-teal">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Transactions</h2>
@@ -6754,10 +7037,8 @@
                             <!-- Task Reward Item -->
                             <a class="settings-list-item glass-card" data-view="rewards">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-pink">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 12 17 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Task Reward</h2>
@@ -6771,10 +7052,8 @@
                             <!-- BTC Mining Item -->
                             <a class="settings-list-item glass-card" data-view="miner">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-orange">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M14.83 9.17a3.1 3.1 0 0 0-2.12-.88H9v8h3.97a3 3 0 0 0 2.12-.88 3.1 3.1 0 0 0 .88-2.12c0-1.4-.95-2.61-2.29-2.95 1.13-.39 1.9-1.5 1.9-2.77a2.9 2.9 0 0 0-.75-2.06z"></path><path d="M9 12h5.5"></path><path d="M11 8V6"></path><path d="M14 8V6"></path><path d="M11 18v-2"></path><path d="M14 18v-2"></path></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">BTC Mining</h2>
@@ -6788,10 +7067,8 @@
                             <!-- Support Item -->
                             <a id="support-grid-btn" class="settings-list-item glass-card" data-view="support">
                                 <div class="item-left">
-                                    <div class="icon-wrapper glow-cyan">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
+                                    <div class="icon-wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Support</h2>
@@ -7060,33 +7337,190 @@
                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
                         <h2>Trade Analysis</h2>
                     </div>
-                    <div class="page-content">
-                        <div class="analysis-hero-card">
-                            <h3>Trading performance overview</h3>
-                            <p class="analysis-hero-sub">Review your win rate, total profit and most profitable instruments with a cleaner premium analysis layout.</p>
-                        </div>
-                        <div class="premium-card" style="margin: 0 10px 20px; text-align: center;">
-                            <h3 style="text-align: center; margin-top: 0; margin-bottom: 8px; font-size: 1rem; color: var(--text-secondary);">Total Trading Volume</h3>
-                            <div id="analysis-total-volume" class="stat-card-value" style="font-size: 2rem; color: var(--color-golden);">$0.00</div>
-                        </div>
-                        <div class="analysis-filters">
-                            <button class="filter-btn active" data-period="all">All Time</button> <button class="filter-btn" data-period="7d">7 Days</button>
-                            <button class="filter-btn" data-period="3d">3 Days</button> <button class="filter-btn" data-period="1d">Today</button>
-                        </div>
-                        <div class="analysis-grid">
-                            <div class="stat-card"> <div class="stat-card-title">Win Rate</div> <div id="analysis-win-rate" class="stat-card-value">0%</div> </div>
-                            <div class="stat-card"> <div class="stat-card-title">Daily Profit</div> <div id="analysis-pnl" class="stat-card-value" style="display:flex; flex-direction:column; align-items:center;">$0.00</div> </div>
-                            <div class="stat-card"> <div class="stat-card-title">Total Trades</div> <div id="analysis-total-trades" class="stat-card-value">0</div> </div>
-                            <div class="stat-card"> <div class="stat-card-title">Avg. Investment</div> <div id="analysis-avg-invest" class="stat-card-value">$0.00</div> </div>
-                        </div>
-                        <div id="top-instruments-section" style="margin: 30px 10px 10px 10px; background: var(--primary-surface); padding: 20px; border-radius: 12px; display: none; border: 1px solid var(--border-color);">
-                            <h3 style="text-align: center; margin-top: 0; margin-bottom: 25px;">Top 3 Most Profitable Instruments</h3>
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
-                                <div id="top-instruments-pie-chart" style="width: 150px; height: 150px; border-radius: 50%;"></div>
-                                <div id="top-instruments-legend" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+                    <div class="page-content" style="padding: 20px;">
+                        <style>
+                            .glass-card-new { background: rgba(16, 18, 21, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; }
+                            
+                            .analysis-hero-new { padding: 20px; position: relative; overflow: hidden; margin-bottom: 24px; }
+                            .ah-top-labels { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+                            .ah-label-small { font-size: 10px; color: #707A8A; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+                            .ah-title { font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin: 4px 0 0 0; color: #EAECEF; }
+                            
+                            .ah-stats-flex { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 24px; }
+                            .ah-stat-col { display: flex; flex-direction: column; gap: 4px; }
+                            .ah-stat-val { font-size: 2.25rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #3fe96c; filter: drop-shadow(0 0 10px rgba(63, 233, 108, 0.4)); line-height: 1; }
+                            
+                            .ah-curve-container { width: 50%; height: 64px; position: relative; }
+                            
+                            .analysis-filters-seg { background: rgba(25, 28, 32, 0.6); padding: 4px; border-radius: 12px; display: flex; align-items: center; margin-bottom: 24px; }
+                            .analysis-filters-seg .filter-btn { flex: 1; text-align: center; padding: 8px 0; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 700; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; background: transparent; color: #707A8A; box-shadow: none !important; }
+                            .analysis-filters-seg .filter-btn:hover { color: #fff; }
+                            .analysis-filters-seg .filter-btn.active { background: #b6c4ff; color: #002780; box-shadow: 0 4px 15px rgba(182, 196, 255, 0.2) !important; }
+
+                            .avc-new { padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-color: rgba(255, 193, 7, 0.1); }
+                            .avc-lbl { font-size: 10px; color: #FFC107; font-weight: 700; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+                            .avc-val-wrap { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+                            .avc-val { font-size: 1.875rem; font-weight: 800; color: #fff; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
+                            .avc-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.2); display: flex; align-items: center; justify-content: center; }
+                            .avc-icon span { color: #FFC107; font-size: 24px; }
+
+                            .analysis-grid-new { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+                            .an-stat-card { padding: 20px; display: flex; flex-direction: column; gap: 16px; min-height: 120px; }
+                            .an-stat-lbl { font-size: 10px; color: #707A8A; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'JetBrains Mono', monospace; }
+                            .an-stat-val { font-size: 1.5rem; font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; line-height: 1.2; }
+                            .an-stat-sub { font-size: 10px; color: #707A8A; margin-top: 4px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+                            .an-stat-val.profit { color: #3fe96c; }
+                            .an-stat-val.loss { color: #FF4D5E; }
+                            .an-stat-sub .icon-up { color: #3fe96c; font-size: 12px; }
+
+                            .an-progress-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 4px; margin-top: 8px; overflow: hidden; }
+                            .an-progress-fill { height: 100%; background: #3fe96c; border-radius: 4px; box-shadow: 0 0 8px rgba(63,233,108,0.5); transition: width 0.5s ease; }
+
+                            .an-top-instruments { padding: 20px; margin-bottom: 24px; display: none; }
+                            .an-top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+                            .an-top-header h3 { font-size: 1rem; font-weight: 700; color: #fff; margin: 0; }
+                            .an-top-body { display: flex; flex-direction: column; gap: 32px; align-items: center; }
+                            
+                            .chart-container-new { position: relative; width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; }
+                            #top-instruments-pie-chart { position: absolute; inset: 0; border-radius: 50%; width: 100%; height: 100%; transform: rotate(-90deg); }
+                            
+                            .chart-center-info { position: absolute; text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 10; background: var(--bg-color); width: 128px; height: 128px; border-radius: 50%; justify-content: center; }
+                            .chart-center-info .lbl { font-size: 8px; color: #707A8A; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+                            .chart-center-info .val { font-size: 1.25rem; font-weight: 800; color: #fff; }
+
+                            #top-instruments-legend { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+                            .an-legend-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; }
+                            .an-legend-left { display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 0.875rem; color: #EAECEF; }
+                            .an-legend-color { width: 8px; height: 8px; border-radius: 50%; }
+                            .an-legend-pct { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; }
+
+                            .an-mood-card { position: relative; height: 180px; overflow: hidden; margin-bottom: 24px; }
+                            .an-mood-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.3; }
+                            .an-mood-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #080B0F, rgba(8, 11, 15, 0.6), transparent); padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; }
+                            .an-mood-lbl { font-size: 9px; color: #b6c4ff; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 4px; text-transform: uppercase; }
+                            .an-mood-title { font-size: 1rem; font-weight: 700; color: #fff; margin: 0 0 10px 0; }
+                            .an-mood-bar-wrap { display: flex; align-items: center; gap: 12px; }
+                            .an-mood-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 4px; display: flex; overflow: hidden; }
+                            .an-mood-bull { height: 100%; background: #3fe96c; box-shadow: 0 0 8px rgba(63,233,108,0.5); transition: width 0.5s; }
+                            .an-mood-bear { height: 100%; background: #FF4D5E; transition: width 0.5s; }
+                            .an-mood-pct { font-size: 10px; color: #707A8A; font-weight: 700; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+                        </style>
+
+                        <!-- Performance Overview Hero -->
+                        <section class="glass-card-new analysis-hero-new">
+                            <div class="ah-top-labels">
+                                <span class="ah-label-small">Performance Summary</span>
+                            </div>
+                            <h2 class="ah-title">Review your win rate and total profit</h2>
+                            <div class="ah-stats-flex">
+                                <div class="ah-stat-col">
+                                    <span class="ah-stat-val" id="hero-efficiency">+0.0%</span>
+                                    <span class="ah-label-small" style="font-size: 10px; margin-top: 4px;">Weekly Growth</span>
+                                </div>
+                                <div class="ah-curve-container">
+                                    <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 40" style="width: 100%; height: 100%;">
+                                        <defs>
+                                            <linearGradient id="curveGradient" x1="0" x2="0" y1="0" y2="1">
+                                                <stop offset="0%" stop-color="#3fe96c" stop-opacity="0.3"></stop>
+                                                <stop offset="100%" stop-color="#3fe96c" stop-opacity="0"></stop>
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M0 35 Q 20 30, 40 25 T 80 10 T 100 5 V 40 H 0 Z" fill="url(#curveGradient)"></path>
+                                        <path d="M0 35 Q 20 30, 40 25 T 80 10 T 100 5" fill="none" stroke="#3fe96c" stroke-linecap="round" stroke-width="2"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Time Filters -->
+                        <nav class="analysis-filters-seg analysis-filters">
+                            <button class="filter-btn active" data-period="all">All Time</button>
+                            <button class="filter-btn" data-period="7d">7 Days</button>
+                            <button class="filter-btn" data-period="3d">3 Days</button>
+                            <button class="filter-btn" data-period="1d">Today</button>
+                        </nav>
+
+                        <!-- Total Trading Volume -->
+                        <section class="glass-card-new avc-new">
+                            <div class="avc-left">
+                                <span class="avc-lbl">TOTAL TRADING VOLUME</span>
+                                <div class="avc-val-wrap">
+                                    <span class="avc-val" id="analysis-total-volume">$0.00</span>
+                                    <span class="material-symbols-outlined" style="color: #FFC107; font-size: 18px; font-variation-settings: 'FILL' 1;">stars</span>
+                                </div>
+                            </div>
+                            <div class="avc-icon">
+                                <span class="material-symbols-outlined">trending_up</span>
+                            </div>
+                        </section>
+
+                        <!-- Stats Grid -->
+                        <div class="analysis-grid-new">
+                            <div class="glass-card-new an-stat-card">
+                                <span class="an-stat-lbl">Win Rate</span>
+                                <div>
+                                    <div class="an-stat-val" id="analysis-win-rate">0%</div>
+                                    <div class="an-progress-bg">
+                                        <div class="an-progress-fill" id="analysis-win-progress" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-card-new an-stat-card">
+                                <span class="an-stat-lbl">Daily Profit</span>
+                                <div>
+                                    <div class="an-stat-val" id="analysis-pnl">$0.00</div>
+                                    <div class="an-stat-sub"><span class="material-symbols-outlined icon-up">expand_less</span> 4.2% from yesterday</div>
+                                </div>
+                            </div>
+                            <div class="glass-card-new an-stat-card">
+                                <span class="an-stat-lbl">Total Trades</span>
+                                <div>
+                                    <div class="an-stat-val" id="analysis-total-trades">0</div>
+                                    <div class="an-stat-sub" style="font-weight: 500;">Executed in period</div>
+                                </div>
+                            </div>
+                            <div class="glass-card-new an-stat-card">
+                                <span class="an-stat-lbl">Avg. Investment</span>
+                                <div>
+                                    <div class="an-stat-val" id="analysis-avg-invest">$0.00</div>
+                                    <div class="an-stat-sub" style="font-weight: 500;">Per position entry</div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Top Instruments -->
+                        <section class="glass-card-new an-top-instruments" id="top-instruments-section">
+                            <div class="an-top-header">
+                                <h3>Top Profitable Instruments</h3>
+                                <span class="material-symbols-outlined" style="color:#707A8A; font-size: 18px;">info</span>
+                            </div>
+                            <div class="an-top-body">
+                                <div class="chart-container-new">
+                                    <div id="top-instruments-pie-chart"></div>
+                                    <div class="chart-center-info">
+                                        <span class="lbl">Total</span>
+                                        <span class="val">100%</span>
+                                    </div>
+                                </div>
+                                <div id="top-instruments-legend"></div>
+                            </div>
+                        </section>
+
+                        <!-- Market Mood -->
+                        <section class="glass-card-new an-mood-card">
+                            <img class="an-mood-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR3_ao0snbceoug8zvrIhzT0ESUxfMyU7hOjsfK3gp5XTxK79InIviOmi4cox2i5Hdha4dfWQuArFfXUEeudCh3mkAIF11A2zqZ8h-EddKjdmCmwF2MplWz_UL4Ln8Zta968f2C0AmClC_zrTsT_Kfj2YRAeKcjz_P3MD5Qyp7MWG27j_VZdyniHts1bNZTGFMwQKhLyZg8pssG_6OX9129dDMjUA6JTYEqJvFeVUY18NKE8QL4JBUaXQ7UkvXlo3Z0EglOZO4f_iq" alt="Market Mood BG">
+                            <div class="an-mood-overlay">
+                                <span class="an-mood-lbl">MARKET MOOD</span>
+                                <h4 class="an-mood-title" id="market-mood-title">Institutional Accumulation Detected</h4>
+                                <div class="an-mood-bar-wrap">
+                                    <div class="an-mood-bar">
+                                        <div class="an-mood-bull" id="mood-bull-bar" style="width: 75%"></div>
+                                        <div class="an-mood-bear" id="mood-bear-bar" style="width: 25%"></div>
+                                    </div>
+                                    <span class="an-mood-pct" id="mood-pct-text">75% BULLISH</span>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
                 
@@ -7456,12 +7890,12 @@
 
             <nav class="app-nav new-nav" id="app-nav">
                 <button class="nav-btn-new active" data-view="chart">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20h4V4h-4v16zm-6 0h4v-8H4v8zM16 9v11h4V9h-4z"></path></svg>
-                    <span>Terminal</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="2" width="2" height="20" /><rect x="6" y="6" width="6" height="10" rx="1.5" /><rect x="16" y="2" width="2" height="20" /><rect x="14" y="11" width="6" height="8" rx="1.5" /></svg>
+                    <span>Trade</span>
                 </button>
                 <button class="nav-btn-new" data-view="history">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></path></svg>
-                    <span>Trades</span>
+                    <span>Orders</span>
                 </button>
                 <button class="nav-btn-new" data-view="mentor">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05c1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -8418,16 +8852,20 @@
             if (option && option.value) {
                 const code = option.dataset.code || '';
                 countrySelectValue.textContent = option.value;
+                countrySelectValue.style.color = '#e1e2e8';
                 countrySelectFlag.src = getFlagImageUrl(code);
                 countrySelectFlag.alt = option.value;
                 countrySelectFlag.classList.remove('world-default');
                 countrySelectDisplay.classList.add('has-value');
+                countrySelectDisplay.style.borderColor = 'rgba(41, 98, 255, 0.45)';
             } else {
                 countrySelectValue.textContent = 'Select Country';
+                countrySelectValue.style.color = '#8d90a2';
                 countrySelectFlag.src = WORLD_ICON_DATA_URL;
                 countrySelectFlag.alt = 'World icon';
                 countrySelectFlag.classList.add('world-default');
                 countrySelectDisplay.classList.remove('has-value');
+                countrySelectDisplay.style.borderColor = '#434656';
             }
         }
 
@@ -9281,6 +9719,24 @@
                     try {
                         const snap = await database.ref(`users/${user.uid}`).once('value');
                         const userData = snap.val();
+                        
+                        // Check if they are mid-registration
+                        const registrationCompleted = userData && userData.settings && userData.settings.registrationCompleted === true;
+                        if (!registrationCompleted && sessionStorage.getItem('registrationCompleted') !== 'true') {
+                            // Hold back App, stay on current registration wizard step!
+                            authContainer.style.display = 'flex';
+                            mainAppWrapper.style.display = 'none';
+                            hideAppLoader();
+                            
+                            const savedStep = parseInt(sessionStorage.getItem('registrationStep')) || 2;
+                            if (typeof showRegistrationStep === 'function') {
+                                showRegistrationStep(savedStep);
+                            } else {
+                                sessionStorage.setItem('registrationStep', String(savedStep));
+                            }
+                            return;
+                        }
+
                         const isLoginOtpOn = userData && userData.telegramChatId ? (userData.otpLogin !== false) : false;
 
                         if (isLoginOtpOn && sessionStorage.getItem('otpVerified') !== 'true') {
@@ -9458,6 +9914,9 @@
         if (currentActive) { currentActive.classList.add('left-out'); }
         const targetForm = document.getElementById(`${formToShow}-form-wrapper`);
         if (targetForm) { targetForm.classList.add('active'); }
+        if (formToShow === 'register') {
+            showRegistrationStep(1);
+        }
     }
     
     showRegisterBtn.addEventListener('click', (e) => { e.preventDefault(); toggleAuthForms('register'); });
@@ -9483,6 +9942,207 @@
         }
     }
     setupPasswordToggle('login-password-toggle', 'login-password');
+
+    // --- STEP-BY-STEP REGISTRATION FLOW HELPERS ---
+    let selectedExperienceLevel = 'Professional'; // default
+    let isNotificationAlertActive = true;
+    let isTermsAccepted = false;
+    let selectedSecurityMethod = 'biometric'; // default checked
+
+    window.selectRegistrationLevel = function(btn, level) {
+        document.querySelectorAll('.level-btn').forEach(b => {
+            b.classList.remove('bg-action-blue', 'text-on-primary-container', 'active-segment');
+            b.classList.add('text-on-surface-variant');
+            b.style.backgroundColor = 'transparent';
+            b.style.color = '#c3c5d8';
+            b.style.boxShadow = 'none';
+        });
+        btn.classList.remove('text-on-surface-variant');
+        btn.classList.add('bg-action-blue', 'text-on-primary-container', 'active-segment');
+        btn.style.backgroundColor = '#2962FF';
+        btn.style.color = 'white';
+        btn.style.boxShadow = '0 0 15px rgba(41, 98, 255, 0.3)';
+        selectedExperienceLevel = level;
+    };
+
+    window.toggleRegistrationCheckbox = function(id) {
+        const element = document.getElementById(id);
+        if (!element) return;
+        
+        if (id === 'reg-notif-check') {
+            const dot = element.querySelector('.dot');
+            if (!dot) return;
+            const isActive = isNotificationAlertActive;
+            if (isActive) {
+                dot.style.transform = 'translateX(4px)';
+                dot.classList.remove('translate-x-6');
+                element.style.backgroundColor = '#32353a';
+                isNotificationAlertActive = false;
+            } else {
+                dot.style.transform = 'translateX(24px)';
+                dot.classList.add('translate-x-6');
+                element.style.backgroundColor = '#0CCF56';
+                isNotificationAlertActive = true;
+            }
+        } else if (id === 'reg-terms-check') {
+            const icon = document.getElementById('reg-terms-icon');
+            if (!icon) return;
+            const isHidden = icon.classList.contains('hidden');
+            if (isHidden) {
+                icon.classList.remove('hidden');
+                element.style.backgroundColor = '#2962FF';
+                element.style.borderColor = '#2962FF';
+                isTermsAccepted = true;
+            } else {
+                icon.classList.add('hidden');
+                element.style.backgroundColor = '#32353a';
+                element.style.borderColor = 'rgba(255, 255, 255, 0.07)';
+                isTermsAccepted = false;
+            }
+        }
+    };
+
+    window.showRegistrationStep = function(step) {
+        sessionStorage.setItem('registrationStep', String(step));
+        
+        // Hide all views
+        const step1 = document.getElementById('register-step-1-view');
+        const step2 = document.getElementById('register-step-2-view');
+        const step3 = document.getElementById('register-step-3-view');
+        
+        if (step1) step1.classList.add('hidden');
+        if (step2) step2.classList.add('hidden');
+        if (step3) step3.classList.add('hidden');
+        
+        // Show target view
+        const targetView = document.getElementById(`register-step-${step}-view`);
+        if (targetView) targetView.classList.remove('hidden');
+        
+        // Update header progress UI
+        const stepTitleCount = document.getElementById('register-step-title-count');
+        const stepTitleText = document.getElementById('register-step-title-text');
+        const progressBar = document.getElementById('register-progress-bar');
+        
+        if (step === 1) {
+            if (stepTitleCount) stepTitleCount.textContent = 'STEP 1 OF 3';
+            if (stepTitleText) stepTitleText.textContent = 'PERSONAL INFO';
+            if (progressBar) {
+                progressBar.style.width = '33.33%';
+                progressBar.style.backgroundColor = '#2962ff';
+                progressBar.style.boxShadow = '0 0 10px rgba(41, 98, 255, 0.8)';
+            }
+        } else if (step === 2) {
+            if (stepTitleCount) stepTitleCount.textContent = 'STEP 2 OF 3';
+            if (stepTitleText) stepTitleText.textContent = 'SECURITY SETUP';
+            if (progressBar) {
+                progressBar.style.width = '66.66%';
+                progressBar.style.backgroundColor = '#2962ff';
+                progressBar.style.boxShadow = '0 0 10px rgba(41, 98, 255, 0.8)';
+            }
+        } else if (step === 3) {
+            if (stepTitleCount) stepTitleCount.textContent = 'STEP 3 OF 3';
+            if (stepTitleText) stepTitleText.textContent = 'FINALIZATION';
+            if (progressBar) {
+                progressBar.style.width = '100%';
+                progressBar.style.backgroundColor = '#0CCF56';
+                progressBar.style.boxShadow = '0 0 10px rgba(12, 207, 86, 0.8)';
+            }
+        }
+    };
+
+    // Attach step 2 & 3 triggers on script evaluation / DOM ready
+    setTimeout(() => {
+        setupPasswordToggle('reg-password-toggle-btn', 'register-password');
+        
+        document.querySelectorAll('#register-step-2-view .security-option').forEach(card => {
+            card.addEventListener('click', () => {
+                const radio = card.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    selectedSecurityMethod = radio.value;
+                }
+            });
+        });
+        
+        const step2ContinueBtn = document.getElementById('step-2-continue-btn');
+        const step2SkipBtn = document.getElementById('step-2-skip-btn');
+        
+        if (step2ContinueBtn) {
+            step2ContinueBtn.addEventListener('click', () => {
+                const user = auth.currentUser;
+                if (user) {
+                    const method = document.querySelector('input[name="security_method"]:checked')?.value || 'biometric';
+                    database.ref(`users/${user.uid}/settings/securityMethod`).set(method)
+                        .catch(err => console.error("Error setting security method:", err));
+                }
+                showRegistrationStep(3);
+            });
+        }
+        
+        if (step2SkipBtn) {
+            step2SkipBtn.addEventListener('click', () => {
+                showRegistrationStep(3);
+            });
+        }
+        
+        const activateTerminalBtn = document.getElementById('activate-terminal-btn');
+        if (activateTerminalBtn) {
+            activateTerminalBtn.addEventListener('click', () => {
+                if (!isTermsAccepted) {
+                    showNotification('Please agree to the Terms of Service to continue.', 'loss');
+                    return;
+                }
+                
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('Session expired. Please log in.', 'loss');
+                    toggleAuthForms('login');
+                    return;
+                }
+                
+                // Visual feedback for activation
+                const originalText = activateTerminalBtn.innerHTML;
+                activateTerminalBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="animation: spin 1s linear infinite; font-size: 20px; display: inline-block; vertical-align: middle; margin-right: 8px;">refresh</span> SECURING SESSION...';
+                activateTerminalBtn.disabled = true;
+                
+                const updates = {};
+                updates[`/users/${user.uid}/settings/experienceLevel`] = selectedExperienceLevel;
+                updates[`/users/${user.uid}/settings/notificationAlerts`] = isNotificationAlertActive;
+                updates[`/users/${user.uid}/settings/registrationCompleted`] = true;
+                
+                database.ref().update(updates)
+                    .then(() => {
+                        setTimeout(() => {
+                            sessionStorage.removeItem('registrationStep');
+                            sessionStorage.setItem('registrationCompleted', 'true');
+                            
+                            // Enter terminal!
+                            authContainer.style.display = 'none';
+                            mainAppWrapper.style.display = 'flex';
+                            
+                            if (!isAppInitialized) { 
+                                initApp(user); 
+                                isAppInitialized = true; 
+                            }
+                            
+                            setTimeout(() => {
+                                resizeCanvas();
+                                if(animationFrameId) cancelAnimationFrame(animationFrameId);
+                                animationFrameId = requestAnimationFrame(gameLoop);
+                            }, 50);
+                            
+                            showNotification('Access Granted. Entering ICTEX Trading Terminal.', 'win');
+                        }, 1500);
+                    })
+                    .catch(err => {
+                        console.error("Error saving step 3 settings:", err);
+                        showNotification('Error configuring experience settings.', 'loss');
+                        activateTerminalBtn.disabled = false;
+                        activateTerminalBtn.innerHTML = originalText;
+                    });
+            });
+        }
+    }, 500);
 
     // --- WebAuthn Helpers ---
     function bufferEncode(buffer) {
@@ -9623,24 +10283,16 @@
         submitBtn.innerHTML = `<svg style="animation: spin 1s linear infinite; height: 20px; width: 20px; margin-right: 8px; display: inline; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Creating Account...`;
 
         registerLoader.style.display = 'block';
-        const email = registerForm['register-email'].value;
-        const password = registerForm['register-password'].value;
-        const mentorId = registerForm['register-mentor-id'].value.trim().toUpperCase();
-        const ageAccepted = registerForm['register-age-check'].checked;
-        const country = registerForm['register-country'].value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const mentorId = document.getElementById('register-mentor-id').value.trim().toUpperCase();
+        const country = document.getElementById('register-country').value;
         const countryCode = getSelectedCountryCode();
         if (!country || !countryCode) {
             registerLoader.style.display = 'none';
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
             showNotification('Please select your country to continue.', 'loss');
-            return;
-        }
-        if (!ageAccepted) {
-            registerLoader.style.display = 'none';
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-            showNotification('Please confirm that you are 18 or older to register.', 'loss');
             return;
         }
 
@@ -9708,8 +10360,8 @@
                     return database.ref().update(updates);
                 })
                 .then(() => {
-                    showNotification('Registration successful. Please log in.', 'win');
-                    toggleAuthForms('login');
+                    sessionStorage.setItem('registrationStep', '2');
+                    showRegistrationStep(2);
                 })
                 .catch(error => {
                     showNotification(getFriendlyAuthError(error), 'loss');
@@ -10967,12 +11619,18 @@ Timestamp: ${new Date().toISOString()}
             const stats = calculateStats(filteredHistory);
 
             document.getElementById('analysis-win-rate').textContent = `${stats.winRate.toFixed(1)}%`;
+            
+            const winProgress = document.getElementById('analysis-win-progress');
+            if(winProgress) winProgress.style.width = `${stats.winRate}%`;
+            
+            const heroEff = document.getElementById('hero-efficiency');
+            if(heroEff) heroEff.textContent = `+${stats.winRate.toFixed(1)}%`;
+
             const pnlElement = document.getElementById('analysis-pnl');
             let dailyProfitVal = currentUserData ? (currentUserData.dailyProfit || 0) : 0;
-            let profitPct = 0;
-            if (balance > 0) profitPct = (dailyProfitVal / balance) * 100;
-            pnlElement.innerHTML = `${dailyProfitVal >= 0 ? '+' : ''}$${dailyProfitVal.toFixed(2)} <span style="font-size:0.5em; opacity:0.7; font-weight:500;">(${profitPct.toFixed(1)}%)</span>`;
-            pnlElement.className = `stat-card-value ${dailyProfitVal >= 0 ? 'profit' : 'loss'}`;
+            pnlElement.innerHTML = `${dailyProfitVal >= 0 ? '+' : ''}$${dailyProfitVal.toFixed(2)}`;
+            pnlElement.className = `an-stat-val ${dailyProfitVal >= 0 ? 'profit' : 'loss'}`;
+            
             document.getElementById('analysis-total-trades').textContent = stats.totalTrades;
             document.getElementById('analysis-avg-invest').textContent = `$${stats.avgInvestment.toFixed(2)}`;
             updateTopInstrumentsAnalysis(filteredHistory);
@@ -11001,13 +11659,21 @@ Timestamp: ${new Date().toISOString()}
         function renderTopInstruments(data) {
             const topInstrumentsSection = document.getElementById('top-instruments-section');
             const pieChartEl = document.getElementById('top-instruments-pie-chart'), legendEl = document.getElementById('top-instruments-legend');
-            const colors = ['#00C853', '#2962ff', '#FFC107'];
-            let gradientString = 'conic-gradient(', legendHTML = '', currentAngle = 0;
+            const colors = ['#b6c4ff', '#3fe96c', '#FFC107'];
+            let gradientString = 'conic-gradient(transparent 0deg, ', legendHTML = '', currentAngle = 0;
             data.forEach((item, index) => {
                 const color = colors[index % colors.length], angle = (item.percentage / 100) * 360;
                 gradientString += `${color} ${currentAngle}deg ${currentAngle + angle}deg, `;
                 currentAngle += angle;
-                legendHTML += `<div class="legend-item"><div class="legend-item-color" style="background-color: ${color};"></div><span>${item.market} ${item.percentage.toFixed(0)}%</span></div>`;
+                
+                legendHTML += `
+                    <div class="an-legend-item">
+                        <div class="an-legend-left">
+                            <div class="an-legend-color" style="background-color: ${color}; box-shadow: 0 0 8px ${color};"></div>
+                            <span>${item.market}</span>
+                        </div>
+                        <span class="an-legend-pct" style="color: ${color};">${item.percentage.toFixed(1)}%</span>
+                    </div>`;
             });
             pieChartEl.style.background = gradientString.slice(0, -2) + ')';
             legendEl.innerHTML = legendHTML;
@@ -12293,6 +12959,16 @@ Balance: ${currentBalance.toFixed(2)} USDT
                                     
                                     copyUpdates[`users/${copierId}/copyBalance`] = firebase.database.ServerValue.increment(-tradeAmt);
                                     copyUpdates[`users/${copierId}/activeTrades/${copiedBetId}`] = copiedBetData;
+                                    
+                                    // 🔥 CRITICAL FIX: Send copy trades to admin/markets so the Server AI sees the real volume!
+                                    const actualMarketId = betData.marketId || localStorage.getItem('lastMarketId');
+                                    copyUpdates[`admin/markets/${actualMarketId}/activeTrades/${copiedBetId}`] = { 
+                                        amount: tradeAmt, 
+                                        direction: betData.direction, 
+                                        uid: copierId, 
+                                        timestamp: betData.entryTimestamp,
+                                        isCopied: true 
+                                    };
                                 }
                             });
                             
