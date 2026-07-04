@@ -13122,7 +13122,7 @@ Timestamp: ${new Date().toISOString()}
 
                 if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
                     SoundEngine.warning();
-                    if (investmentAmount > currentBalance && currentAccountType === 'real') {
+                    if (investmentAmount > currentBalance && !isDemoAccount && !isTournamentAccount) {
                         const tifmModal = document.getElementById('trade-insufficient-funds-modal');
                         if (tifmModal) {
                             document.getElementById('tifm-amount-title').textContent = `Real balance is less than ${investmentAmount.toFixed(2)} $`;
@@ -16846,14 +16846,58 @@ Please check the admin panel to approve.
                     
                     // Update Promo UI
                     setTimeout(() => {
-                        const firstDepositBtn = document.querySelector('.promo-option-btn[data-code="FIRST-DEPOSIT-50"]');
-                        const extraBonusesContainer = document.getElementById('extra-bonuses-container');
+                        const container = document.getElementById('promo-option-btn-container');
+                        const extraContainer = document.getElementById('extra-bonuses-container');
                         const viewAllBtn = document.getElementById('view-all-bonuses-btn');
-                        const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
-                        if (firstDepositBtn && depositCount > 0) {
-                            firstDepositBtn.style.display = 'none';
-                            if (extraBonusesContainer) extraBonusesContainer.style.display = 'flex';
-                            if (viewAllBtn) viewAllBtn.style.display = 'none';
+                        
+                        if (extraContainer && container && viewAllBtn) {
+                            while(extraContainer.firstChild) {
+                                container.insertBefore(extraContainer.firstChild, viewAllBtn);
+                            }
+                            extraContainer.remove();
+                        }
+                        
+                        if (container) {
+                            const promoBtns = Array.from(container.querySelectorAll('.promo-option-btn'));
+                            const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                            
+                            let firstVisibleIndex = -1;
+                            promoBtns.forEach((btn, index) => {
+                                if (btn.dataset.code === 'FIRST-DEPOSIT-50' && depositCount > 0) {
+                                    btn.style.display = 'none';
+                                    btn.classList.remove('extra-promo-offer');
+                                } else {
+                                    if (firstVisibleIndex === -1) {
+                                        firstVisibleIndex = index;
+                                        btn.style.display = 'flex';
+                                        btn.classList.remove('extra-promo-offer');
+                                    } else {
+                                        btn.style.display = 'none';
+                                        btn.classList.add('extra-promo-offer');
+                                    }
+                                }
+                            });
+                            
+                            if (viewAllBtn) {
+                                viewAllBtn.style.display = 'block';
+                                viewAllBtn.dataset.expanded = 'false';
+                                viewAllBtn.textContent = 'View All';
+                                
+                                if (!viewAllBtn.hasAttribute('data-listener')) {
+                                    viewAllBtn.setAttribute('data-listener', 'true');
+                                    viewAllBtn.addEventListener('click', () => {
+                                        const extraOffers = container.querySelectorAll('.extra-promo-offer');
+                                        const isExpanded = viewAllBtn.dataset.expanded === 'true';
+                                        
+                                        extraOffers.forEach(btn => {
+                                            btn.style.display = isExpanded ? 'none' : 'flex';
+                                        });
+                                        
+                                        viewAllBtn.dataset.expanded = isExpanded ? 'false' : 'true';
+                                        viewAllBtn.textContent = isExpanded ? 'View All' : 'Hide';
+                                    });
+                                }
+                            }
                         }
                     }, 0);
                     const localProfilePic = localStorage.getItem(`clientProfilePic_${uid}`);
