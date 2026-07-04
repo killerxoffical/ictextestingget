@@ -13835,6 +13835,20 @@ Timestamp: ${new Date().toISOString()}
                 drawCandle(c, x, cW, cS, minP, maxP, mainChartHeight);
             });
 
+            const runningIdx = (N - 1) - minIndex;
+            if (runningIdx >= 0 && runningIdx < vC.length) {
+                const runningX = (runningIdx * cW) + xShift + (cW / 2);
+                ctx.save();
+                ctx.beginPath();
+                ctx.setLineDash([4, 4]);
+                ctx.moveTo(runningX, 0);
+                ctx.lineTo(runningX, canvasHeight);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.restore();
+            }
+
             if (chartSettings.indicators.sma.active) drawSMA(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.ema.active) drawEMA(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.bollinger.active) drawBollingerBands(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
