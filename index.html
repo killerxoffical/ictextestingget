@@ -7406,7 +7406,7 @@
                             <div style="position: relative; z-index: 10;">
                                 <h1 class="settings-header-title" style="font-size: 1.15rem; font-weight: 700;">Settings</h1>
                             </div>
-                            <button class="settings-close-btn" style="background: transparent; border: none; color: #9CA3AF; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s, color 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.05)';" onmouseout="this.style.color='#9CA3AF'; this.style.background='transparent';" onclick="showView('terminal')">
+                            <button id="settings-close-btn" class="settings-close-btn" style="background: transparent; border: none; color: #9CA3AF; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s, color 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.05)';" onmouseout="this.style.color='#9CA3AF'; this.style.background='transparent';">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="18" y1="6" x2="6" y2="18"></line>
                                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -17454,6 +17454,9 @@ Please check the admin panel to approve.
                     if (!trigger) return;
                     openNotificationsPage(e);
                 }, true);
+            });
+            document.getElementById('settings-close-btn')?.addEventListener('click', () => {
+                showView('terminal');
             });
             backBtns.forEach(btn => btn.addEventListener('click', (e) => {
                 if (window.appViewHistory && window.appViewHistory.length > 0) {
