@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Terms & Conditions - Booyah Day</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0c;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .font-ff {
+            font-family: 'Teko', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .glass-container {
+            background: rgba(20, 20, 25, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 185, 0, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border-radius: 16px;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, rgba(255,185,0,0.1) 0%, rgba(255,75,0,0.05) 100%);
+            border-bottom: 1px solid rgba(255, 185, 0, 0.2);
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #ffb900, #ff4b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            position: relative;
+            background: linear-gradient(90deg, #2d3748 0%, #1a202c 100%);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        
+        .btn-back:hover {
+            background: linear-gradient(90deg, #ff9900 0%, #ff4b00 100%);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 185, 0, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffb900;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff4b00;
+        }
+        
+        .section-marker {
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(to bottom, #ffb900, #ff4b00);
+            border-radius: 4px;
+        }
+
+        .terms-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: #94a3b8;
+        }
+        
+        .terms-content h3 {
+            color: #f8fafc;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .terms-content h3::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ffb900;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 185, 0, 0.8);
+        }
+
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: radial-gradient(circle at 50% 0%, rgba(255, 185, 0, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative flex flex-col">
+
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header-bg sticky top-0 z-50 backdrop-blur-lg">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="window.history.back()" class="btn-back px-4 py-2 text-sm font-bold tracking-wider flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    BACK
+                </button>
+                <div>
+                    <h1 class="text-2xl font-ff text-gradient tracking-widest font-bold leading-none">TERMS & CONDITIONS</h1>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Last updated: July 2026</p>
+                </div>
+            </div>
+            
+            <div class="hidden sm:flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-[#ffb900]/20 flex items-center justify-center border border-[#ffb900]/50">
+                    <svg class="w-4 h-4 text-[#ffb900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
+        
+        <div class="glass-container p-6 sm:p-10 relative overflow-hidden">
+            <div class="section-marker"></div>
+            
+            <!-- Intro -->
+            <div class="mb-10 text-center">
+                <h2 class="text-4xl font-ff font-black text-white tracking-widest uppercase mb-4 shadow-sm">Legal Agreement</h2>
+                <p class="text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                    Please read these Terms and Conditions carefully before using our platform. Your access to and use of the service is conditioned on your acceptance of and compliance with these terms.
+                </p>
+            </div>
+
+            <div class="terms-content">
+                
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing and using this application ("Service"), you accept and agree to be bound by the terms and provision of this agreement. In addition, when using these particular services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
+                
+                <h3>2. User Accounts and Security</h3>
+                <p>To access certain features of the Service, you may be required to register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.</p>
+                <p>You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password. You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.</p>
+
+                <h3>3. Virtual Items and In-App Currency</h3>
+                <p>The Service may include virtual currencies (such as "Gold" or "Diamonds") and virtual items. These are licensed to you, not sold. You have no ownership right in any virtual items or currency. We reserve the right to manage, regulate, control, modify, or eliminate virtual currency and/or virtual items as we see fit at our sole discretion.</p>
+
+                <h3>4. Privacy Policy</h3>
+                <p>Our Privacy Policy describes our practices concerning data that you provide or that we may collect about you through the Services, and you consent to our use of data in compliance with the Privacy Policy.</p>
+
+                <h3>5. User Conduct and Restrictions</h3>
+                <p>You agree not to use the Service to:</p>
+                <ul class="list-disc pl-6 mb-4 text-[#94a3b8] space-y-2">
+                    <li>Engage in any unlawful, abusive, or harassing behavior.</li>
+                    <li>Utilize any cheats, exploits, automation software, bots, hacks, mods, or any unauthorized third-party software designed to modify or interfere with the Service.</li>
+                    <li>Attempt to gain unauthorized access to the Service, accounts registered to others, or to the computers, servers, or networks connected to the Service.</li>
+                    <li>Sell, trade, or otherwise transfer your account to anyone else.</li>
+                </ul>
+
+                <h3>6. Intellectual Property</h3>
+                <p>The Service and its original content (excluding Content provided by users), features, and functionality are and will remain the exclusive property of the platform and its licensors. The Service is protected by copyright, trademark, and other laws.</p>
+
+                <h3>7. Termination</h3>
+                <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. Upon termination, your right to use the Service will immediately cease.</p>
+
+                <h3>8. Limitation of Liability</h3>
+                <p>In no event shall the platform, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>
+
+                <h3>9. Changes to Terms</h3>
+                <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. What constitutes a material change will be determined at our sole discretion. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.</p>
+
+                <h3>10. Contact Information</h3>
+                <p>If you have any questions about these Terms, please contact our support team through the official support channels provided within the application.</p>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest text-center sm:text-left">
+                    &copy; 2026 Booyah Day Platform. All rights reserved.
+                </p>
+                <button onclick="window.history.back()" class="bg-gradient-to-r from-[#ffb900] to-[#ff4b00] hover:scale-105 active:scale-95 transition-all text-white font-bold py-3 px-8 text-sm uppercase tracking-widest clip-path-button">
+                    I Understand & Agree
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .clip-path-button {
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        }
+    </style>
+</body>
+</html>
