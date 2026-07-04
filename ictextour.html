@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Tournaments - ICTEX</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0B0E14', surface: '#1A1F2A', surfaceLight: '#242B38',
+                        ictexGreen: '#0CCF56', ictexBlue: '#007AFF', textDim: '#8BA0B8',
+                        tourOrange: '#D9822B', cardBg: '#161A23', btnAreaBg: '#11151C', tourRed: '#E53935',
+                        warning: '#F59E0B'
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        body { background-color: #0B0E14; color: #ffffff; -webkit-tap-highlight-color: transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-btn, .inner-tab-btn { position: relative; transition: color 0.3s ease; }
+        .tab-btn::after, .inner-tab-btn::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+            background-color: #007AFF; transform: scaleX(0); transition: transform 0.3s ease;
+            border-radius: 3px 3px 0 0;
+        }
+        .tab-btn.active, .inner-tab-btn.active { color: #007AFF; font-weight: 700; }
+        .tab-btn.active::after, .inner-tab-btn.active::after { transform: scaleX(1); }
+        
+        .tab-content, .inner-tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active, .inner-tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .flag-icon { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
+        .avatar-icon { width: 16px; height: 16px; border-radius: 50%; background: #007AFF; display: flex; align-items: center; justify-content: center; font-size: 8px; margin-left: -6px; border: 1px solid #1A1F2A; z-index: 2;}
+        
+        .modal-active { opacity: 1 !important; pointer-events: auto !important; }
+        .modal-active > div { transform: scale(1) !important; }
+        
+        .radar-spin { animation: spin 3s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased flex flex-col h-screen overflow-hidden">
+
+    <div id="custom-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-surfaceLight border border-white/10 rounded-2xl w-full max-w-sm p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div id="custom-modal-icon" class="w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto"></div>
+            <h3 id="custom-modal-title" class="text-xl font-bold mb-2 text-center text-white">Notice</h3>
+            <p id="custom-modal-message" class="text-textDim text-sm mb-6 leading-relaxed text-center"></p>
+            <button onclick="closeCustomModal()" class="w-full py-3.5 rounded-lg bg-ictexBlue hover:bg-blue-600 text-white font-bold transition active:scale-95">OK, Got it</button>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-surfaceLight border border-white/10 rounded-2xl w-full max-w-sm p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-ictexBlue/20 text-ictexBlue flex items-center justify-center">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 id="confirm-modal-title" class="text-xl font-bold mb-2 text-white text-center">Confirm Action</h3>
+            <p id="confirm-modal-message" class="text-textDim text-sm mb-6 leading-relaxed text-center"></p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirmModal()" class="flex-1 py-3.5 rounded-xl bg-surface border border-white/10 text-white font-bold transition active:scale-95">Cancel</button>
+                <button id="confirm-modal-btn" class="flex-1 py-3.5 rounded-xl bg-ictexBlue hover:bg-blue-600 text-white font-bold transition shadow-lg active:scale-95">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="prize-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-surfaceLight border border-white/10 rounded-2xl w-full max-w-sm p-5 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-[17px] font-bold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-ictexGreen" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.015 5.015 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.015 5.015 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                    Prize Distribution
+                </h3>
+                <button onclick="closePrizeModal()" class="text-textDim hover:text-white transition bg-white/5 p-1.5 rounded-lg border border-white/5">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="flex justify-between text-[11px] font-bold text-textDim uppercase tracking-wider mb-3 px-2"><span>Position</span><span>Prize</span></div>
+            <div id="prize-modal-list" class="flex flex-col gap-2 overflow-y-auto hide-scrollbar pr-1"></div>
+        </div>
+    </div>
+
+    <header class="bg-surface backdrop-blur-md border-b border-white/5 px-4 py-3 flex items-center justify-between shadow-lg z-50">
+        <button onclick="window.parent.postMessage({ type: 'GO_BACK_FROM_TOURNAMENT' }, '*');" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/5 text-white hover:bg-white/10 transition">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        </button>
+        <h1 class="text-lg font-bold">Tournaments</h1>
+        <div class="bg-surfaceLight px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-1">
+            <span id="user-top-balance" class="font-bold text-sm">Loading...</span>
+        </div>
+    </header>
+
+    <div id="view-main" class="flex-1 flex flex-col h-full overflow-hidden">
+        <div class="flex bg-surface border-b border-white/5 px-2 shrink-0">
+            <button class="tab-btn active flex-1 py-4 text-sm font-semibold text-textDim" data-target="tab-tournaments">Tournaments</button>
+            <button class="tab-btn flex-1 py-4 text-sm font-semibold text-textDim" data-target="tab-joined">Joined</button>
+            <button class="tab-btn flex-1 py-4 text-sm font-semibold text-textDim" data-target="tab-completed">Completed</button>
+        </div>
+
+        <main class="flex-1 overflow-y-auto hide-scrollbar p-4 relative">
+            <div id="tab-tournaments" class="tab-content active pb-10 min-h-full">
+                <div id="loading-text" class="text-center text-textDim pt-20 animate-pulse">Fetching tournaments...</div>
+                <div id="active-tour-list" class="flex flex-col gap-5"></div>
+            </div>
+            
+            <div id="tab-joined" class="tab-content pb-10 min-h-full">
+                <div id="joined-tour-list" class="flex flex-col gap-5"></div>
+                <div id="empty-joined" class="hidden flex-col items-center justify-center pt-32 pb-10 text-center">
+                    <svg class="w-12 h-12 opacity-20 mb-5 text-textDim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <h3 class="text-white font-semibold text-lg tracking-wide">No joined tournaments</h3>
+                </div>
+            </div>
+            
+            <div id="tab-completed" class="tab-content pb-10 min-h-full">
+                <div id="completed-tour-list" class="flex flex-col gap-5"></div>
+                <div id="empty-completed" class="hidden flex-col items-center justify-center pt-32 pb-10 text-center">
+                    <svg class="w-12 h-12 opacity-20 mb-5 text-textDim" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><path d="M9 12l2 2 4-4"></path></svg>
+                    <h3 class="text-white font-semibold text-lg tracking-wide">No completed tournaments</h3>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-details" class="hidden flex-1 flex flex-col h-full bg-bgDark overflow-hidden z-50 fixed inset-0">
+        <div class="bg-surface px-4 py-4 shrink-0 shadow-md z-20">
+            <button onclick="closeDetails()" class="flex items-center text-ictexBlue font-semibold gap-2 mb-4 hover:opacity-80">
+                <div class="w-6 h-6 rounded-full bg-ictexBlue flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                </div>
+                Return back
+            </button>
+            <div class="flex border-b border-white/5">
+                <button class="inner-tab-btn active flex-1 pb-3 text-sm font-semibold text-textDim uppercase tracking-wide" data-target="inner-info">INFO</button>
+                <button class="inner-tab-btn flex-1 pb-3 text-sm font-semibold text-textDim uppercase tracking-wide" data-target="inner-prizes">LEADERBOARD</button>
+            </div>
+        </div>
+
+        <main class="flex-1 overflow-y-auto hide-scrollbar p-4 relative pb-20">
+            <div id="inner-info" class="inner-tab-content active">
+                <div class="rounded-xl border border-white/10 shadow-xl mb-6 bg-cardBg overflow-hidden flex flex-col" id="det-card-wrapper">
+                    <div class="relative p-5 pb-8">
+                        <div class="absolute inset-0 z-0">
+                            <div class="absolute inset-0 bg-[url('https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1776985962699_AddText_04_24_05.11.43.jpg')] bg-[length:100%_auto] bg-top bg-no-repeat blur-[3px] opacity-30"></div>
+                            <div class="absolute inset-0 bg-gradient-to-b from-[#0B0E14]/20 to-[#161A23]"></div>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div id="det-badge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-white text-[10px] font-extrabold tracking-wider bg-blue-600">
+                                    <svg id="det-badge-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <span id="det-time-text" class="live-timer-text" data-start="" data-end="">Loading...</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] font-bold text-textDim uppercase tracking-wider">PRIZE POOL</span>
+                                    <span id="det-prize" class="block text-xl font-black text-ictexGreen"></span>
+                                </div>
+                            </div>
+                            <h2 id="det-title" class="text-2xl font-bold text-white mb-2"></h2>
+                        </div>
+                    </div>
+                    
+                    <div id="det-action-area" class="bg-btnAreaBg p-4 border-t border-white/5 relative z-20">
+                        <button id="det-join-btn" class="w-full py-3.5 rounded-lg bg-ictexGreen hover:bg-[#0aa645] text-white font-bold text-[15px] shadow-lg active:scale-95 transition">
+                            Join now — <span id="det-join-fee"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-y-8 gap-x-4 mb-8 px-2 relative">
+                    <div class="absolute left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2"></div>
+                    <div class="flex flex-col gap-6 items-center text-center">
+                        <div><span class="block text-[10px] text-textDim font-bold tracking-wider mb-1">UTC+06:00</span><span id="det-start" class="block text-white font-bold text-[14px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">START</span></div>
+                        <div><span class="block text-[10px] text-textDim font-bold tracking-wider mb-1">UTC+06:00</span><span id="det-end" class="block text-white font-bold text-[14px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">END</span></div>
+                        <div><span id="det-grid-fee" class="block text-white font-bold text-[16px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">ENTRY FEE</span></div>
+                        <div><span id="det-grid-duration" class="block text-white font-bold text-[16px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">DURATION</span></div>
+                    </div>
+                    <div class="flex flex-col gap-6 items-center text-center pt-8">
+                        <div><span id="det-grid-prize" class="block text-white font-bold text-[16px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">PRIZE POOL</span></div>
+                        <div class="mt-4"><span id="det-grid-rebuys" class="block text-white font-bold text-[16px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">NUMBER OF<br>REBUYS</span></div>
+                        <div class="mt-4"><span id="det-grid-rebuy-cost" class="block text-white font-bold text-[16px]"></span><span class="block text-[10px] text-textDim font-bold tracking-wider mt-1">REBUY COST</span></div>
+                    </div>
+                </div>
+
+                <div class="border-t border-white/10 pt-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-[16px] font-bold">Description</h3>
+                        <button onclick="openPrizeModal()" class="bg-ictexBlue/10 hover:bg-ictexBlue/20 text-ictexBlue border border-ictexBlue/30 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.1 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.1 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            View Prizes
+                        </button>
+                    </div>
+                    <p id="det-desc" class="text-textDim text-sm leading-relaxed"></p>
+                </div>
+            </div>
+            <div id="inner-prizes" class="inner-tab-content"></div>
+        </main>
+    </div>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyBUTMFblYIVovOe4F25XCFneJNTlVcoWCA", authDomain: "ictex-trade.firebaseapp.com", databaseURL: "https://ictex-trade-default-rtdb.firebaseio.com", projectId: "ictex-trade" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(); const database = firebase.database();
+
+        let allTournaments = {};
+        let myUID = null;
+        let activeUserBalance = 0;
+        let userRealBalance = 0;
+        let isDemoActive = false;
+        let liveTimerInterval = null;
+        let myUserName = "You";
+        let myCountryCode = "un";
+        let currentTourId = null;
+        const bannerUrl = "https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1776985962699_AddText_04_24_05.11.43.jpg";
+
+        function showCustomModal(title, message, isSuccess = false) {
+            document.getElementById('custom-modal-title').textContent = title;
+            document.getElementById('custom-modal-message').innerHTML = message;
+            const iconDiv = document.getElementById('custom-modal-icon');
+            if (isSuccess) {
+                iconDiv.className = 'w-16 h-16 mx-auto mb-4 rounded-full bg-ictexGreen/20 text-ictexGreen flex items-center justify-center';
+                iconDiv.innerHTML = `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+            } else {
+                iconDiv.className = 'w-16 h-16 mx-auto mb-4 rounded-full bg-tourRed/20 text-tourRed flex items-center justify-center';
+                iconDiv.innerHTML = `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+            }
+            document.getElementById('custom-modal').classList.add('modal-active');
+        }
+
+        function closeCustomModal() { document.getElementById('custom-modal').classList.remove('modal-active'); }
+
+        let pendingConfirmAction = null;
+        function showConfirmModal(title, message, action) {
+            document.getElementById('confirm-modal-title').textContent = title;
+            document.getElementById('confirm-modal-message').innerHTML = message;
+            pendingConfirmAction = action;
+            document.getElementById('confirm-modal').classList.add('modal-active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.remove('modal-active');
+            pendingConfirmAction = null;
+        }
+
+        document.getElementById('confirm-modal-btn').addEventListener('click', () => {
+            if (pendingConfirmAction) pendingConfirmAction();
+            closeConfirmModal();
+        });
+
+        function openPrizeModal() { document.getElementById('prize-modal').classList.add('modal-active'); }
+        function closePrizeModal() { document.getElementById('prize-modal').classList.remove('modal-active'); }
+
+        async function claimTournamentPrize(tourId, prizeAmount) {
+            if (!myUID) return;
+            const btn = document.getElementById(`claim-btn-${tourId}`);
+            if (btn) { btn.disabled = true; btn.innerText = "Claiming..."; }
+
+            try {
+                const tour = allTournaments[tourId];
+                const walletType = tour ? (tour.prizeWalletType || 'bonusBalance') : 'bonusBalance';
+                const updates = {};
+                
+                updates[`users/${myUID}/${walletType}`] = firebase.database.ServerValue.increment(prizeAmount);
+                updates[`tournaments/${tourId}/participants/${myUID}/isPrizeClaimed`] = true;
+                
+                const txId = `TOURPRIZE_${Date.now()}`;
+                const tourTitle = tour?.title || 'Tournament';
+                updates[`users/${myUID}/transactions/${txId}`] = { id: txId, timestamp: Date.now(), status: 'succeeded', amount: prizeAmount, method: `${tourTitle} Prize`, type: 'claim' };
+
+                await database.ref().update(updates);
+                showCustomModal('Prize Claimed!', `Congratulations! <b>$${prizeAmount.toFixed(2)}</b> has been successfully added to your Bonus Balance.`, true);
+
+                if (btn) {
+                    btn.innerText = "Claimed";
+                    btn.classList.replace('bg-ictexGreen', 'bg-white/10');
+                    btn.classList.replace('text-white', 'text-white/50');
+                    btn.classList.remove('hover:bg-[#0aa645]', 'active:scale-95');
+                }
+            } catch (error) {
+                showCustomModal('Error', 'Failed to claim prize. Please try again or contact support.', false);
+                if (btn) { btn.disabled = false; btn.innerText = "Claim Prize"; }
+            }
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+            });
+        });
+        document.querySelectorAll('.inner-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.inner-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.inner-tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const balanceEl = document.getElementById('user-top-balance');
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    myUID = user.uid;
+                    database.ref('users/' + user.uid).on('value', snapshot => {
+                        if (snapshot.exists()) {
+                            const data = snapshot.val();
+                            myUserName = data.nickname || data.name || "You";
+                            myCountryCode = data.countryCode ? data.countryCode.toLowerCase() : "un";
+                            isDemoActive = localStorage.getItem('isDemoAccount') === 'true';
+                            userRealBalance = data.realBalance || 0;
+                            activeUserBalance = userRealBalance + (data.bonusBalance || 0);
+                            balanceEl.innerHTML = `$${activeUserBalance.toFixed(2)} <span class="text-ictexGreen text-[10px] uppercase ml-1">(Live)</span>`;
+                        }
+                    });
+                }
+            });
+        });
+
+        function formatCountdown(diff) {
+            if (diff < 0) diff = 0;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            if (d > 0) return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+            return `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+        }
+
+        function getBadgeData(tour) {
+            const now = Date.now();
+            if (tour.status === 'completed' || now > tour.endTime) return { text: "FINISHED", bgClass: "bg-tourRed", showIcon: false };
+            const startDiff = tour.startTime - now;
+            const endDiff = tour.endTime - now;
+            if (startDiff > 0) return { text: `UNTIL START: ${formatCountdown(startDiff)}`, bgClass: "bg-tourOrange", showIcon: true };
+            return { text: `ENDS IN: ${formatCountdown(endDiff)}`, bgClass: "bg-tourRed", showIcon: false };
+        }
+
+        function startLiveTimers() {
+            if(liveTimerInterval) clearInterval(liveTimerInterval);
+            liveTimerInterval = setInterval(() => {
+                document.querySelectorAll('.live-timer-text').forEach(el => {
+                    const start = parseInt(el.getAttribute('data-start'));
+                    const end = parseInt(el.getAttribute('data-end'));
+                    const status = el.getAttribute('data-status');
+                    if(start && end) {
+                        const data = getBadgeData({startTime: start, endTime: end, status: status});
+                        el.innerText = data.text;
+                        const parent = el.parentElement;
+                        if (parent) {
+                            parent.className = parent.className.replace(/bg-ictexGreen|bg-tourOrange|bg-tourRed/g, '').trim();
+                            parent.classList.add(data.bgClass);
+                        }
+                        const badgeIcon = parent ? parent.querySelector('svg') : null;
+                        if (badgeIcon) badgeIcon.style.display = data.showIcon ? 'block' : 'none';
+                    }
+                });
+            }, 1000);
+        }
+
+        function formatDate(ts) {
+            const d = new Date(ts);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = d.toLocaleString('en-US', { month: 'short' });
+            const hours = String(d.getHours()).padStart(2, '0');
+            const mins = String(d.getMinutes()).padStart(2, '0');
+            return `${day} ${month} ${hours}:${mins}`;
+        }
+
+        let currentLeaderboardData = [];
+        let currentUserRank = "Analyzing...";
+        let activeTourIdForLeaderboard = null;
+
+        function listenToTournamentLeaderboard(tourId, tour, isJoined) {
+            const prizesTab = document.getElementById('inner-prizes');
+            if (!prizesTab) return;
+
+            if (!isJoined) {
+                let prizeListHTML = '';
+                if(tour.prizes) {
+                    for(let i=1; i<=10; i++) {
+                        let amt = tour.prizes[`place_${i}`] || 0;
+                        if(amt > 0) prizeListHTML += `<div class="flex justify-between items-center ${i%2!==0 ? 'bg-white/5 border border-white/5' : 'bg-transparent border border-transparent'} rounded-lg p-3 transition hover:bg-white/10"><span class="font-black text-[13px] text-white tracking-wide">${i} PLACE</span><span class="font-black text-[15px] text-ictexGreen">$${amt}</span></div>`;
+                    }
+                }
+                
+                prizesTab.innerHTML = `
+                    <div class="flex flex-col items-center justify-center pt-8 pb-6 text-center">
+                        <div class="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10 shadow-lg">
+                            <svg class="w-7 h-7 text-ictexBlue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h3 class="text-white font-bold text-lg tracking-wide">Leaderboard Locked</h3>
+                        <p class="text-textDim text-sm mt-2 px-6">You must join this tournament to view the live leaderboard. Here is the prize distribution:</p>
+                    </div>
+                    <div class="bg-cardBg rounded-xl p-3 border border-white/5 shadow-lg mb-8">
+                        <div class="flex justify-between text-[11px] font-bold text-textDim uppercase tracking-wider mb-3 px-2 border-b border-white/10 pb-3"><span>Position</span><span>Prize</span></div>
+                        <div class="flex flex-col gap-1">${prizeListHTML}</div>
+                    </div>`;
+                return; 
+            }
+
+            window.renderLeaderboardUI = () => {
+                if (currentTourId !== tourId) return;
+
+                const now = Date.now();
+                const diff = tour.startTime - now;
+                const elapsedMs = now - tour.startTime;
+                const isCompleted = tour.status === 'completed' || now > tour.endTime;
+                const isActive = diff <= 0 && !isCompleted;
+
+                if (diff > 0) {
+                    prizesTab.innerHTML = `
+                        <div class="flex flex-col items-center justify-center pt-24 pb-10 text-center">
+                            <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10 shadow-lg">
+                                <svg class="w-8 h-8 text-ictexBlue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h3 class="text-white font-bold text-lg tracking-wide">Tournament begins soon</h3>
+                            <p class="text-textDim text-sm mt-2 px-6">The live leaderboard will appear here as soon as the tournament starts.</p>
+                        </div>`;
+                    return;
+                }
+
+                if (isActive && elapsedMs < 120000) {
+                    if (!document.getElementById('init-countdown-text')) {
+                        prizesTab.innerHTML = `
+                            <div class="flex flex-col items-center justify-center pt-20 pb-10 text-center">
+                                <div class="w-20 h-20 relative flex items-center justify-center mb-6">
+                                    <div class="absolute inset-0 rounded-full border-t-2 border-r-2 border-ictexBlue radar-spin opacity-50"></div>
+                                    <div class="absolute inset-0 rounded-full border-b-2 border-l-2 border-ictexGreen radar-spin opacity-50" style="animation-direction: reverse; animation-duration: 4s;"></div>
+                                    <span id="init-countdown-text" class="text-white font-bold text-xl">Loading...</span>
+                                </div>
+                                <h3 class="text-white font-bold text-lg tracking-wide mb-1">Market Initialization</h3>
+                                <p class="text-textDim text-sm px-6">Syncing live arena data and computing bot structures. Get ready for battle!</p>
+                            </div>`;
+                    }
+
+                    if (window.leaderboardInitTimer) clearInterval(window.leaderboardInitTimer);
+                    window.leaderboardInitTimer = setInterval(() => {
+                        const currentElapsed = Date.now() - tour.startTime;
+                        if (currentElapsed >= 120000) {
+                            clearInterval(window.leaderboardInitTimer);
+                            window.leaderboardInitTimer = null;
+                            window.renderLeaderboardUI(); 
+                        } else {
+                            const remainingSecs = Math.ceil((120000 - currentElapsed) / 1000);
+                            const timerEl = document.getElementById('init-countdown-text');
+                            if (timerEl) timerEl.innerText = remainingSecs + 's';
+                        }
+                    }, 1000);
+                    return; 
+                }
+
+                if (window.leaderboardInitTimer) { clearInterval(window.leaderboardInitTimer); window.leaderboardInitTimer = null; }
+
+                let participantsHTML = '';
+                if (currentLeaderboardData && currentLeaderboardData.length > 0) {
+                    currentLeaderboardData.forEach((player, i) => {
+                        const bgClass = i % 2 !== 0 ? 'bg-white/5' : 'bg-transparent';
+                        const prizeHTML = player.prize > 0 ? `<span class="font-bold text-ictexGreen">$${player.prize.toFixed(2)}</span>` : `<span class="font-bold text-ictexGreen">$0.00</span>`;
+                        
+                        participantsHTML += `
+                            <div class="flex items-center ${bgClass} py-3 px-3 text-[13px]">
+                                <span class="w-[10%] font-bold text-white text-[12px]">${player.rank}</span>
+                                <div class="w-[45%] flex items-center gap-1">
+                                    <div class="relative flex items-center">
+                                        <img src="https://flagcdn.com/w20/${player.flag}.png" class="flag-icon" onerror="this.src='https://flagcdn.com/w20/un.png'">
+                                    </div>
+                                    <span class="font-semibold text-white ml-2 truncate max-w-[85px]">${player.name}</span>
+                                </div>
+                                <span class="w-[25%] text-right font-bold text-white pr-2">$${player.balance.toFixed(2)}</span>
+                                <div class="w-[20%] text-right">${prizeHTML}</div>
+                            </div>`;
+                    });
+                } else {
+                    participantsHTML = `<div class="text-center py-6 text-textDim animate-pulse">Analysing live market positions...</div>`;
+                }
+
+                let userPositionHTML = '';
+                let isBanned = tour.participants && myUID && tour.participants[myUID] && tour.participants[myUID].isBanned;
+
+                if (isJoined && !isBanned) {
+                    // Update Logic: Find the exact data for the current user in the sorted array
+                    const myData = currentLeaderboardData ? currentLeaderboardData.find(p => p.uid === myUID) : null;
+                    const initialBal = parseFloat(tour.initialBalance || 100);
+                    
+                    let finalBalance = tour.participants && myUID && tour.participants[myUID] ? parseFloat(tour.participants[myUID].tourBalance !== undefined ? tour.participants[myUID].tourBalance : initialBal) : initialBal;
+                    
+                    // If the user is found in the current Top 10 Leaderboard Array
+                    if (myData) finalBalance = myData.balance;
+
+                    let myRank = myData ? myData.rank : (currentUserRank || "Analyzing...");
+                    if (!myData && finalBalance <= 0) myRank = "999+";
+
+                    // Ensure Prize reads correctly from the array if user is in Top 10, else fallback to 0
+                    let myPrize = myData ? myData.prize : (typeof myRank === 'number' && tour.prizes ? (tour.prizes[`place_${myRank}`] || 0) : 0);
+
+                    let rebuyBtn = '';
+                    if (isActive && !isCompleted && parseFloat(tour.rebuyCost) > 0) {
+                        rebuyBtn = `<button class="bg-ictexGreen hover:opacity-80 text-white font-bold text-[10px] px-2 py-1 rounded-md active:scale-95 transition" onclick="handleRebuy()">Rebuy — $${tour.rebuyCost}</button>`;
+                    }
+
+                    let claimBtnHTML = '';
+                    const pData = tour.participants && myUID ? tour.participants[myUID] : null;
+                    
+                    if (isCompleted) {
+                        if (myPrize > 0) {
+                            if (tour.prizeDistributed) {
+                                if (pData && pData.unclaimedPrize > 0) {
+                                    if (pData.isPrizeClaimed) claimBtnHTML = `<button class="bg-white/10 text-white/50 font-bold text-[11px] px-3 py-1.5 rounded-md cursor-not-allowed">Claimed</button>`;
+                                    else claimBtnHTML = `<button id="claim-btn-${tourId}" class="bg-ictexGreen hover:bg-[#0aa645] text-white font-bold text-[11px] px-3 py-1.5 rounded-md active:scale-95 transition shadow-lg" onclick="claimTournamentPrize('${tourId}', ${pData.unclaimedPrize})">Claim Prize</button>`;
+                                } else {
+                                    claimBtnHTML = `<button class="bg-white/10 text-white/50 font-bold text-[11px] px-3 py-1.5 rounded-md cursor-not-allowed">Claimed</button>`;
+                                }
+                            } else {
+                                claimBtnHTML = `<span class="text-[10px] text-tourOrange italic font-bold">Pending Approval</span>`;
+                            }
+                        } else {
+                            claimBtnHTML = `<span class="text-[10px] text-textDim italic">No Prize</span>`;
+                        }
+                    }
+
+                    userPositionHTML = `
+                        <div class="mb-4">
+                            <div class="flex flex-col py-3 px-3 bg-white/5 rounded-xl border border-white/10 shadow-md">
+                                <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
+                                    <div class="flex items-center gap-1">
+                                        <div class="relative flex items-center">
+                                            <img src="https://flagcdn.com/w20/${myCountryCode}.png" class="flag-icon" onerror="this.src='https://flagcdn.com/w20/un.png'">
+                                            <div class="avatar-icon"><svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                        </div>
+                                        <span class="font-semibold text-white ml-1 uppercase text-[12px]">${myData ? myData.name : myUserName}</span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="font-bold text-white text-[13px]">$${finalBalance.toFixed(2)}</span>
+                                        <span class="font-bold text-ictexGreen text-[13px]">$${myPrize.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] text-textDim uppercase tracking-wider font-bold">Your position: <span class="text-white ml-1">${myRank}</span></span>
+                                    <div class="flex gap-2 items-center">
+                                        ${rebuyBtn}
+                                        ${claimBtnHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+
+                if (isBanned) {
+                    userPositionHTML = `
+                    <div class="bg-tourRed/10 border border-tourRed/30 rounded-xl p-4 mb-4 text-center">
+                        <svg class="w-8 h-8 text-tourRed mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <h4 class="text-tourRed font-bold text-sm">Account Banned from Tournament</h4>
+                        <p class="text-tourRed/80 text-xs mt-1">${tour.participants[myUID].banReason || 'You have been disqualified for violating tournament rules.'}</p>
+                    </div>`;
+                }
+
+                let ruleWarning = (isCompleted && tour.prizeDistributed) ? `<div class="bg-warning/10 border border-warning/20 text-warning text-[10px] p-2.5 rounded-lg mb-3 text-center font-bold tracking-wide">⚠️ Notice: Prizes must be claimed within 3 days. Unclaimed prizes will expire automatically with history deletion.</div>` : '';
+
+                prizesTab.innerHTML = `
+                    <div class="bg-cardBg rounded-xl p-3 border border-white/5 shadow-lg">
+                        ${ruleWarning}
+                        ${userPositionHTML}
+                        <div class="flex items-center text-[10px] font-bold text-textDim uppercase tracking-wider mb-2 px-3 border-b border-white/10 pb-3">
+                            <span class="w-[10%]">#</span>
+                            <span class="w-[45%] pl-1">Participant</span>
+                            <span class="w-[25%] text-right pr-2">Balance</span>
+                            <span class="w-[20%] text-right">Prize</span>
+                        </div>
+                        <div class="flex flex-col">${participantsHTML}</div>
+                    </div>`;
+            };
+
+            if (activeTourIdForLeaderboard === tourId) { window.renderLeaderboardUI(); return; }
+
+            activeTourIdForLeaderboard = tourId;
+            prizesTab.innerHTML = `<div class="text-center py-10 text-textDim animate-pulse">Loading Leaderboard...</div>`;
+
+            if (window.activeLeaderboardRef) window.activeLeaderboardRef.off();
+            if (window.activeUserRankRef) window.activeUserRankRef.off();
+
+            currentLeaderboardData = []; currentUserRank = "Analyzing...";
+
+            window.activeLeaderboardRef = database.ref(`tournaments/${tourId}/leaderboard`);
+            window.activeLeaderboardRef.on('value', snap => {
+                if (snap.exists()) currentLeaderboardData = snap.val();
+                window.renderLeaderboardUI();
+            });
+
+            if (myUID) {
+                window.activeUserRankRef = database.ref(`tournaments/${tourId}/userRanks/${myUID}`);
+                window.activeUserRankRef.on('value', snap => {
+                    if (snap.exists()) currentUserRank = snap.val();
+                    else currentUserRank = "Analyzing...";
+                    window.renderLeaderboardUI();
+                });
+            } else {
+                auth.onAuthStateChanged(user => {
+                    if (user && currentTourId === tourId) {
+                        myUID = user.uid;
+                        window.activeUserRankRef = database.ref(`tournaments/${tourId}/userRanks/${myUID}`);
+                        window.activeUserRankRef.on('value', snap => {
+                            if (snap.exists()) currentUserRank = snap.val();
+                            window.renderLeaderboardUI();
+                        });
+                    }
+                });
+            }
+        }
+
+        database.ref('tournaments').on('value', snapshot => {
+            const loadingText = document.getElementById('loading-text');
+            if (loadingText) loadingText.style.display = 'none';
+
+            const activeList = document.getElementById('active-tour-list');
+            const joinedList = document.getElementById('joined-tour-list');
+            const completedList = document.getElementById('completed-tour-list');
+            
+            activeList.innerHTML = ''; joinedList.innerHTML = ''; completedList.innerHTML = '';
+            let hasActive = false, hasJoined = false, hasCompleted = false;
+
+            if (snapshot.exists()) {
+                allTournaments = snapshot.val();
+                if (currentTourId && !document.getElementById('view-details').classList.contains('hidden')) updateDetailsView(currentTourId);
+
+                Object.keys(allTournaments).forEach(key => {
+                    const tour = allTournaments[key];
+                    const isJoined = tour.participants && myUID && tour.participants[myUID];
+                    const diff = tour.startTime - Date.now();
+                    const isStarted = diff <= 0;
+                    const isCompleted = tour.status === 'completed' || Date.now() > tour.endTime;
+
+                    const feeDisplay = tour.fee == 0 ? `<span class="block text-[16px] font-bold text-ictexGreen">Free</span>` : `<span class="block text-[16px] font-bold text-white">$${tour.fee}</span>`;
+                    const badgeData = getBadgeData(tour);
+                    const svgIcon = badgeData.showIcon ? `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>` : '';
+                    
+                    let actionButtonHTML = '';
+                    if (isCompleted) {
+                        let topMsg = '';
+                        if (tour.prizeDistributed) {
+                            if (isJoined && tour.participants && tour.participants[myUID] && tour.participants[myUID].unclaimedPrize > 0 && !tour.participants[myUID].isPrizeClaimed) {
+                                topMsg = `<div class="w-full text-center py-2 text-warning text-[11px] font-extrabold uppercase tracking-wider">Prize Pending to Claim</div>`;
+                            } else {
+                                topMsg = `<div class="w-full text-center py-2 text-ictexGreen text-[11px] font-extrabold uppercase tracking-wider">Tournament Completed</div>`;
+                            }
+                        } else {
+                            topMsg = `<div class="w-full text-center py-2 text-tourOrange text-[11px] font-extrabold uppercase tracking-wider">Pending Admin Approval</div>`;
+                        }
+
+                        actionButtonHTML = `
+                            ${topMsg}
+                            <button onclick="openDetails('${key}')" class="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-white/10 hover:bg-white/20 active:scale-[0.98] text-white text-sm font-bold transition border border-white/10 mt-2">
+                                View Final Leaderboard <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            </button>`;
+                    } else if (isStarted && !isJoined) {
+                        actionButtonHTML = `<button onclick="openDetails('${key}')" class="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-ictexBlue hover:bg-blue-600 active:scale-[0.98] text-white text-[15px] font-bold transition shadow-lg">Join Live Tournament <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></button>`;
+                    } else {
+                        actionButtonHTML = `<button onclick="openDetails('${key}')" class="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-white/10 hover:bg-white/20 active:scale-[0.98] text-white text-sm font-bold transition border border-white/10">Details <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></button>`;
+                    }
+
+                    const standardCardHTML = `
+                        <div class="rounded-xl border border-white/10 shadow-xl bg-cardBg overflow-hidden flex flex-col">
+                            <div class="relative p-5">
+                                <div class="absolute inset-0 z-0">
+                                    <div class="absolute inset-0 bg-[url('${bannerUrl}')] bg-[length:100%_auto] bg-top bg-no-repeat blur-[3px] opacity-25"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-b from-[#0B0E14]/20 to-[#161A23]"></div>
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-white text-[10px] font-extrabold tracking-wider mb-5 shadow-lg ${badgeData.bgClass}">
+                                        ${svgIcon}
+                                        <span class="live-timer-text" data-start="${tour.startTime}" data-end="${tour.endTime}" data-status="${tour.status}">${badgeData.text}</span>
+                                    </div>
+                                    <div class="flex justify-between items-end mb-6">
+                                        <h2 class="text-xl font-bold text-white tracking-tight">${tour.title}</h2>
+                                        <div class="text-right">
+                                            <span class="block text-[9px] font-bold text-textDim tracking-wider mb-0.5">PRIZE POOL</span>
+                                            <span class="block text-lg font-black text-ictexGreen">$${tour.prize}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between bg-white/5 backdrop-blur-sm rounded-xl p-2.5 mb-2 border border-white/5">
+                                        <div class="text-center flex-1">${feeDisplay}<span class="block text-[10px] text-textDim font-medium mt-1">Entry fee</span></div>
+                                        <div class="w-px h-8 bg-white/10"></div>
+                                        <div class="text-center flex-1"><span class="block text-[16px] font-bold text-white">${tour.duration}</span><span class="block text-[10px] text-textDim font-medium mt-1">Duration</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-btnAreaBg p-4 border-t border-white/5 relative z-20 flex flex-col">${actionButtonHTML}</div>
+                        </div>`;
+
+                    const joinedNotStartedHTML = `
+                        <div class="rounded-xl border-l-[3px] border-tourOrange shadow-xl bg-cardBg overflow-hidden flex flex-col">
+                            <div class="relative p-4 pb-2">
+                                <div class="absolute inset-0 z-0">
+                                    <div class="absolute inset-0 bg-[url('${bannerUrl}')] bg-[length:100%_auto] bg-top bg-no-repeat blur-[3px] opacity-20"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-b from-[#0B0E14]/20 to-[#161A23]"></div>
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-white text-[10px] font-extrabold tracking-wider mb-4 bg-tourOrange shadow-md">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        <span class="live-timer-text" data-start="${tour.startTime}" data-end="${tour.endTime}" data-status="${tour.status}">Loading...</span>
+                                    </div>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h2 class="text-xl font-bold text-white tracking-tight">${tour.title}</h2>
+                                        <div class="text-right"><span class="block text-[9px] font-bold text-textDim tracking-wider mb-0.5">PRIZE POOL</span><span class="block text-lg font-black text-ictexGreen">$${tour.prize}</span></div>
+                                    </div>
+                                    <div class="flex items-center justify-center gap-10 mb-4">
+                                        <div class="text-center">${feeDisplay}<span class="block text-[10px] text-textDim font-medium mt-1">Entry fee</span></div>
+                                        <div class="w-px h-8 bg-white/10"></div>
+                                        <div class="text-center"><span class="block text-[16px] font-bold text-white">${tour.duration}</span><span class="block text-[10px] text-textDim font-medium mt-1">Duration</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-btnAreaBg p-4 border-t border-white/5 flex gap-2 relative z-20">
+                                <button class="flex-1 bg-[#1A2634] text-white/40 font-bold rounded-lg py-3 text-sm cursor-not-allowed">Not started yet</button>
+                                <button onclick="openDetails('${key}')" class="w-14 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center justify-center transition border border-white/5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></button>
+                            </div>
+                        </div>`;
+
+                    const joinedActiveHTML = `
+                        <div class="rounded-xl border-l-[3px] border-ictexGreen shadow-xl bg-cardBg overflow-hidden flex flex-col">
+                            <div class="relative p-4 pb-2">
+                                <div class="absolute inset-0 z-0">
+                                    <div class="absolute inset-0 bg-[url('${bannerUrl}')] bg-[length:100%_auto] bg-top bg-no-repeat blur-[3px] opacity-20"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-b from-[#0B0E14]/20 to-[#161A23]"></div>
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-white text-[10px] font-extrabold tracking-wider mb-4 ${badgeData.bgClass} shadow-md">
+                                        <span class="live-timer-text" data-start="${tour.startTime}" data-end="${tour.endTime}" data-status="${tour.status}">Loading...</span>
+                                    </div>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h2 class="text-xl font-bold text-white tracking-tight">${tour.title}</h2>
+                                        <div class="text-right"><span class="block text-[9px] font-bold text-textDim tracking-wider mb-0.5">PRIZE POOL</span><span class="block text-lg font-black text-ictexGreen">$${tour.prize}</span></div>
+                                    </div>
+                                    <div class="flex items-center justify-center gap-10 mb-4">
+                                        <div class="text-center">${feeDisplay}<span class="block text-[10px] text-textDim font-medium mt-1">Entry fee</span></div>
+                                        <div class="w-px h-8 bg-white/10"></div>
+                                        <div class="text-center"><span class="block text-[16px] font-bold text-white">${tour.duration}</span><span class="block text-[10px] text-textDim font-medium mt-1">Duration</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-btnAreaBg p-4 border-t border-white/5 flex gap-2 relative z-20">
+                                <button class="flex-1 bg-ictexBlue hover:bg-blue-600 text-white font-bold rounded-lg py-3 text-[15px] shadow-md transition" onclick="redirectToTrade()">Trade</button>
+                                <button onclick="openDetails('${key}')" class="w-14 bg-ictexBlue/10 hover:bg-ictexBlue/20 text-ictexBlue rounded-lg flex items-center justify-center transition border border-ictexBlue/30 shadow-md">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                                </button>
+                            </div>
+                        </div>`;
+
+                    if (isCompleted) { completedList.innerHTML += standardCardHTML; hasCompleted = true; }
+                    else if (isJoined) {
+                        const htmlToRender = !isStarted ? joinedNotStartedHTML : joinedActiveHTML;
+                        joinedList.innerHTML += htmlToRender; hasJoined = true;
+                        activeList.innerHTML += htmlToRender; hasActive = true; 
+                    } else {
+                        activeList.innerHTML += standardCardHTML; hasActive = true;
+                    }
+                });
+                startLiveTimers();
+            }
+
+            if (!hasActive) activeList.innerHTML = `<div class="text-center py-10 text-textDim">No active tournaments.</div>`;
+            const emptyJoined = document.getElementById('empty-joined');
+            if (emptyJoined) emptyJoined.style.display = hasJoined ? 'none' : 'flex';
+            const emptyCompleted = document.getElementById('empty-completed');
+            if (emptyCompleted) emptyCompleted.style.display = hasCompleted ? 'none' : 'flex';
+        });
+
+        function updateDetailsView(tourId) {
+            const tour = allTournaments[tourId];
+            if(!tour) return closeDetails();
+
+            const isStarted = Date.now() >= tour.startTime;
+            const isCompleted = tour.status === 'completed' || Date.now() > tour.endTime;
+            const isJoined = tour.participants && myUID && tour.participants[myUID];
+
+            const badgeData = getBadgeData(tour);
+            const badge = document.getElementById('det-badge');
+            
+            const cardWrapper = document.getElementById('det-card-wrapper');
+            if (cardWrapper) cardWrapper.className = `rounded-xl border shadow-xl mb-6 bg-cardBg overflow-hidden flex flex-col ${isStarted && !isCompleted && isJoined ? 'border-l-[3px] border-ictexGreen border-y-white/10 border-r-white/10' : 'border-white/10'}`;
+            if (badge) badge.className = `inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-white text-[10px] font-extrabold tracking-wider ${badgeData.bgClass}`;
+            
+            const timeEl = document.getElementById('det-time-text');
+            if (timeEl) {
+                timeEl.setAttribute('data-start', tour.startTime);
+                timeEl.setAttribute('data-end', tour.endTime);
+                timeEl.setAttribute('data-status', tour.status);
+                timeEl.innerText = badgeData.text;
+            }
+
+            const detBadgeIcon = document.getElementById('det-badge-icon');
+            if (detBadgeIcon) detBadgeIcon.style.display = badgeData.showIcon ? 'block' : 'none';
+            
+            document.getElementById('det-title').innerText = tour.title;
+            const walletLabel = (tour.prizeWalletType === 'realBalance') ? 'Real Balance' : 'Bonus Balance';
+            document.getElementById('det-prize').innerHTML = `$${tour.prize}<br><span class="text-[10px] text-textDim font-bold">Target: ${walletLabel}</span>`;
+            
+            const actionArea = document.getElementById('det-action-area');
+            if (actionArea) {
+                if(isCompleted) {
+                    actionArea.innerHTML = `<div class="w-full text-center py-3.5 rounded-lg bg-white/5 text-ictexGreen text-sm font-bold border border-white/10">Prize Distribution Completed</div>`;
+                } else {
+                    actionArea.innerHTML = `<button id="det-join-btn" class="w-full py-3.5 rounded-lg bg-ictexGreen hover:bg-[#0aa645] text-white font-bold text-[15px] shadow-lg active:scale-95 transition">Join now — <span id="det-join-fee"></span></button>`;
+                    const newJoinBtn = document.getElementById('det-join-btn');
+                    
+                    if (isJoined) {
+                        if (isStarted) {
+                            newJoinBtn.innerText = "Trade";
+                            newJoinBtn.className = "w-full py-3.5 rounded-lg bg-ictexBlue hover:bg-blue-600 text-white font-bold text-[16px] shadow-lg active:scale-95 transition";
+                            newJoinBtn.onclick = redirectToTrade;
+                        } else {
+                            newJoinBtn.innerText = "Not started yet";
+                            newJoinBtn.className = "w-full py-3.5 rounded-lg bg-surfaceLight text-white/40 font-bold text-[15px] shadow-lg cursor-not-allowed border border-white/5";
+                            newJoinBtn.onclick = null;
+                        }
+                    } else {
+                        document.getElementById('det-join-fee').innerText = tour.fee == 0 ? 'Free' : `$${tour.fee}`;
+                        newJoinBtn.onclick = handleJoin;
+                    }
+                }
+            }
+            
+            document.getElementById('det-start').innerText = formatDate(tour.startTime);
+            document.getElementById('det-end').innerText = formatDate(tour.endTime);
+            document.getElementById('det-grid-fee').innerText = tour.fee == 0 ? 'Free' : `$${tour.fee}`;
+            document.getElementById('det-grid-duration').innerText = tour.duration;
+            document.getElementById('det-grid-prize').innerText = `$${tour.prize}`;
+            document.getElementById('det-grid-rebuys').innerText = tour.rebuys || '0';
+            document.getElementById('det-grid-rebuy-cost').innerText = tour.rebuyCost == 0 ? 'Free' : `$${tour.rebuyCost}`;
+            document.getElementById('det-desc').innerText = `The total prize pool is $${tour.prize}. To participate, you need to register and pay the entrance fee of $${tour.fee}. After that, $${tour.initialBalance || 100} will be deposited into a special tournament account. All participants start with the same initial conditions. Over the duration of ${tour.duration}, participants must make trades on their tournament account. The top traders with the highest balances will be the winners.`;
+
+            let prizeListHTML = '';
+            if(tour.prizes) {
+                for(let i=1; i<=10; i++) {
+                    let amt = tour.prizes[`place_${i}`] || 0;
+                    if(amt > 0) prizeListHTML += `<div class="flex justify-between items-center ${i%2!==0 ? 'bg-white/5 border border-white/5' : 'bg-transparent border border-transparent'} rounded-lg p-3 transition hover:bg-white/10"><span class="font-black text-[13px] text-white tracking-wide">${i} PLACE</span><span class="font-black text-[15px] text-ictexGreen">$${amt}</span></div>`;
+                }
+            } else { prizeListHTML = '<p class="text-center text-textDim text-sm py-4">Prize list pending.</p>'; }
+            document.getElementById('prize-modal-list').innerHTML = prizeListHTML;
+
+            listenToTournamentLeaderboard(tourId, tour, isJoined);
+        }
+
+        function openDetails(tourId) {
+            currentTourId = tourId;
+            document.getElementById('view-main').classList.add('hidden');
+            document.getElementById('view-details').classList.remove('hidden');
+            updateDetailsView(tourId);
+        }
+
+        async function handleJoin() {
+            if(!myUID || !currentTourId) return;
+            if(isDemoActive) {
+                showCustomModal('Action Denied', 'Tournaments can only be joined using a <b>Live account</b>. Please switch to your real balance to participate.', false);
+                return;
+            }
+            const tour = allTournaments[currentTourId];
+            const fee = parseFloat(tour.fee);
+
+            if (fee > 0 && userRealBalance < fee) {
+                showCustomModal('Insufficient Real Balance', `You need <b>$${fee.toFixed(2)}</b> in your Real Balance to join.<br><br><i style="color:#8BA0B8;">Note: Bonus balance cannot be used for tournament entry fees.</i>`, false);
+                window.parent.postMessage({ type: 'SHOW_INSUFFICIENT_FUNDS', tourName: tour.title, fee: fee, balance: userRealBalance }, '*');
+                return;
+            }
+
+            const feeText = fee === 0 ? "Free" : `$${fee.toFixed(2)}`;
+            showConfirmModal('Join Tournament', `Are you sure you want to join <b>${tour.title}</b>?<br><br>Entry Fee: <span class="text-white font-bold">${feeText}</span>`, async () => {
+                if (fee > 0) await database.ref(`users/${myUID}/realBalance`).set(firebase.database.ServerValue.increment(-fee));
+                const initialBal = parseFloat(tour.initialBalance || 100);
+                await database.ref(`tournaments/${currentTourId}/participants/${myUID}`).set({ joinedAt: Date.now(), isBot: false, tourBalance: initialBal });
+                closeDetails();
+                showCustomModal('Success!', 'You have successfully joined the tournament. Good luck!', true);
+            });
+        }
+
+        async function handleRebuy() {
+            if (!myUID || !currentTourId) return;
+            const tour = allTournaments[currentTourId];
+            const initialBalance = parseFloat(tour.initialBalance || 100);
+            const rebuyCost = parseFloat(tour.rebuyCost || 0);
+
+            try {
+                const tourBalanceSnap = await database.ref(`tournaments/${currentTourId}/participants/${myUID}/tourBalance`).once('value');
+                const currentTourBalance = tourBalanceSnap.exists() ? parseFloat(tourBalanceSnap.val()) : initialBalance;
+
+                if (currentTourBalance >= initialBalance) {
+                    showCustomModal('Rebuy Denied', `Your current balance is <b>$${currentTourBalance.toFixed(2)}</b>.<br><br>Your balance is equal to or higher than the initial balance ($${initialBalance.toFixed(2)}), so you do not need to rebuy right now. Keep trading!`, false);
+                    return;
+                }
+                
+                if (userRealBalance < rebuyCost) {
+                    showCustomModal('Insufficient Real Balance', `You need <b>$${rebuyCost.toFixed(2)}</b> in your Real Balance to rebuy.<br><br><i style="color:#8BA0B8;">Note: Bonus balance cannot be used for tournament rebuys.</i>`, false);
+                    window.parent.postMessage({ type: 'SHOW_INSUFFICIENT_FUNDS', tourName: tour.title + ' (Rebuy)', fee: rebuyCost, balance: userRealBalance }, '*');
+                    return;
+                }
+
+                showConfirmModal('Confirm Rebuy', `Your tournament balance will be reset to <b>$${initialBalance.toFixed(2)}</b>.<br><br>Are you sure you want to rebuy for <b>$${rebuyCost.toFixed(2)}</b>?`, async () => {
+                    const updates = {};
+                    updates[`/users/${myUID}/realBalance`] = firebase.database.ServerValue.increment(-rebuyCost);
+                    updates[`/tournaments/${currentTourId}/participants/${myUID}/tourBalance`] = initialBalance;
+                    await database.ref().update(updates);
+                    showCustomModal('Rebuy Successful!', `Your tournament balance has been reset to <b>$${initialBalance.toFixed(2)}</b>.<br>Good luck on your comeback!`, true);
+                });
+                
+            } catch (error) { showCustomModal('Error', 'An error occurred during rebuy. Please try again.', false); }
+        }
+
+        function closeDetails() {
+            currentTourId = null;
+            document.getElementById('view-details').classList.add('hidden');
+            document.getElementById('view-main').classList.remove('hidden');
+            const infoBtn = document.querySelector('[data-target="inner-info"]');
+            if (infoBtn) infoBtn.click();
+        }
+
+        function redirectToTrade() { window.parent.postMessage({ type: 'SWITCH_TO_TRADE_TERMINAL' }, '*'); }
+    </script>
+</body>
+</html>
