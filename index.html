@@ -14202,12 +14202,15 @@ Timestamp: ${new Date().toISOString()}
                 ctx.fill();
             }
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
             ctx.beginPath();
-            ctx.moveTo(xPos, y);
+            ctx.moveTo(0, y);
             ctx.lineTo(chartDrawWidth, y);
             ctx.stroke();
+            ctx.restore();
 
             ctx.save();
             ctx.translate(xPos, y);
