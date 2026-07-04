@@ -10232,10 +10232,6 @@
                     });
                     // --- END TOURNAMENT LISTENER ---
                     
-                    if (window.location.pathname.indexOf('terminal.html') === -1) {
-                        window.location.href = 'terminal.html';
-                        return;
-                    }
                     authContainer.style.display = 'none';
                     mainAppWrapper.style.display = 'flex';
                     setTimeout(() => {
@@ -10565,10 +10561,6 @@
                             sessionStorage.setItem('registrationCompleted', 'true');
                             
                             // Enter terminal!
-                            if (window.location.pathname.indexOf('terminal.html') === -1) {
-                                window.location.href = 'terminal.html';
-                                return;
-                            }
                             authContainer.style.display = 'none';
                             mainAppWrapper.style.display = 'flex';
                             
