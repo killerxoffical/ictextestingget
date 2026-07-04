@@ -11343,7 +11343,7 @@
             
             setTimeout(() => {
                 loader.style.display = 'none';
-                if (document.getElementById('tab-active-btn').classList.contains('active')) {
+                if (document.getElementById('tab-active-btn').style.color !== 'rgb(139, 160, 184)' && document.getElementById('tab-active-btn').style.color !== '#8BA0B8') {
                     activeList.style.display = 'block';
                 } else {
                     historyList.style.display = 'block';
