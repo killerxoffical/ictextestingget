@@ -13847,7 +13847,6 @@ Timestamp: ${new Date().toISOString()}
                     ctx.save();
                     ctx.beginPath();
                     ctx.setLineDash([4, 4]);
-                    ctx.lineDashOffset = -(Date.now() / 40) % 8;
                     if (yH - gap > 0) {
                         ctx.moveTo(runningX, 0);
                         ctx.lineTo(runningX, yH - gap);
@@ -14220,10 +14219,17 @@ Timestamp: ${new Date().toISOString()}
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
             ctx.lineWidth = 1;
             ctx.setLineDash([4, 4]);
-            ctx.lineDashOffset = -(Date.now() / 40) % 8;
             ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(chartDrawWidth, y);
+            
+            const hGap = Math.max(6, candleWidth / 2 + 2);
+            if (xPos - hGap > 0) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(xPos - hGap, y);
+            }
+            if (xPos + hGap < chartDrawWidth) {
+                ctx.moveTo(xPos + hGap, y);
+                ctx.lineTo(chartDrawWidth, y);
+            }
             ctx.stroke();
             ctx.restore();
 
