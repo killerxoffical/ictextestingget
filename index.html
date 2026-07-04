@@ -8073,42 +8073,54 @@
                                     <span class="active-deals-badge">Active Deals</span>
                                 </div>
                                 <div id="promo-option-btn-container" class="promo-option-btn-container">
-                                    <!-- Tier 1 -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-10P-15TEX" data-min="150" data-percent="10">
+                                <!-- First Deposit Bonus -->
+                                    <button type="button" class="promo-option-btn glass-card-bonus featured" data-code="FIRST-DEPOSIT-50" data-min="10" data-percent="50">
+                                        <div class="promo-best-val-tag" style="background:var(--color-up);color:#000;">First Deposit</div>
                                         <div class="promo-left">
-                                            <span class="promo-lbl-green">+10% TRADING BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $150</span>
+                                            <span class="promo-lbl-green" style="color:var(--color-up);">+50% WELCOME BONUS</span>
+                                            <span class="promo-lbl-sub">For your first deposit only</span>
                                         </div>
-                                        <div class="promo-right-green">+$15</div>
+                                        <div class="promo-right-green" style="color:var(--color-up);">50%</div>
                                     </button>
                                     
-                                    <!-- Tier 2 - Best Value -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus featured" data-code="IC-30P-70TEX" data-min="700" data-percent="30">
-                                        <div class="promo-best-val-tag">Best Value</div>
-                                        <div class="promo-left">
-                                            <span class="promo-lbl-cyan">+30% ELITE BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $700</span>
-                                        </div>
-                                        <div class="promo-right-cyan">+$210</div>
-                                    </button>
+                                    <div id="extra-bonuses-container" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
+                                        <!-- Tier 1 -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-10P-15TEX" data-min="150" data-percent="10">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-green">+10% TRADING BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $150</span>
+                                            </div>
+                                            <div class="promo-right-green">+$15</div>
+                                        </button>
+                                        
+                                        <!-- Tier 2 - Best Value -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-30P-70TEX" data-min="700" data-percent="30">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-cyan">+30% ELITE BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $700</span>
+                                            </div>
+                                            <div class="promo-right-cyan">+$210</div>
+                                        </button>
 
-                                    <!-- Tier 3 -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-50P-300TEX" data-min="3000" data-percent="50">
-                                        <div class="promo-left">
-                                            <span class="promo-lbl-green">+50% PLATINUM BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $3,000</span>
-                                        </div>
-                                        <div class="promo-right-green">+$1,500</div>
-                                    </button>
+                                        <!-- Tier 3 -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-50P-300TEX" data-min="3000" data-percent="50">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-green">+50% PLATINUM BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $3,000</span>
+                                            </div>
+                                            <div class="promo-right-green">+$1,500</div>
+                                        </button>
 
-                                    <!-- Tier 4 -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-150P-5K" data-min="5000" data-percent="150">
-                                        <div class="promo-left">
-                                            <span class="promo-lbl-green">+150% VIP HYPER BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $5,000</span>
-                                        </div>
-                                        <div class="promo-right-green">+$7,500</div>
-                                    </button>
+                                        <!-- Tier 4 -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-150P-5K" data-min="5000" data-percent="150">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-green">+150% VIP HYPER BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $5,000</span>
+                                            </div>
+                                            <div class="promo-right-green">+$7,500</div>
+                                        </button>
+                                    </div>
+                                    <button type="button" id="view-all-bonuses-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); width: 100%; padding: 8px; border-radius: 8px; margin-top: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s;">View All</button>
                                 </div>
                             </div>
 
@@ -15078,12 +15090,23 @@ Please check the admin panel to approve.
                         let bonusAmount = 0;
                         if(request.promoCode && promoCodesDB[request.promoCode] && promoCodesDB[request.promoCode].status === 'active') {
                             const promo = promoCodesDB[request.promoCode];
-                            const usageCount = (currentUserData.promoUsage && currentUserData.promoUsage[request.promoCode]) || 0;
-                            const limit = (request.promoCode === 'IC-50P-300TEX' || request.promoCode === 'IC-150P-5K') ? 3 : 2; 
-                            if(request.amountUSD >= promo.minDeposit && usageCount < limit) {
-                                bonusAmount = request.amountUSD * (promo.bonusPercentage / 100);
-                                if(promo.maxBonus) bonusAmount = Math.min(bonusAmount, promo.maxBonus);
-                                database.ref(`users/${uid}/promoUsage/${request.promoCode}`).set(firebase.database.ServerValue.increment(1));
+                            
+                            let isValidPromo = true;
+                            if (promo.isFirstDepositOnly) {
+                                const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                                if (depositCount > 0) {
+                                    isValidPromo = false;
+                                }
+                            }
+                            
+                            if (isValidPromo) {
+                                const usageCount = (currentUserData.promoUsage && currentUserData.promoUsage[request.promoCode]) || 0;
+                                const limit = (request.promoCode === 'IC-50P-300TEX' || request.promoCode === 'IC-150P-5K') ? 3 : 2; 
+                                if(request.amountUSD >= promo.minDeposit && usageCount < limit) {
+                                    bonusAmount = request.amountUSD * (promo.bonusPercentage / 100);
+                                    if(promo.maxBonus) bonusAmount = Math.min(bonusAmount, promo.maxBonus);
+                                    database.ref(`users/${uid}/promoUsage/${request.promoCode}`).set(firebase.database.ServerValue.increment(1));
+                                }
                             }
                         }
                         
@@ -16788,6 +16811,7 @@ Please check the admin panel to approve.
             const promoCodesRef = database.ref('admin/promo_codes');
             promoCodesRef.on('value', (snapshot) => {
                 promoCodesDB = snapshot.exists() ? snapshot.val() : {};
+                if (!promoCodesDB['FIRST-DEPOSIT-50']) promoCodesDB['FIRST-DEPOSIT-50'] = { bonusPercentage: 50, minDeposit: 10, status: 'active', isFirstDepositOnly: true };
                 if (!promoCodesDB['IC-10P-15TEX']) promoCodesDB['IC-10P-15TEX'] = { bonusPercentage: 10, minDeposit: 150, status: 'active' };
                 if (!promoCodesDB['IC-30P-70TEX']) promoCodesDB['IC-30P-70TEX'] = { bonusPercentage: 30, minDeposit: 700, status: 'active' };
                 if (!promoCodesDB['IC-50P-300TEX']) promoCodesDB['IC-50P-300TEX'] = { bonusPercentage: 50, minDeposit: 3000, status: 'active' };
@@ -17579,7 +17603,19 @@ Please check the admin panel to approve.
                 if (!code) return;
                 
                 if (promoCodesDB[code] && promoCodesDB[code].status === 'active') {
-                    currentDepositData.promo = promoCodesDB[code];
+                    const promoData = promoCodesDB[code];
+                    
+                    if (promoData.isFirstDepositOnly) {
+                        const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                        if (depositCount > 0) {
+                            promoFeedbackEl.className = 'promo-feedback error visible';
+                            promoFeedbackText.textContent = `This code is only valid for your first deposit.`;
+                            document.querySelectorAll('.promo-option-btn').forEach(b => b.classList.remove('active'));
+                            return;
+                        }
+                    }
+
+                    currentDepositData.promo = promoData;
                     currentDepositData.promoCode = code;
                     promoCodeInput.value = code;
                     promoFeedbackEl.className = 'promo-feedback success visible';
@@ -17617,6 +17653,20 @@ Please check the admin panel to approve.
                     handleApplyPromoCode(code); 
                 } 
             });
+            
+            const viewAllBonusesBtn = document.getElementById('view-all-bonuses-btn');
+            const extraBonusesContainer = document.getElementById('extra-bonuses-container');
+            if (viewAllBonusesBtn && extraBonusesContainer) {
+                viewAllBonusesBtn.addEventListener('click', () => {
+                    if (extraBonusesContainer.style.display === 'none') {
+                        extraBonusesContainer.style.display = 'flex';
+                        viewAllBonusesBtn.textContent = 'Show Less';
+                    } else {
+                        extraBonusesContainer.style.display = 'none';
+                        viewAllBonusesBtn.textContent = 'View All';
+                    }
+                });
+            }
 
             const settingsNotificationsLinkEl = document.getElementById('settings-notifications-link');
             if (settingsNotificationsLinkEl) {
