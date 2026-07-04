@@ -2198,6 +2198,39 @@
         .color-swatch-item.selected {
             border-color: var(--color-accent);
         }
+        .swatch-scroll-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .swatch-scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: rgba(41, 98, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            border: none;
+            padding: 0;
+            margin-top: -5px;
+        }
+        .swatch-scroll-arrow.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .swatch-scroll-arrow.left { left: 0; }
+        .swatch-scroll-arrow.right { right: 0; }
+        .swatch-scroll-arrow svg { width: 16px; height: 16px; }
         .color-swatch-item div {
             width: 100%;
             height: 100%;
@@ -8499,11 +8532,27 @@
                         </div>
                         <div class="options-section">
                             <h4>UP CANDLE COLOR <button class="reset-btn-inline" id="reset-up-color-btn">Reset</button></h4>
-                            <div class="color-swatch-container" id="up-candle-color-container"></div>
+                            <div class="swatch-scroll-wrapper">
+                                <button class="swatch-scroll-arrow left" onclick="this.nextElementSibling.scrollBy({left: -150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+                                </button>
+                                <div class="color-swatch-container" id="up-candle-color-container" onscroll="if(window.updateSwatchScrollIndicators) window.updateSwatchScrollIndicators(this)"></div>
+                                <button class="swatch-scroll-arrow right" onclick="this.previousElementSibling.scrollBy({left: 150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="options-section">
                             <h4>DOWN CANDLE COLOR <button class="reset-btn-inline" id="reset-down-color-btn">Reset</button></h4>
-                            <div class="color-swatch-container" id="down-candle-color-container"></div>
+                            <div class="swatch-scroll-wrapper">
+                                <button class="swatch-scroll-arrow left" onclick="this.nextElementSibling.scrollBy({left: -150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+                                </button>
+                                <div class="color-swatch-container" id="down-candle-color-container" onscroll="if(window.updateSwatchScrollIndicators) window.updateSwatchScrollIndicators(this)"></div>
+                                <button class="swatch-scroll-arrow right" onclick="this.previousElementSibling.scrollBy({left: 150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -9536,6 +9585,21 @@
         if (isNaN(demoBalance)) { demoBalance = 10000; localStorage.setItem('demoBalance', demoBalance); }
         let canvasWidth, canvasHeight, historicalData = [], myActiveBets = [], tradeHistory = [], fullTradeHistory = [];
         window.appViewHistory = [];
+        window.updateSwatchScrollIndicators = function(container) {
+            if (!container) return;
+            const wrapper = container.parentElement;
+            if (!wrapper) return;
+            const leftArrow = wrapper.querySelector('.left');
+            const rightArrow = wrapper.querySelector('.right');
+            if (leftArrow) {
+                if(container.scrollLeft > 5) leftArrow.classList.add('visible');
+                else leftArrow.classList.remove('visible');
+            }
+            if (rightArrow) {
+                if(container.scrollLeft < container.scrollWidth - container.clientWidth - 5) rightArrow.classList.add('visible');
+                else rightArrow.classList.remove('visible');
+            }
+        };
         let currentView = 'chart', lastFrameTime = 0, animationFrameId;
         let isPanning = false, isScaling = false, isPinching = false;
         let panStartX = 0, scaleStartY = 0, initialPinchDistance = 0, panDragDistance = 0, viewOffset = 0;
@@ -18284,6 +18348,12 @@ Please check the admin panel to approve.
                 `).join('');
 
                 attachDisplayOptionsListeners();
+                setTimeout(() => {
+                    if (window.updateSwatchScrollIndicators) {
+                        window.updateSwatchScrollIndicators(upColorContainer);
+                        window.updateSwatchScrollIndicators(downColorContainer);
+                    }
+                }, 50);
             }
 
             function attachDisplayOptionsListeners() {
