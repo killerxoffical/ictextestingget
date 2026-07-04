@@ -4089,7 +4089,7 @@
         .ti-date { font-size: 0.85rem; color: #fff; }
         .ti-method { font-size: 0.85rem; color: #fff; font-weight: 500; }
         .ti-status { font-size: 0.85rem; font-weight: 500; text-transform: capitalize; }
-        .ti-status-successed, .ti-status-success, .ti-status-completed, .ti-status-approved { color: #00C853; } 
+        .ti-status-successed, .ti-status-success, .ti-status-successful, .ti-status-completed, .ti-status-approved { color: #00C853; } 
         .ti-status-pending { color: #F5A623; } 
         .ti-status-failed { color: #E8304A; } 
         .ti-status-canceled { color: #9CA3AF; }
@@ -12161,6 +12161,12 @@ Timestamp: ${new Date().toISOString()}
                 else if(t.type === 'subscription') { methodDisplay = `AI Subscription`; }
                 const cancelButton = (t.type === 'withdraw' && t.status === 'pending') ? `<button class="cancel-withdraw-btn" data-tx-id="${t.id}" data-amount="${Math.abs(t.amount)}" data-bonus="${t.bonusRemoved || 0}">Cancel</button>` : '';
                 const amountValue = typeof t.amount === 'string' ? t.amount : `$${Math.abs(t.amount).toFixed(2)}`;
+                let typeDisplay = 'Deposit';
+                if (t.type === 'withdraw') typeDisplay = 'Payout';
+                else if (t.type === 'bonus') typeDisplay = 'Claim';
+                else if (t.type === 'subscription') typeDisplay = 'Subscription';
+                else if (t.type === 'transfer') typeDisplay = 'Transfer';
+                
                 return `<div class="transaction-item" data-type="${t.type}">
                     <div class="ti-row">
                         <span class="ti-id">${transactionId}</span>
@@ -12172,7 +12178,7 @@ Timestamp: ${new Date().toISOString()}
                     </div>
                     <div class="ti-row">
                         <span class="ti-status ti-status-${t.status ? t.status.toLowerCase() : 'pending'}">${t.status}</span>
-                        <span class="ti-type">${t.type === 'withdraw' ? 'Payout' : 'Deposit'}</span>
+                        <span class="ti-type">${typeDisplay}</span>
                     </div>
                     ${cancelButton}
                 </div>`;
