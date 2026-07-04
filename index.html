@@ -9742,7 +9742,7 @@
             try { updateTradeOptionsModalUI(); } catch(e){}
         }
 
-        const COLOR_GRID_TEXT = '#707A8A';
+        const COLOR_GRID_TEXT = '#FFFFFF';
         const RIGHT_PADDING = 65, CANDLE_PATH_STEPS = 1000, MAX_STORED_CANDLES = 5000, FUTURE_SPACE_CANDLES = 5;
         const RSI_PANE_HEIGHT = 80;
         const MACD_PANE_HEIGHT = 80;
@@ -13855,7 +13855,7 @@ Timestamp: ${new Date().toISOString()}
                         ctx.moveTo(runningX, yL + gap);
                         ctx.lineTo(runningX, canvasHeight);
                     }
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.strokeStyle = '#FFFFFF';
                     ctx.lineWidth = 1;
                     ctx.stroke();
                     ctx.restore();
@@ -14223,7 +14223,7 @@ Timestamp: ${new Date().toISOString()}
             }
 
             ctx.save();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.strokeStyle = '#FFFFFF';
             ctx.lineWidth = 1;
             ctx.setLineDash([4, 4]);
             ctx.beginPath();
