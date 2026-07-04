@@ -10232,19 +10232,12 @@
                     });
                     // --- END TOURNAMENT LISTENER ---
                     
-                    const p = window.location.pathname;
-                    if (p.endsWith('/') || p.endsWith('/index.html') || p.endsWith('/ictextestingget/')) {
-                        window.location.href = 'terminal.html';
-                        return;
-                    }
                     authContainer.style.display = 'none';
                     mainAppWrapper.style.display = 'flex';
                     setTimeout(() => {
                        resizeCanvas();
                        if(animationFrameId) cancelAnimationFrame(animationFrameId);
-                       if (p.includes('terminal.html')) {
-                           animationFrameId = requestAnimationFrame(gameLoop);
-                       }
+                       animationFrameId = requestAnimationFrame(gameLoop);
                     }, 50);
                 } else {
                     authContainer.style.display = 'flex'; 
@@ -10568,11 +10561,6 @@
                             sessionStorage.setItem('registrationCompleted', 'true');
                             
                             // Enter terminal!
-                            const p = window.location.pathname;
-                            if (p.endsWith('/') || p.endsWith('/index.html') || p.endsWith('/ictextestingget/')) {
-                                window.location.href = 'terminal.html';
-                                return;
-                            }
                             authContainer.style.display = 'none';
                             mainAppWrapper.style.display = 'flex';
                             
@@ -10584,9 +10572,7 @@
                             setTimeout(() => {
                                 resizeCanvas();
                                 if(animationFrameId) cancelAnimationFrame(animationFrameId);
-                                if (p.includes('terminal.html')) {
-                                    animationFrameId = requestAnimationFrame(gameLoop);
-                                }
+                                animationFrameId = requestAnimationFrame(gameLoop);
                             }, 50);
                             
                             showNotification('Access Granted. Entering ICTEX Trading Terminal.', 'win');
@@ -11223,20 +11209,6 @@
     }
 
     function showView(viewId, isPopState = false) {
-            const pageMap = {
-                'chart': 'terminal.html',
-                'leaderboard': 'leaderboard.html',
-                'rewards': 'reward.html',
-                'analysis': 'analysis.html',
-                'settings': 'account.html'
-            };
-            const targetPage = pageMap[viewId];
-            const p = window.location.pathname;
-            if (targetPage && !p.includes(targetPage)) {
-                 window.location.href = targetPage;
-                 return;
-            }
-
             if (viewId === currentView) return;
             
             if (!isPopState) {
@@ -19141,14 +19113,3 @@ Please check the admin panel to approve.
 
 </body>
 </html>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const p = window.location.pathname;
-    setTimeout(() => {
-        if (p.includes('leaderboard.html')) showView('leaderboard');
-        else if (p.includes('reward.html')) showView('rewards');
-        else if (p.includes('analysis.html')) showView('analysis');
-        else if (p.includes('account.html')) showView('settings');
-    }, 500);
-});
-</script>
