@@ -2640,7 +2640,7 @@
         #view-settings .settings-list-container {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
             padding: 0 1rem;
         }
         #view-settings .settings-list-item.glass-card {
@@ -2741,28 +2741,26 @@
             color: #c084fc;
         }
         #view-settings .logout-button {
-            background: rgba(26, 32, 53, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 1rem;
-            padding: 1rem;
+            background: #2B2F3A;
+            border: none;
+            border-radius: 4px;
+            padding: 0.6rem 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            transition: transform 0.15s ease, background 0.15s ease;
-            text-decoration: none;
+            transition: all 0.15s ease;
             color: #ef4444;
             cursor: pointer;
-            width: 100%;
-            margin-top: 1.5rem;
-            font-weight: 600;
-            font-size: 1.125rem;
+            width: auto;
+            min-width: 120px;
+            margin: 1.5rem auto;
+            font-weight: 700;
+            font-size: 0.9rem;
             box-sizing: border-box;
         }
         #view-settings .logout-button:hover {
-            background: rgba(239, 68, 68, 0.1);
+            background: #22252C;
         }
         #view-settings .logout-button:active {
             transform: scale(0.97);
@@ -7404,10 +7402,9 @@
                 <div id="view-settings" class="view">
                     <div class="page-content">
                         <!-- NEW HEADER -->
-                        <header class="settings-header" style="justify-content: center; text-align: center; padding-bottom: 1.5rem;">
+                        <header class="settings-header" style="justify-content: flex-start; text-align: left; padding: 0.25rem 1rem 0.5rem 1rem;">
                             <div style="position: relative; z-index: 10;">
-                                <h1 class="settings-header-title">Settings</h1>
-                                <p class="settings-header-subtitle">Manage your account and preferences</p>
+                                <h1 class="settings-header-title" style="font-size: 1.15rem; font-weight: 700;">Settings</h1>
                             </div>
                         </header>
                         <div class="settings-list-container">
@@ -7509,7 +7506,9 @@
                             <a class="settings-list-item glass-card" data-view="miner">
                                 <div class="item-left">
                                     <div class="icon-wrapper">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M14.83 9.17a3.1 3.1 0 0 0-2.12-.88H9v8h3.97a3 3 0 0 0 2.12-.88 3.1 3.1 0 0 0 .88-2.12c0-1.4-.95-2.61-2.29-2.95 1.13-.39 1.9-1.5 1.9-2.77a2.9 2.9 0 0 0-.75-2.06z"></path><path d="M9 12h5.5"></path><path d="M11 8V6"></path><path d="M14 8V6"></path><path d="M11 18v-2"></path><path d="M14 18v-2"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="bitcoin" fill="currentColor">
+                                          <path d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21ZM14,7V6a1,1,0,0,0-2,0V7H11V6A1,1,0,0,0,9,6V7H8A1,1,0,0,0,8,9H9v6H8a1,1,0,0,0,0,2H9v1a1,1,0,0,0,2,0V17h1v1a1,1,0,0,0,2,0V17a3,3,0,0,0,3-3,3,3,0,0,0-.77-2A3,3,0,0,0,17,10,3,3,0,0,0,14,7Zm0,8H11V13h3a1,1,0,0,1,0,2Zm0-4H11V9h3a1,1,0,0,1,0,2Z"></path>
+                                        </svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">BTC Mining</h2>
