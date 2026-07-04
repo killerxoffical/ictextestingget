@@ -6633,7 +6633,7 @@
                         </div>
                         <div class="flex flex-col gap-1" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
                             <p class="text-sm leading-relaxed text-on-surface-variant" style="color: #c3c5d8; font-size: 14px; margin: 0; line-height: 1.5;">
-                                I agree to the <a href="terms.html" class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;" onclick="event.stopPropagation();">Terms of Service</a> and <a href="terms.html" class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;" onclick="event.stopPropagation();">Risk Disclosure</a> policies.
+                                I agree to the <a href="#" data-view="terms" class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;" onclick="event.stopPropagation(); window.showView('terms'); return false;">Terms of Service</a> and <a href="#" data-view="terms" class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;" onclick="event.stopPropagation(); window.showView('terms'); return false;">Risk Disclosure</a> policies.
                             </p>
                         </div>
                     </div>
@@ -7508,7 +7508,7 @@
                             </button>
                         </div>
                         <!-- Terms & Conditions Link -->
-                        <a href="terms.html" class="settings-terms-link">Terms & Conditions</a>
+                        <a href="#" data-view="terms" id="terms-link" class="settings-terms-link">Terms & Conditions</a>
                     </div>
                 </div>
                 
@@ -7992,61 +7992,47 @@
                          <div style="width: 34px;"></div>
                     </div>
                     <div class="page-content">
-                        <h3>Terms & Conditions</h3>
-                        <h4>1. Acceptance of Terms</h4>
-                        <p>By registering for and using the ICTEX trading platform ("Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, do not use the Service.</p>
+                        <!-- Intro -->
+                        <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #25282F;">
+                            <div style="margin-top: 24px; background: #2B3139; padding: 16px; border-radius: 8px; border-left: 4px solid #FF3B30;">
+                                <h4 style="color: #FF3B30; font-weight: bold; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                                    HIGH RISK WARNING
+                                </h4>
+                                <p style="font-size: 14px; color: #707A8A; margin: 0; text-align: left;">Trading on financial markets involves a high degree of risk and may not be suitable for all investors. The possibility exists that you could sustain a loss of some or all of your initial investment. You should carefully consider your investment objectives, level of experience, and risk appetite before trading.</p>
+                            </div>
+                        </div>
 
-                        <h4>2. Eligibility and Account</h4>
-                        <p>You must be at least 18 years old to use our Service. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to provide accurate and complete information during registration.</p>
+                        <h4>1. Introduction</h4>
+                        <p>These Terms and Conditions ("Agreement") govern your access to and use of the ICTEX Trade platform, including its website, mobile applications, and API services (collectively, the "Platform"). By registering for an account or using the Platform, you agree to be legally bound by this Agreement.</p>
+                        
+                        <h4>2. Client Qualifications and KYC</h4>
+                        <p>To use our services, you must be at least 18 years of age and legally competent to form a binding contract. You agree to provide true, accurate, and complete information during the registration process. As part of our Anti-Money Laundering (AML) and Know Your Customer (KYC) policies, we may require you to verify your identity by providing government-issued ID, proof of address, and other relevant documents before you can deposit or withdraw funds.</p>
 
                         <h4>3. Deposits and Withdrawals</h4>
-                        <p>
-                            <ul>
-                                <li>All transactions are processed in USD. Conversions from other currencies are subject to prevailing exchange rates.</li>
-                                <li>You agree to use only payment methods that belong to you.</li>
-                                <li>Withdrawals are subject to verification processes, including but not limited to KYC (Know Your Customer) checks. We reserve the right to delay or reject withdrawals if fraudulent activity is suspected.</li>
-                                <li>Bonus funds are for trading purposes only and cannot be withdrawn directly. Profits made from trading with bonus funds may be withdrawn subject to specific promotional rules.</li>
-                            </ul>
-                        </p>
+                        <p>Funds can be deposited into your trading account using the approved payment methods listed on the Platform. We do not accept third-party payments; all deposits and withdrawals must be made from/to accounts in your own name.</p>
+                        <p>Withdrawal requests are subject to review and processing times. The Platform reserves the right to impose withdrawal limits and fees as outlined in our fee schedule.</p>
 
-                        <h4>4. Trading and Risk Disclosure</h4>
-                        <p>Trading in financial markets involves a high level of risk and may not be suitable for all investors. You acknowledge that you understand these risks and that you are trading with funds you can afford to lose. ICTEX does not provide financial advice. The market data provided is for informational purposes only, and we are not liable for any trading decisions you make based on it.</p>
-                        
+                        <h4>4. Order Execution and Market Data</h4>
+                        <p>The Platform provides real-time market data and order execution services. You acknowledge that due to market volatility and technical factors, order execution prices may differ from the prices displayed at the time of order entry (slippage). The Platform is not liable for any losses resulting from such discrepancies, transmission delays, or system failures.</p>
+
                         <h4>5. Prohibited Activities</h4>
-                        <p>You are prohibited from:
-                            <ul>
-                                <li>Using any automated software or bots to interact with the platform.</li>
-                                <li>Opening multiple accounts without prior written consent.</li>
-                                <li>Engaging in any form of market manipulation, arbitrage, or fraudulent activity.</li>
-                                <li>Using the Service for any illegal activities, including money laundering.</li>
-                                <li>Engaging in any form of platform manipulation, including but not limited to exploiting trade timing or pricing glitches. Any such activity may result in immediate account suspension and forfeiture of all funds.</li>
-                                <li>Placing an excessive number of concurrent trades before prior trades are resolved. This is considered high-risk gambling behavior and may lead to temporary account suspension.</li>
-                            </ul>
-                            Violation of these rules may result in immediate account suspension, forfeiture of funds, and legal action.
-                        </p>
-                        
-                        <h4>6. Limitation of Liability</h4>
-                        <p>The Service is provided "as is." We do not guarantee that the Service will be uninterrupted or error-free. In no event shall ICTEX, its directors, or employees be liable for any direct, indirect, or consequential loss or damage arising out of your use of the Service.</p>
+                        <p>Users are strictly prohibited from engaging in the following activities:</p>
+                        <ul>
+                            <li>Using automated trading bots, algorithmic software, or API exploits without explicit written permission.</li>
+                            <li>Arbitrage trading, latency abuse, or any strategy aimed at exploiting technical discrepancies in our pricing feeds.</li>
+                            <li>Creating multiple accounts to bypass promotional limits or manipulate the platform.</li>
+                            <li>Engaging in market manipulation, wash trading, or insider trading.</li>
+                        </ul>
+                        <p>Violation of these rules may result in immediate account suspension, cancellation of trades, and confiscation of funds.</p>
 
-                        <h4>7. Account Termination</h4>
-                        <p>We reserve the right to suspend or terminate your account at our sole discretion, without notice, for any violation of these Terms or for any other reason.</p>
-                        
-                        <h4>8. Mentor Program</h4>
-                        <p>
-                            <ul>
-                                <li>Every newly created account is automatically enabled as a Mentor account. No task completion, deposit, trade history, or manual approval is required to activate Mentor access.</li>
-                                <li>If a new user opens the site through a valid referral link, the referral code may be filled automatically during registration.</li>
-                                <li>When a referred user completes a deposit, the Mentor earns a 5% deposit bonus, which is credited to the Deposit Bonus Wallet.</li>
-                                <li>The Deposit Bonus Wallet can be claimed to the real balance once it reaches a minimum of $10.</li>
-                                <li>The Partner Program unlocks automatically at 100 active members. Once unlocked, the user may join instantly without admin approval. Each Partner cycle lasts 30 days and pays $3 per active member to the Salary Wallet.</li>
-                                <li>The Salary Wallet can be claimed to the real balance once it reaches a minimum of $1000.</li>
-                                <li>If the number of active members falls below 100 after Partner activation, a 10-day grace period applies. If the requirement is not restored within the grace period, Partner access may be deactivated.</li>
-                                <li>ICTEX reserves the right to review, suspend, or terminate Mentor or Partner benefits in cases of fraud, abuse, platform manipulation, or violation of these Terms.</li>
-                            </ul>
-                        </p>
-                        
-                        <h4>9. Amendments</h4>
-                        <p>We may amend these Terms at any time by posting the revised version on our platform. Your continued use of the Service after such changes constitutes your acceptance of the new Terms.</p>
+                        <h4>6. Privacy and Data Protection</h4>
+                        <p>We are committed to protecting your personal information. Our use of your personal data is governed by our Privacy Policy, which details how we collect, store, and process your information in compliance with applicable data protection laws.</p>
+
+                        <h4>7. Limitation of Liability</h4>
+                        <p>To the maximum extent permitted by law, ICTEX Trade and its affiliates, directors, or employees shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, arising out of or related to your use of the Platform.</p>
+
+                        <h4>8. Governing Law and Dispute Resolution</h4>
+                        <p>This Agreement shall be governed by and construed in accordance with the applicable laws of our operating jurisdiction. Any disputes arising from this Agreement shall be resolved through binding arbitration or in the competent courts of our jurisdiction, as determined by ICTEX Trade.</p>
                     </div>
                 </div>
 
@@ -8196,9 +8182,6 @@
                 <button class="nav-btn-new" data-view="settings">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="m9.25 22l-.4-3.2q-.325-.125-.613-.3t-.562-.35l-3.025 1.25l-2.8-4.85l2.4-1.95q-.05-.2-.075-.4t-.025-.5q0-.2.025-.5t-.075-.4l-2.4-1.95l2.8-4.85l3.025 1.25q-.275-.175-.562-.35t.613-.3L9.25 2h5.5l.4 3.2q.325.125.613-.3t.562.35l3.025-1.25l2.8 4.85l-2.4 1.95q.05.2.075-.4t.025-.5q0 .2-.025-.5t-.075-.4l2.4 1.95l-2.8 4.85l-3.025-1.25q-.275-.175-.562-.35t-.613-.3l-.4 3.2h-5.5Zm2.75-6.5q1.45 0 2.475-1.025T15.5 12q0-1.45-1.025-2.475T12 8.5q-1.45 0-2.475 1.025T8.5 12q0 1.45 1.025 2.475T12 15.5Z"></path></svg>
                 </button>
-                <a href="terms.html" class="nav-btn-new" title="Terms & Conditions" style="display:flex;align-items:center;justify-content:center;text-decoration:none;color:inherit;">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                </a>
             </nav>
             
             <!-- Modals -->
