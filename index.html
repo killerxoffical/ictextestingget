@@ -13122,7 +13122,19 @@ Timestamp: ${new Date().toISOString()}
 
                 if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
                     SoundEngine.warning();
-                    showNotification(`Invalid amount (min ${minInvestment}) or insufficient balance.`, 'loss'); 
+                    if (investmentAmount > currentBalance && currentAccountType === 'real') {
+                        const tifmModal = document.getElementById('trade-insufficient-funds-modal');
+                        if (tifmModal) {
+                            document.getElementById('tifm-amount-title').textContent = `Real balance is less than ${investmentAmount.toFixed(2)} $`;
+                            tifmModal.classList.add('visible');
+                        } else {
+                            showNotification('Insufficient balance.', 'loss');
+                        }
+                    } else if (investmentAmount > currentBalance) {
+                        showNotification('Insufficient balance.', 'loss');
+                    } else {
+                        showNotification(`Invalid amount (min ${minInvestment})`, 'loss'); 
+                    }
                     isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
                     return; 
                 }
@@ -16831,6 +16843,19 @@ Please check the admin panel to approve.
                     // -----------------------------
 
                     currentUserData = data; currentUserData.uid = uid;
+                    
+                    // Update Promo UI
+                    setTimeout(() => {
+                        const firstDepositBtn = document.querySelector('.promo-option-btn[data-code="FIRST-DEPOSIT-50"]');
+                        const extraBonusesContainer = document.getElementById('extra-bonuses-container');
+                        const viewAllBtn = document.getElementById('view-all-bonuses-btn');
+                        const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                        if (firstDepositBtn && depositCount > 0) {
+                            firstDepositBtn.style.display = 'none';
+                            if (extraBonusesContainer) extraBonusesContainer.style.display = 'flex';
+                            if (viewAllBtn) viewAllBtn.style.display = 'none';
+                        }
+                    }, 0);
                     const localProfilePic = localStorage.getItem(`clientProfilePic_${uid}`);
                     if (localProfilePic) currentUserData.profilePicUrl = localProfilePic;
                     userTaskProgress = currentUserData.taskProgress || {};
@@ -17382,9 +17407,20 @@ Please check the admin panel to approve.
                 ifmModal.addEventListener('click', (e) => { if(e.target === ifmModal) ifmModal.classList.remove('visible'); });
                 document.getElementById('ifm-deposit-btn').addEventListener('click', () => {
                     ifmModal.classList.remove('visible');
-                    showView('deposit-new'); // Go directly to deposit screen
+                    showView('deposit-new');
                 });
             }
+            
+            const tifmModal = document.getElementById('trade-insufficient-funds-modal');
+            if (tifmModal) {
+                document.getElementById('tifm-close-btn').addEventListener('click', () => tifmModal.classList.remove('visible'));
+                tifmModal.addEventListener('click', (e) => { if(e.target === tifmModal) tifmModal.classList.remove('visible'); });
+                document.getElementById('tifm-deposit-btn').addEventListener('click', () => {
+                    tifmModal.classList.remove('visible');
+                    showView('deposit-new');
+                });
+            }
+
             // --- END TOURNAMENT IFRAME COMMUNICATION ---
             document.getElementById('multiple-trades-warning-close-btn').addEventListener('click', () => multipleTradesWarningModal.classList.remove('visible'));
             termsLink.addEventListener('click', (e) => { e.preventDefault(); showView('terms'); });
@@ -19035,6 +19071,55 @@ Please check the admin panel to approve.
                 </div>
                 <div class="as-to-account-box" id="as-to-account"></div>
                 <button class="as-done-btn" id="as-close-done-btn">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Insufficient Funds Modal -->
+    <style>
+        #trade-insufficient-funds-modal .modal-content {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+            overflow: hidden;
+            max-width: 650px;
+            background-color: #1a1d24;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        @media (max-width: 600px) {
+            #trade-insufficient-funds-modal .modal-content {
+                flex-direction: column;
+                max-width: 90vw;
+            }
+            #tifm-img-container {
+                padding: 10px !important;
+                height: 120px;
+            }
+            #tifm-img-container img {
+                height: 100%;
+                width: auto;
+            }
+            #tifm-text-container {
+                padding: 20px 15px !important;
+            }
+        }
+    </style>
+    <div class="modal-overlay" id="trade-insufficient-funds-modal" style="z-index: 10000;">
+        <div class="modal-content" style="position: relative; border-radius: 12px;">
+            <button id="tifm-close-btn" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: #707A8A; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; z-index: 10;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div id="tifm-img-container" style="flex: 1; background-color: #c42646; display: flex; justify-content: center; align-items: center; padding: 20px;">
+                <img src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1776588374188_701f8b64b2a60a602fd0.png" style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
+            <div id="tifm-text-container" style="flex: 1.5; padding: 35px 30px; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+                <h3 id="tifm-amount-title" style="font-size: 1.25rem; font-weight: 800; margin: 0 0 12px 0; color: #fff; line-height: 1.4;">Real balance is less than 1,000.00 $</h3>
+                <p style="font-size: 0.9rem; color: #8BA0B8; margin: 0 0 20px 0; line-height: 1.5;">You have insufficient funds! Try investing a smaller amount or top up your balance.</p>
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px;"></div>
+                <p style="font-size: 0.8rem; color: #8BA0B8; margin: 0 0 25px 0; line-height: 1.4;">Risk Warning: Trading in the financial markets carries risks. You should only invest the amount you can afford to lose.</p>
+                <button id="tifm-deposit-btn" style="background-color: var(--color-up); color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: fit-content; transition: 0.2s opacity;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Deposit funds
+                </button>
             </div>
         </div>
     </div>
