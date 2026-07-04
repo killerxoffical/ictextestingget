@@ -14208,6 +14208,13 @@ Timestamp: ${new Date().toISOString()}
 
             const xPos = ((numCandlesOnScreen - 1) * candleWidth) + xShift + (candleWidth / 2);
 
+            const priceText = p.toFixed(5);
+            ctx.font = 'bold 11px Roboto';
+            const textMetrics = ctx.measureText(priceText);
+            const tagWidth = textMetrics.width + 16;
+            const tagHeight = 22;
+            const tagX = canvasWidth - tagWidth - 2;
+
             if (pulseAnimation.opacity > 0) {
                 ctx.beginPath();
                 ctx.arc(xPos, y, pulseAnimation.radius, 0, 2 * Math.PI);
@@ -14226,9 +14233,9 @@ Timestamp: ${new Date().toISOString()}
                 ctx.moveTo(0, y);
                 ctx.lineTo(xPos - hGap, y);
             }
-            if (xPos + hGap < chartDrawWidth) {
+            if (xPos + hGap < tagX) {
                 ctx.moveTo(xPos + hGap, y);
-                ctx.lineTo(chartDrawWidth, y);
+                ctx.lineTo(tagX, y);
             }
             ctx.stroke();
             ctx.restore();
@@ -14241,12 +14248,6 @@ Timestamp: ${new Date().toISOString()}
             ctx.fillRect(-diamondSize, -diamondSize, diamondSize * 2, diamondSize * 2);
             ctx.restore();
 
-            const priceText = p.toFixed(5);
-            ctx.font = 'bold 11px Roboto';
-            const textMetrics = ctx.measureText(priceText);
-            const tagWidth = textMetrics.width + 16;
-            const tagHeight = 22;
-            const tagX = canvasWidth - tagWidth - 2;
             const color = (historicalData.length > 1 && p >= historicalData[historicalData.length-2].close) ? chartSettings.colors.up : chartSettings.colors.down;
             ctx.fillStyle = color;
             ctx.beginPath();
