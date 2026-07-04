@@ -4089,7 +4089,7 @@
         .ti-date { font-size: 0.85rem; color: #fff; }
         .ti-method { font-size: 0.85rem; color: #fff; font-weight: 500; }
         .ti-status { font-size: 0.85rem; font-weight: 500; text-transform: capitalize; }
-        .ti-status-successed, .ti-status-success, .ti-status-successful, .ti-status-completed, .ti-status-approved { color: #00C853; } 
+        .ti-status-successed, .ti-status-succeeded, .ti-status-success, .ti-status-successful, .ti-status-completed, .ti-status-approved { color: #00C853; } 
         .ti-status-pending { color: #F5A623; } 
         .ti-status-failed { color: #E8304A; } 
         .ti-status-canceled { color: #9CA3AF; }
@@ -12167,6 +12167,12 @@ Timestamp: ${new Date().toISOString()}
                 else if (t.type === 'subscription') typeDisplay = 'Subscription';
                 else if (t.type === 'transfer') typeDisplay = 'Transfer';
                 
+                let statusDisplay = t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Pending';
+                const lowerStatus = statusDisplay.toLowerCase();
+                if (lowerStatus === 'successed' || lowerStatus === 'success' || lowerStatus === 'successful' || lowerStatus === 'succeeded') {
+                    statusDisplay = 'Succeeded';
+                }
+                
                 return `<div class="transaction-item" data-type="${t.type}">
                     <div class="ti-row">
                         <span class="ti-id">${transactionId}</span>
@@ -12177,7 +12183,7 @@ Timestamp: ${new Date().toISOString()}
                         <span class="ti-method">${methodDisplay}</span>
                     </div>
                     <div class="ti-row">
-                        <span class="ti-status ti-status-${t.status ? t.status.toLowerCase() : 'pending'}">${t.status}</span>
+                        <span class="ti-status ti-status-${statusDisplay.toLowerCase()}">${statusDisplay}</span>
                         <span class="ti-type">${typeDisplay}</span>
                     </div>
                     ${cancelButton}
