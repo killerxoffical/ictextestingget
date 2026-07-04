@@ -9536,6 +9536,7 @@
         let demoBalance = parseFloat(localStorage.getItem('demoBalance'));
         if (isNaN(demoBalance)) { demoBalance = 10000; localStorage.setItem('demoBalance', demoBalance); }
         let canvasWidth, canvasHeight, historicalData = [], myActiveBets = [], tradeHistory = [], fullTradeHistory = [];
+        window.appViewHistory = [];
         let currentView = 'chart', lastFrameTime = 0, animationFrameId;
         let isPanning = false, isScaling = false, isPinching = false;
         let panStartX = 0, scaleStartY = 0, initialPinchDistance = 0, panDragDistance = 0, viewOffset = 0;
@@ -11224,6 +11225,7 @@
             if (viewId === currentView) return;
             
             if (!isPopState) {
+                window.appViewHistory.push(currentView);
                 window.history.pushState({ view: viewId }, '', window.location.pathname + window.location.search);
             }
 
@@ -16537,17 +16539,7 @@ Please check the admin panel to approve.
                 setTimeout(() => resolveExpiredBets(true), 500); 
             }, 1000);
             
-            backBtns.forEach(btn => {
-                const originalView = btn.dataset.view;
-                const settingsViews = ['profile', 'kyc', 'withdraw', 'withdraw-success', 'analysis', 'transactions', 'rewards', 'miner', 'miner-history', 'terms', 'leaderboard', 'mentor', 'mentor-users', 'admin-mentors', 'admin-users', 'admin-panel'];
-                const paymentViews = ['deposit-new', 'deposit-methods', 'payment-details', 'ai-payment-methods', 'ai-payment-details'];
-                
-                if (settingsViews.includes(originalView)) {
-                    btn.dataset.view = 'settings';
-                } else if (paymentViews.includes(originalView)) {
-                     btn.dataset.view = 'chart';
-                }
-            });
+
             
             // Admin button injection removed for security
             
@@ -17353,7 +17345,13 @@ Please check the admin panel to approve.
                     openNotificationsPage(e);
                 }, true);
             });
-            backBtns.forEach(btn => btn.addEventListener('click', (e) => showView(e.currentTarget.dataset.view)));
+            backBtns.forEach(btn => btn.addEventListener('click', (e) => {
+                if (window.appViewHistory && window.appViewHistory.length > 0) {
+                    window.history.back();
+                } else {
+                    showView(e.currentTarget.dataset.view);
+                }
+            }));
             headerProfileBtn.addEventListener('click', (e) => {
                 if (unreadNotificationCount > 0) {
                     showView('notifications');
@@ -17920,6 +17918,9 @@ Please check the admin panel to approve.
             
             // Handle mobile hardware back button
             window.addEventListener('popstate', (e) => {
+                if (window.appViewHistory && window.appViewHistory.length > 0) {
+                    window.appViewHistory.pop();
+                }
                 if (e.state && e.state.view) {
                     showView(e.state.view, true);
                 } else {
