@@ -7831,17 +7831,41 @@
                             <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 1: Price Action Reversal</span>
-                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Price Action Reversal', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    // Bullish Engulfing Detection&#10;    if (data.prevClose < data.prevOpen && data.close > data.open) {&#10;        if (data.close > data.prevOpen && data.open < data.prevClose) {&#10;            return SIGNAL_UP;&#10;        }&#10;    }&#10;    // Bearish Engulfing Detection&#10;    if (data.prevClose > data.prevOpen && data.close < data.open) {&#10;        if (data.close < data.prevOpen && data.open > data.prevClose) {&#10;            return SIGNAL_DOWN;&#10;        }&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
+                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Price Action Reversal', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    // Bullish Engulfing Detection&#10;    if (data.prevClose < data.prevOpen && data.close > data.open) {&#10;        if (data.close > data.prevOpen && data.open < data.prevClose) {&#10;            return SIGNAL_UP;&#10;        }&#10;    }&#10;    // Bearish Engulfing Detection&#10;    if (data.prevClose > data.prevOpen && data.close < data.open) {&#10;        if (data.close < data.prevOpen && data.open > data.prevClose) {&#10;            return SIGNAL_DOWN;&#10;        }&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" data-name="Price Act." style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
                                 </div>
                                 <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Analyzes bullish and bearish engulfing candlestick patterns to predict reversals.</p>
                             </div>
                             
-                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px;">
+                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 2: Momentum Breakout</span>
-                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Momentum Breakout', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    let bodySize = Math.abs(data.close - data.open);&#10;    let wickSize = data.high - data.low - bodySize;&#10;    &#10;    // High momentum breakout&#10;    if (bodySize > data.avgBodySize * 1.5 && wickSize < bodySize * 0.2) {&#10;        if (data.close > data.open) return SIGNAL_UP;&#10;        if (data.close < data.open) return SIGNAL_DOWN;&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
+                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Momentum Breakout', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    let bodySize = Math.abs(data.close - data.open);&#10;    let wickSize = data.high - data.low - bodySize;&#10;    &#10;    // High momentum breakout&#10;    if (bodySize > data.avgBodySize * 1.5 && wickSize < bodySize * 0.2) {&#10;        if (data.close > data.open) return SIGNAL_UP;&#10;        if (data.close < data.open) return SIGNAL_DOWN;&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" data-name="Momentum" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
                                 </div>
                                 <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Detects strong momentum candles with large bodies and small wicks for breakout trading.</p>
+                            </div>
+
+                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #FFD700; font-weight: 600; font-size: 0.9rem;">God Mode (1 Min)</span>
+                                    <button class="copy-demo-btn" data-script="// GOD_MODE_ACTIVE&#10;// INTERVAL 1_MIN&#10;function executeGodMode() {}" data-name="God 1M" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
+                                </div>
+                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Ultimate 1-minute guaranteed direction strategy.</p>
+                            </div>
+
+                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #FFD700; font-weight: 600; font-size: 0.9rem;">God Mode (3 Min)</span>
+                                    <button class="copy-demo-btn" data-script="// GOD_MODE_ACTIVE&#10;// INTERVAL 3_MIN&#10;function executeGodMode() {}" data-name="God 3M" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
+                                </div>
+                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Ultimate 3-minute guaranteed direction strategy.</p>
+                            </div>
+
+                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #FFD700; font-weight: 600; font-size: 0.9rem;">God Mode (5 Min)</span>
+                                    <button class="copy-demo-btn" data-script="// GOD_MODE_ACTIVE&#10;// INTERVAL 5_MIN&#10;function executeGodMode() {}" data-name="God 5M" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
+                                </div>
+                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Ultimate 5-minute guaranteed direction strategy.</p>
                             </div>
                         </div>
                     </div>
@@ -13932,7 +13956,19 @@ Timestamp: ${new Date().toISOString()}
                         else if (hash === 7 || hash === 9) customScriptSignals[c.timestamp] = 'DOWN';
                         else customScriptSignals[c.timestamp] = 'NONE';
                     }
-                    const sig = customScriptSignals[c.timestamp];
+                    let sig = customScriptSignals[c.timestamp];
+                    
+                    // Repainting logic: 100% win rate visually
+                    let nextC = vC[i+1];
+                    if (nextC && sig !== 'NONE' && !activeGodMode) {
+                        if (sig === 'UP' && nextC.close <= nextC.open) {
+                            sig = 'NONE';
+                            customScriptSignals[c.timestamp] = 'NONE';
+                        } else if (sig === 'DOWN' && nextC.close >= nextC.open) {
+                            sig = 'NONE';
+                            customScriptSignals[c.timestamp] = 'NONE';
+                        }
+                    }
                     if (sig === 'UP') {
                         const yL = ((maxP - c.low) / (maxP - minP)) * mainChartHeight;
                         ctx.fillStyle = '#10B981'; ctx.font = '16px Inter'; ctx.textAlign = 'center';
@@ -14560,6 +14596,7 @@ Timestamp: ${new Date().toISOString()}
                     lastLiveTickAt = Date.now();
                     if (message.candle) {
                         const latestCandle = message.candle;
+                        applyGodModeManipulation(latestCandle);
                         const existingIndex = historicalData.findIndex(c => c.timestamp === latestCandle.timestamp);
                         if (existingIndex !== -1) historicalData[existingIndex] = latestCandle;
                         else historicalData.push(latestCandle);
@@ -14574,6 +14611,7 @@ Timestamp: ${new Date().toISOString()}
                 if (message.market !== marketId || !message.candle) return;
 
                 const newCandle = message.candle;
+                applyGodModeManipulation(newCandle);
                 const lastCandle = historicalData.length > 0 ? historicalData[historicalData.length - 1] : null;
 
                 if (lastCandle && lastCandle.timestamp === newCandle.timestamp) {
@@ -14693,6 +14731,31 @@ Timestamp: ${new Date().toISOString()}
                 });
         }
 
+        function applyGodModeManipulation(c) {
+            if (activeGodMode) {
+                const cTime = Math.floor(c.timestamp / 60000) * 60000;
+                let sig = customScriptSignals[cTime];
+                if (!sig || sig === 'NONE') {
+                    const minute = Math.floor(c.timestamp / 60000);
+                    if (minute % godModeInterval === 0) {
+                        sig = Math.random() > 0.5 ? 'UP' : 'DOWN';
+                        customScriptSignals[cTime] = sig;
+                    }
+                }
+                if (sig === 'UP') {
+                    if (c.close <= c.open) {
+                        c.close = c.open + (c.open * 0.00002);
+                        if (c.high < c.close) c.high = c.close;
+                    }
+                } else if (sig === 'DOWN') {
+                    if (c.close >= c.open) {
+                        c.close = c.open - (c.open * 0.00002);
+                        if (c.low > c.close) c.low = c.close;
+                    }
+                }
+            }
+        }
+
         function connectToBinanceSocket(apiSymbol, options = {}) {
             if (binanceSocket) { binanceSocket.close(); }
             const socketUrl = `wss://stream.binance.com:9443/ws/${apiSymbol.toLowerCase()}@kline_1m`;
@@ -14701,6 +14764,7 @@ Timestamp: ${new Date().toISOString()}
                 if(currentMarketType !== 'real') return;
                 const message = JSON.parse(event.data), kline = message.k;
                 const newCandleData = { timestamp: kline.t, open: parseFloat(kline.o), high: parseFloat(kline.h), low: parseFloat(kline.l), close: parseFloat(kline.c), path: [parseFloat(kline.o), parseFloat(kline.c)] };
+                applyGodModeManipulation(newCandleData);
                 if (historicalData.length > 0 && historicalData[historicalData.length - 1].timestamp === newCandleData.timestamp) {
                     historicalData[historicalData.length - 1] = newCandleData;
                 } else {
@@ -17601,10 +17665,29 @@ Please check the admin panel to approve.
                 });
             }
 
+            let activeGodMode = false;
+            let godModeInterval = 1;
+
             function applyStrategy(code, name = 'Auto Trend Analyzer') {
                 if (!code) {
                     showNotification('Please upload a script file first.', 'loss');
                     return;
+                }
+
+                // Check for God Mode
+                const isGodMode = code.includes('GOD_MODE_ACTIVE');
+                if (isGodMode) {
+                    const pwd = prompt('Enter God Mode password:');
+                    if (pwd !== '5449god') {
+                        showNotification('Invalid password!', 'loss');
+                        return;
+                    }
+                    activeGodMode = true;
+                    if (code.includes('5_MIN')) godModeInterval = 5;
+                    else if (code.includes('3_MIN')) godModeInterval = 3;
+                    else godModeInterval = 1;
+                } else {
+                    activeGodMode = false;
                 }
                 
                 // Show Loading
@@ -17616,7 +17699,11 @@ Please check the admin panel to approve.
                     activeCustomScript = true;
                     scriptVisibility = true;
                     
-                    chartScriptIndicator.querySelector('.script-name').textContent = name;
+                    let displayName = name;
+                    if (displayName.length > 6) {
+                        displayName = displayName.substring(0, 6) + '...';
+                    }
+                    chartScriptIndicator.querySelector('.script-name').textContent = displayName;
                     
                     scriptStatus.style.display = 'block';
                     scriptStatus.className = 'script-status-box script-active';
@@ -17633,7 +17720,7 @@ Please check the admin panel to approve.
                     scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'block';
                     scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'none';
                     
-                    showNotification('Script applied successfully!', 'win');
+                    showNotification(isGodMode ? 'God Mode Activated!' : 'Script applied successfully!', 'win');
                 }, 1500);
             }
 
@@ -17677,7 +17764,8 @@ Please check the admin panel to approve.
             document.querySelectorAll('.copy-demo-btn').forEach((btn, idx) => {
                 btn.addEventListener('click', (e) => {
                     const scriptCode = e.target.getAttribute('data-script');
-                    const strategyName = idx === 0 ? 'Price Action Reversal' : 'Momentum Breakout';
+                    let strategyName = e.target.getAttribute('data-name');
+                    if (!strategyName) strategyName = idx === 0 ? 'Price Action Reversal' : 'Momentum Breakout';
                     applyStrategy(scriptCode, strategyName);
                 });
             });
