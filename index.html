@@ -6857,13 +6857,6 @@
                             <span class="sentiment-percent" id="sentiment-percent-up">50%</span>
                         </div>
                         <div id="chart-utc-time-display"></div>
-                        <div id="chart-script-indicator" style="position: absolute; bottom: 30px; left: 15px; z-index: 100; display: none; align-items: center; gap: 8px; background: transparent; border: none; padding: 0; color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace;">
-                            <span class="script-name" style="font-weight: 600;">Auto Trend Analyzer</span>
-                            <button class="script-toggle-btn" id="script-visibility-btn" title="Toggle Script Visibility" style="background: transparent; border: none; color: #707A8A; cursor: pointer; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon-closed" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                            </button>
-                        </div>
                         <canvas id="chart-canvas"></canvas>
                         <canvas id="drawing-canvas"></canvas>
                         <div id="chart-loader-overlay">
@@ -7451,21 +7444,6 @@
                                     </svg>
                                 </div>
                             </a>
-                            <!-- Scripts System Item -->
-                            <a class="settings-list-item glass-card" data-view="scripts">
-                                <div class="item-left">
-                                    <div class="icon-wrapper" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="m10 13-2 2 2 2"></path><path d="m14 17 2-2-2-2"></path></svg>
-                                    </div>
-                                    <div class="item-info">
-                                        <h2 class="item-title">Scripts</h2>
-                                        <p class="item-subtitle">Manage custom trading scripts</p>
-                                    </div>
-                                </div>
-                                <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                </svg>
-                            </a>
                             <!-- Trade Analysis Item -->
                             <a class="settings-list-item glass-card" data-view="analysis">
                                 <div class="item-left">
@@ -7793,81 +7771,6 @@
                         <!-- Action Buttons -->
                         <button class="btn-wallet" id="success-wallet-btn">Back to Wallet</button>
                         <button class="btn-history" id="success-history-btn">View Transaction History</button>
-                    </div>
-                </div>
-
-                <div id="view-scripts" class="view">
-                    <div class="page-header">
-                        <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2>Custom Scripts</h2>
-                    </div>
-                    <div class="page-content" style="padding: 20px;">
-                        <style>
-                            .script-textarea { width: 100%; height: 250px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(16, 185, 129, 0.3); color: #EAECEF; padding: 15px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; resize: none; margin-bottom: 15px; outline: none; }
-                            .script-textarea:focus { border-color: #10B981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
-                            .script-status-box { padding: 12px; border-radius: 8px; font-weight: 600; text-align: center; margin-bottom: 15px; display: none; }
-                            .script-active { background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); display: block; }
-                        </style>
-                        <h3 style="margin-top: 0; color: #fff; font-size: 1.1rem; margin-bottom: 10px;">Load Custom Script</h3>
-                        <p style="color: #707A8A; font-size: 0.85rem; margin-bottom: 20px;">Upload your custom analysis script file (.txt, .js, .script) below. Base64 encrypted files are automatically decrypted by our engine for secure execution.</p>
-                        
-                        <div id="script-status-indicator" class="script-status-box"></div>
-
-                        <div class="file-upload-container" style="background: rgba(0, 0, 0, 0.3); border: 1px dashed rgba(16, 185, 129, 0.5); border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 15px; cursor: pointer;" onclick="document.getElementById('script-file-upload').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            <h4 style="color: #EAECEF; margin: 0 0 5px 0; font-size: 1rem;">Click to Upload Script File</h4>
-                            <p style="color: #707A8A; font-size: 0.8rem; margin: 0;" id="script-file-name-display">Supports .txt, .js, .script</p>
-                            <input type="file" id="script-file-upload" accept=".txt,.js,.script" style="display: none;">
-                        </div>
-                        
-                        <div style="display: flex; gap: 10px; margin-bottom: 24px;">
-                            <button id="apply-script-btn" class="save-button" style="flex: 1; background: #10B981;">Apply Script</button>
-                            <button id="clear-script-btn" class="save-button" style="flex: 1; background: rgba(255,59,48,0.1); color: #FF3B30; display: none;">Stop Script</button>
-                        </div>
-                        
-                        <div class="demo-scripts-container" style="background: rgba(16, 18, 21, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px;">
-                            <h4 style="margin-top: 0; color: #EAECEF; font-size: 1rem; margin-bottom: 12px;">Demo Strategies</h4>
-                            
-                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 1: Price Action Reversal</span>
-                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Price Action Reversal', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    // Bullish Engulfing Detection&#10;    if (data.prevClose < data.prevOpen && data.close > data.open) {&#10;        if (data.close > data.prevOpen && data.open < data.prevClose) {&#10;            return SIGNAL_UP;&#10;        }&#10;    }&#10;    // Bearish Engulfing Detection&#10;    if (data.prevClose > data.prevOpen && data.close < data.open) {&#10;        if (data.close < data.prevOpen && data.open > data.prevClose) {&#10;            return SIGNAL_DOWN;&#10;        }&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" data-name="Price Act." style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
-                                </div>
-                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Analyzes bullish and bearish engulfing candlestick patterns to predict reversals.</p>
-                            </div>
-                            
-                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 2: Momentum Breakout</span>
-                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Momentum Breakout', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    let bodySize = Math.abs(data.close - data.open);&#10;    let wickSize = data.high - data.low - bodySize;&#10;    &#10;    // High momentum breakout&#10;    if (bodySize > data.avgBodySize * 1.5 && wickSize < bodySize * 0.2) {&#10;        if (data.close > data.open) return SIGNAL_UP;&#10;        if (data.close < data.open) return SIGNAL_DOWN;&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" data-name="Momentum" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
-                                </div>
-                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Detects strong momentum candles with large bodies and small wicks for breakout trading.</p>
-                            </div>
-
-                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #FFD700; font-weight: 600; font-size: 0.9rem;">God Mode (1 Min)</span>
-                                    <button class="copy-demo-btn" data-script="// GOD_MODE_ACTIVE&#10;// INTERVAL 1_MIN&#10;function executeGodMode() {}" data-name="God 1M" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
-                                </div>
-                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Ultimate 1-minute guaranteed direction strategy.</p>
-                            </div>
-
-                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #FFD700; font-weight: 600; font-size: 0.9rem;">God Mode (3 Min)</span>
-                                    <button class="copy-demo-btn" data-script="// GOD_MODE_ACTIVE&#10;// INTERVAL 3_MIN&#10;function executeGodMode() {}" data-name="God 3M" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
-                                </div>
-                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Ultimate 3-minute guaranteed direction strategy.</p>
-                            </div>
-
-                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #FFD700; font-weight: 600; font-size: 0.9rem;">God Mode (5 Min)</span>
-                                    <button class="copy-demo-btn" data-script="// GOD_MODE_ACTIVE&#10;// INTERVAL 5_MIN&#10;function executeGodMode() {}" data-name="God 5M" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
-                                </div>
-                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Ultimate 5-minute guaranteed direction strategy.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -9691,8 +9594,6 @@
         let panStartX = 0, scaleStartY = 0, initialPinchDistance = 0, panDragDistance = 0, viewOffset = 0;
         let panVelocity = 0, lastPanMoveAt = 0;
         let visibleCandles = 12, verticalZoomFactor = 1.0;
-        let activeCustomScript = false;
-        let customScriptSignals = {};
         const DRAWING_TOOL_DEFS = [
             { id: 'select', label: 'Select / Move', points: 0, help: 'Tap a drawing or anchor point, then drag to move it.' },
             { id: 'horizontalLine', label: 'Horizontal Line', points: 1, help: 'Tap once to place a horizontal support or resistance line.' },
@@ -13947,42 +13848,6 @@ Timestamp: ${new Date().toISOString()}
                 if (!c) return;
                 const x = (i * cW) + xShift;
                 drawCandle(c, x, cW, cS, minP, maxP, mainChartHeight);
-
-                // --- Custom Script Mock Signals ---
-                if (activeCustomScript) {
-                    if (!customScriptSignals[c.timestamp]) {
-                        const hash = (Math.floor(c.timestamp / 1000) * 17) % 11;
-                        if (hash === 2 || hash === 5) customScriptSignals[c.timestamp] = 'UP';
-                        else if (hash === 7 || hash === 9) customScriptSignals[c.timestamp] = 'DOWN';
-                        else customScriptSignals[c.timestamp] = 'NONE';
-                    }
-                    let sig = customScriptSignals[c.timestamp];
-                    
-                    // Repainting logic: 100% win rate visually
-                    let nextC = vC[i+1];
-                    if (nextC && sig !== 'NONE' && !activeGodMode) {
-                        if (sig === 'UP' && nextC.close <= nextC.open) {
-                            sig = 'NONE';
-                            customScriptSignals[c.timestamp] = 'NONE';
-                        } else if (sig === 'DOWN' && nextC.close >= nextC.open) {
-                            sig = 'NONE';
-                            customScriptSignals[c.timestamp] = 'NONE';
-                        }
-                    }
-                    if (sig === 'UP') {
-                        const yL = ((maxP - c.low) / (maxP - minP)) * mainChartHeight;
-                        ctx.fillStyle = '#10B981'; ctx.font = '16px Inter'; ctx.textAlign = 'center';
-                        ctx.fillText('▲', x + cW / 2, yL + 18);
-                        ctx.font = 'bold 11px Inter';
-                        ctx.fillText('U', x + cW / 2, yL + 30);
-                    } else if (sig === 'DOWN') {
-                        const yH = ((maxP - c.high) / (maxP - minP)) * mainChartHeight;
-                        ctx.fillStyle = '#FF3B30'; ctx.font = '16px Inter'; ctx.textAlign = 'center';
-                        ctx.fillText('▼', x + cW / 2, yH - 8);
-                        ctx.font = 'bold 11px Inter';
-                        ctx.fillText('D', x + cW / 2, yH - 24);
-                    }
-                }
             });
 
             const runningIdx = (N - 1) - minIndex;
@@ -14596,7 +14461,6 @@ Timestamp: ${new Date().toISOString()}
                     lastLiveTickAt = Date.now();
                     if (message.candle) {
                         const latestCandle = message.candle;
-                        applyGodModeManipulation(latestCandle);
                         const existingIndex = historicalData.findIndex(c => c.timestamp === latestCandle.timestamp);
                         if (existingIndex !== -1) historicalData[existingIndex] = latestCandle;
                         else historicalData.push(latestCandle);
@@ -14611,7 +14475,6 @@ Timestamp: ${new Date().toISOString()}
                 if (message.market !== marketId || !message.candle) return;
 
                 const newCandle = message.candle;
-                applyGodModeManipulation(newCandle);
                 const lastCandle = historicalData.length > 0 ? historicalData[historicalData.length - 1] : null;
 
                 if (lastCandle && lastCandle.timestamp === newCandle.timestamp) {
@@ -14731,31 +14594,6 @@ Timestamp: ${new Date().toISOString()}
                 });
         }
 
-        function applyGodModeManipulation(c) {
-            if (activeGodMode) {
-                const cTime = Math.floor(c.timestamp / 60000) * 60000;
-                let sig = customScriptSignals[cTime];
-                if (!sig || sig === 'NONE') {
-                    const minute = Math.floor(c.timestamp / 60000);
-                    if (minute % godModeInterval === 0) {
-                        sig = Math.random() > 0.5 ? 'UP' : 'DOWN';
-                        customScriptSignals[cTime] = sig;
-                    }
-                }
-                if (sig === 'UP') {
-                    if (c.close <= c.open) {
-                        c.close = c.open + (c.open * 0.00002);
-                        if (c.high < c.close) c.high = c.close;
-                    }
-                } else if (sig === 'DOWN') {
-                    if (c.close >= c.open) {
-                        c.close = c.open - (c.open * 0.00002);
-                        if (c.low > c.close) c.low = c.close;
-                    }
-                }
-            }
-        }
-
         function connectToBinanceSocket(apiSymbol, options = {}) {
             if (binanceSocket) { binanceSocket.close(); }
             const socketUrl = `wss://stream.binance.com:9443/ws/${apiSymbol.toLowerCase()}@kline_1m`;
@@ -14764,7 +14602,6 @@ Timestamp: ${new Date().toISOString()}
                 if(currentMarketType !== 'real') return;
                 const message = JSON.parse(event.data), kline = message.k;
                 const newCandleData = { timestamp: kline.t, open: parseFloat(kline.o), high: parseFloat(kline.h), low: parseFloat(kline.l), close: parseFloat(kline.c), path: [parseFloat(kline.o), parseFloat(kline.c)] };
-                applyGodModeManipulation(newCandleData);
                 if (historicalData.length > 0 && historicalData[historicalData.length - 1].timestamp === newCandleData.timestamp) {
                     historicalData[historicalData.length - 1] = newCandleData;
                 } else {
@@ -17628,148 +17465,6 @@ Please check the admin panel to approve.
             document.getElementById('settings-close-btn')?.addEventListener('click', () => {
                 showView('chart');
             });
-            
-            // Scripts Logic
-            const applyScriptBtn = document.getElementById('apply-script-btn');
-            const clearScriptBtn = document.getElementById('clear-script-btn');
-            const scriptStatus = document.getElementById('script-status-indicator');
-            const fileUploadInput = document.getElementById('script-file-upload');
-            const fileNameDisplay = document.getElementById('script-file-name-display');
-            const chartScriptIndicator = document.getElementById('chart-script-indicator');
-            const scriptVisibilityBtn = document.getElementById('script-visibility-btn');
-
-            let scriptVisibility = true;
-            let uploadedScriptContent = '';
-
-            if (fileUploadInput) {
-                fileUploadInput.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    
-                    fileNameDisplay.textContent = file.name;
-                    
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        let content = ev.target.result;
-                        // Attempt base64 decode
-                        try {
-                            if (/^[A-Za-z0-9+/=]+$/.test(content.trim()) && content.trim().length % 4 === 0) {
-                                content = atob(content.trim());
-                            }
-                        } catch(e) {}
-                        
-                        uploadedScriptContent = content;
-                        showNotification('Script file loaded!', 'info');
-                    };
-                    reader.readAsText(file);
-                });
-            }
-
-            let activeGodMode = false;
-            let godModeInterval = 1;
-
-            function applyStrategy(code, name = 'Auto Trend Analyzer') {
-                if (!code) {
-                    showNotification('Please upload a script file first.', 'loss');
-                    return;
-                }
-
-                // Check for God Mode
-                const isGodMode = code.includes('GOD_MODE_ACTIVE');
-                if (isGodMode) {
-                    const pwd = prompt('Enter God Mode password:');
-                    if (pwd !== '5449god') {
-                        showNotification('Invalid password!', 'loss');
-                        return;
-                    }
-                    activeGodMode = true;
-                    if (code.includes('5_MIN')) godModeInterval = 5;
-                    else if (code.includes('3_MIN')) godModeInterval = 3;
-                    else godModeInterval = 1;
-                } else {
-                    activeGodMode = false;
-                }
-                
-                // Show Loading
-                applyScriptBtn.innerHTML = '<div class="ictex-loader small"></div> Analyzing...';
-                applyScriptBtn.disabled = true;
-                applyScriptBtn.style.opacity = '0.7';
-
-                setTimeout(() => {
-                    activeCustomScript = true;
-                    scriptVisibility = true;
-                    
-                    let displayName = name;
-                    if (displayName.length > 6) {
-                        displayName = displayName.substring(0, 6) + '...';
-                    }
-                    chartScriptIndicator.querySelector('.script-name').textContent = displayName;
-                    
-                    scriptStatus.style.display = 'block';
-                    scriptStatus.className = 'script-status-box script-active';
-                    scriptStatus.innerHTML = '✅ Script Run';
-                    
-                    applyScriptBtn.innerHTML = 'Apply Script';
-                    applyScriptBtn.disabled = false;
-                    applyScriptBtn.style.opacity = '1';
-                    applyScriptBtn.style.display = 'none';
-                    clearScriptBtn.style.display = 'block';
-                    
-                    chartScriptIndicator.style.display = 'flex';
-                    chartScriptIndicator.classList.remove('hidden-script');
-                    scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'block';
-                    scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'none';
-                    
-                    showNotification(isGodMode ? 'God Mode Activated!' : 'Script applied successfully!', 'win');
-                }, 1500);
-            }
-
-            applyScriptBtn?.addEventListener('click', () => {
-                applyStrategy(uploadedScriptContent, 'Auto Trend Analyzer');
-            });
-
-            clearScriptBtn?.addEventListener('click', () => {
-                activeCustomScript = false;
-                customScriptSignals = {};
-                
-                scriptStatus.style.display = 'none';
-                applyScriptBtn.style.display = 'block';
-                clearScriptBtn.style.display = 'none';
-                uploadedScriptContent = '';
-                if(fileNameDisplay) fileNameDisplay.textContent = 'Supports .txt, .js, .script';
-                if(fileUploadInput) fileUploadInput.value = '';
-                
-                chartScriptIndicator.style.display = 'none';
-                
-                showNotification('Script stopped and cleared.', 'info');
-            });
-
-            scriptVisibilityBtn?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                scriptVisibility = !scriptVisibility;
-                activeCustomScript = scriptVisibility;
-                
-                if (scriptVisibility) {
-                    chartScriptIndicator.classList.remove('hidden-script');
-                    scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'block';
-                    scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'none';
-                } else {
-                    chartScriptIndicator.classList.add('hidden-script');
-                    scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'none';
-                    scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'block';
-                }
-            });
-
-            // Demo Scripts Run Logic
-            document.querySelectorAll('.copy-demo-btn').forEach((btn, idx) => {
-                btn.addEventListener('click', (e) => {
-                    const scriptCode = e.target.getAttribute('data-script');
-                    let strategyName = e.target.getAttribute('data-name');
-                    if (!strategyName) strategyName = idx === 0 ? 'Price Action Reversal' : 'Momentum Breakout';
-                    applyStrategy(scriptCode, strategyName);
-                });
-            });
-
             backBtns.forEach(btn => btn.addEventListener('click', (e) => {
                 if (window.appViewHistory && window.appViewHistory.length > 0) {
                     window.history.back();
