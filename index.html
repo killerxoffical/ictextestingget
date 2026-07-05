@@ -11848,8 +11848,8 @@ Timestamp: ${new Date().toISOString()}
         { id: 'gpay', name: 'G Pay', status: 'coming-soon', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH6zlma32FMWqNOAnJJbAv3aSKGTUibNSdMF8YFA1KXQ&s' },
         { id: 'binance', name: 'Binance Pay', status: 'active', logo: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1778979120673_file_00000000a9647206a4af2bf828400907.png', details: { type: 'qr', qr_image: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ixbrokerbinance.png', instructions: 'Scan the QR code with your Binance App. Send the exact USD amount.' } },
         { id: 'tether', name: 'USDT (TRC20)', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQRSJGSSrXoszL7c7QGzKWfXLn3UPQFMAvqfFaiq8xK9-OjDx1MOhJlug&s=10', details: { type: 'address', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774143805279_1000258950.jpg', address: 'TRWZqTgWSVeBXMPEkhSzcqXyfsnuWW3o6t', instructions: 'Only send USDT on the TRC20 network to this address. Ensure you cover any network fees.' } },
-        { id: 'hstn-pay', name: 'HSTN Pay', status: 'active', logo: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', details: { type: 'address', networkLabel: 'HSTN Chain USDT', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', address: 'TQS2UubYVLSMaIy53OiWW8VDNNtQkoIJHC', instructions: 'Only send USDT on the HSTN Chain to this address. Send the exact amount and ensure the network is selected correctly.', brandTitle: 'HSTN Pay © ICTEX', brandUrl: 'https://hstnpay.hstn.me' } },
-        { id: 'telegram_pay', name: 'Telegram Pay', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJOISwXgNAD-GnWiVJ6gbGO_eeAEUhYrWFcOrykD-At-3UxY_V31hU_P0&s=10', link: 'https://t.me/ictextelepay_bot' }
+        // { id: 'hstn-pay', name: 'HSTN Pay', status: 'active', logo: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', details: { type: 'address', networkLabel: 'HSTN Chain USDT', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', address: 'TQS2UubYVLSMaIy53OiWW8VDNNtQkoIJHC', instructions: 'Only send USDT on the HSTN Chain to this address. Send the exact amount and ensure the network is selected correctly.', brandTitle: 'HSTN Pay © ICTEX', brandUrl: 'https://hstnpay.hstn.me' } },
+        { id: 'telegram_pay', name: 'Telegram Pay', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJOISwXgNAD-GnWiVJ6gbGO_eeAEUhYrWFcOrykD-At-3UxY_V31hU_P0&s=10', link: 'https://t.me/ictextelepay_bot', customSubtitle: '<div style="color:#10b981; font-weight:700; font-size:10px; display:block; line-height:1.2; margin-top:5px; text-align:center; background: rgba(16,185,129,0.1); padding: 5px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.2);">🌍 All Country Payment Method Available</div>' }
     ];
 
     const withdrawMethods = [
@@ -14958,7 +14958,7 @@ Timestamp: ${new Date().toISOString()}
                     </div>
                     <div class="pm-card-bottom">
                         <div class="pm-card-title">${m.name}</div>
-                        <div class="pm-card-subtitle">Min. $10</div>
+                        ${m.customSubtitle ? m.customSubtitle : `<div class="pm-card-subtitle">Min. $10</div>`}
                     </div>
                     ${extraTags}
                 `;
