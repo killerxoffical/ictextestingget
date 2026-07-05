@@ -787,9 +787,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            color: #bdc3c7;
-            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        .payout-label {
+            color: #ffffff;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .payout-dotted-line {
+            flex-grow: 1;
+            border-bottom: 2px dotted rgba(255, 255, 255, 0.3);
+            margin: 0 10px;
+            height: 10px;
         }
         .payout-info-new {
             display: flex;
@@ -817,9 +830,9 @@
             transform: translate(-50%, -50%);
             background: var(--bg-color);
             padding: 0 6px;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            color: var(--text-secondary);
+            color: #ffffff;
             z-index: 2;
             border-radius: 4px;
             letter-spacing: 0.8px;
@@ -834,25 +847,25 @@
             display: flex;
             align-items: center;
             background-color: #1C1F26;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            height: 52px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255,255,255,0.08);
             position: relative;
             z-index: 1;
             transition: all 0.3s ease;
         }
         .input-stepper:hover {
-            border-color: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.45);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 5px rgba(255,255,255,0.15);
         }
         .stepper-display {
             flex-grow: 1;
             text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #F8FAFC;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #FFFFFF;
             cursor: pointer;
             height: 100%;
             display: flex;
@@ -6867,10 +6880,10 @@
                             </div>
                         </div>
                         <div class="controls-row-1">
-                            <span>Fixed Time mode</span>
+                            <span class="payout-label">Payout</span>
+                            <div class="payout-dotted-line"></div>
                             <div class="payout-info-new">
-                                <span>Profit: </span>
-                                <span id="payout-amount-new">+USDT 8.50</span>
+                                <span id="payout-amount-new" style="color:var(--color-up); font-weight: 800;">+USDT 8.50</span>
                             </div>
                         </div>
                         <div class="controls-row-2">
@@ -13629,7 +13642,7 @@ Timestamp: ${new Date().toISOString()}
             
             const timeValueMinutes = expirySettings.value / 60;
             let displayTimeText = `${timeValueMinutes} min`;
-            if (fixedTimeModeLabel) fixedTimeModeLabel.textContent = 'Fixed Time mode';
+            if (fixedTimeModeLabel) fixedTimeModeLabel.textContent = 'Payout';
             
             // 🔥 58 SEC BUG FIX: Use Math.floor on total milliseconds to prevent rounding jumps
             const secondsInCurrentCandle = Math.floor((now.getTime() % 60000) / 1000);
