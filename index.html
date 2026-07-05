@@ -6857,7 +6857,7 @@
                             <span class="sentiment-percent" id="sentiment-percent-up">50%</span>
                         </div>
                         <div id="chart-utc-time-display"></div>
-                        <div id="chart-script-indicator" style="position: absolute; top: 10px; left: 10px; z-index: 100; display: none; align-items: center; gap: 8px; background: transparent; border: none; padding: 0; color: #10B981; font-size: 11px; font-family: 'JetBrains Mono', monospace;">
+                        <div id="chart-script-indicator" style="position: absolute; bottom: 30px; left: 15px; z-index: 100; display: none; align-items: center; gap: 8px; background: transparent; border: none; padding: 0; color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace;">
                             <span class="script-name" style="font-weight: 600;">Auto Trend Analyzer</span>
                             <button class="script-toggle-btn" id="script-visibility-btn" title="Toggle Script Visibility" style="background: transparent; border: none; color: #707A8A; cursor: pointer; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -7809,11 +7809,16 @@
                             .script-active { background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); display: block; }
                         </style>
                         <h3 style="margin-top: 0; color: #fff; font-size: 1.1rem; margin-bottom: 10px;">Load Custom Script</h3>
-                        <p style="color: #707A8A; font-size: 0.85rem; margin-bottom: 20px;">Paste your custom analysis script code below. Our advanced engine will execute the script to generate real-time market signals directly on your chart.</p>
+                        <p style="color: #707A8A; font-size: 0.85rem; margin-bottom: 20px;">Upload your custom analysis script file (.txt, .js, .script) below. Base64 encrypted files are automatically decrypted by our engine for secure execution.</p>
                         
                         <div id="script-status-indicator" class="script-status-box"></div>
 
-                        <textarea id="custom-script-input" class="script-textarea" placeholder="// Paste your PineScript or JS algorithm here...&#10;&#10;function analyzeMarket(data) {&#10;  // Your logic&#10;}"></textarea>
+                        <div class="file-upload-container" style="background: rgba(0, 0, 0, 0.3); border: 1px dashed rgba(16, 185, 129, 0.5); border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 15px; cursor: pointer;" onclick="document.getElementById('script-file-upload').click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <h4 style="color: #EAECEF; margin: 0 0 5px 0; font-size: 1rem;">Click to Upload Script File</h4>
+                            <p style="color: #707A8A; font-size: 0.8rem; margin: 0;" id="script-file-name-display">Supports .txt, .js, .script</p>
+                            <input type="file" id="script-file-upload" accept=".txt,.js,.script" style="display: none;">
+                        </div>
                         
                         <div style="display: flex; gap: 10px; margin-bottom: 24px;">
                             <button id="apply-script-btn" class="save-button" style="flex: 1; background: #10B981;">Apply Script</button>
@@ -7826,7 +7831,7 @@
                             <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 1: Price Action Reversal</span>
-                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Price Action Reversal', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    // Bullish Engulfing Detection&#10;    if (data.prevClose < data.prevOpen && data.close > data.open) {&#10;        if (data.close > data.prevOpen && data.open < data.prevClose) {&#10;            return SIGNAL_UP;&#10;        }&#10;    }&#10;    // Bearish Engulfing Detection&#10;    if (data.prevClose > data.prevOpen && data.close < data.open) {&#10;        if (data.close < data.prevOpen && data.open > data.prevClose) {&#10;            return SIGNAL_DOWN;&#10;        }&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(255,255,255,0.1); border: none; color: #EAECEF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Copy</button>
+                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Price Action Reversal', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    // Bullish Engulfing Detection&#10;    if (data.prevClose < data.prevOpen && data.close > data.open) {&#10;        if (data.close > data.prevOpen && data.open < data.prevClose) {&#10;            return SIGNAL_UP;&#10;        }&#10;    }&#10;    // Bearish Engulfing Detection&#10;    if (data.prevClose > data.prevOpen && data.close < data.open) {&#10;        if (data.close < data.prevOpen && data.open > data.prevClose) {&#10;            return SIGNAL_DOWN;&#10;        }&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
                                 </div>
                                 <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Analyzes bullish and bearish engulfing candlestick patterns to predict reversals.</p>
                             </div>
@@ -7834,7 +7839,7 @@
                             <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 2: Momentum Breakout</span>
-                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Momentum Breakout', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    let bodySize = Math.abs(data.close - data.open);&#10;    let wickSize = data.high - data.low - bodySize;&#10;    &#10;    // High momentum breakout&#10;    if (bodySize > data.avgBodySize * 1.5 && wickSize < bodySize * 0.2) {&#10;        if (data.close > data.open) return SIGNAL_UP;&#10;        if (data.close < data.open) return SIGNAL_DOWN;&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(255,255,255,0.1); border: none; color: #EAECEF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Copy</button>
+                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Momentum Breakout', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    let bodySize = Math.abs(data.close - data.open);&#10;    let wickSize = data.high - data.low - bodySize;&#10;    &#10;    // High momentum breakout&#10;    if (bodySize > data.avgBodySize * 1.5 && wickSize < bodySize * 0.2) {&#10;        if (data.close > data.open) return SIGNAL_UP;&#10;        if (data.close < data.open) return SIGNAL_DOWN;&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.3); color: #10B981; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">Run</button>
                                 </div>
                                 <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Detects strong momentum candles with large bodies and small wicks for breakout trading.</p>
                             </div>
@@ -13930,12 +13935,16 @@ Timestamp: ${new Date().toISOString()}
                     const sig = customScriptSignals[c.timestamp];
                     if (sig === 'UP') {
                         const yL = ((maxP - c.low) / (maxP - minP)) * mainChartHeight;
-                        ctx.fillStyle = '#10B981'; ctx.font = 'bold 12px Inter'; ctx.textAlign = 'center';
-                        ctx.fillText('U', x + cW / 2, yL + 14);
+                        ctx.fillStyle = '#10B981'; ctx.font = '16px Inter'; ctx.textAlign = 'center';
+                        ctx.fillText('▲', x + cW / 2, yL + 18);
+                        ctx.font = 'bold 11px Inter';
+                        ctx.fillText('U', x + cW / 2, yL + 30);
                     } else if (sig === 'DOWN') {
                         const yH = ((maxP - c.high) / (maxP - minP)) * mainChartHeight;
-                        ctx.fillStyle = '#FF3B30'; ctx.font = 'bold 12px Inter'; ctx.textAlign = 'center';
-                        ctx.fillText('D', x + cW / 2, yH - 6);
+                        ctx.fillStyle = '#FF3B30'; ctx.font = '16px Inter'; ctx.textAlign = 'center';
+                        ctx.fillText('▼', x + cW / 2, yH - 8);
+                        ctx.font = 'bold 11px Inter';
+                        ctx.fillText('D', x + cW / 2, yH - 24);
                     }
                 }
             });
@@ -17560,16 +17569,41 @@ Please check the admin panel to approve.
             const applyScriptBtn = document.getElementById('apply-script-btn');
             const clearScriptBtn = document.getElementById('clear-script-btn');
             const scriptStatus = document.getElementById('script-status-indicator');
-            const scriptInput = document.getElementById('custom-script-input');
+            const fileUploadInput = document.getElementById('script-file-upload');
+            const fileNameDisplay = document.getElementById('script-file-name-display');
             const chartScriptIndicator = document.getElementById('chart-script-indicator');
             const scriptVisibilityBtn = document.getElementById('script-visibility-btn');
 
             let scriptVisibility = true;
+            let uploadedScriptContent = '';
 
-            applyScriptBtn?.addEventListener('click', () => {
-                const code = scriptInput.value.trim();
+            if (fileUploadInput) {
+                fileUploadInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    fileNameDisplay.textContent = file.name;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        let content = ev.target.result;
+                        // Attempt base64 decode
+                        try {
+                            if (/^[A-Za-z0-9+/=]+$/.test(content.trim()) && content.trim().length % 4 === 0) {
+                                content = atob(content.trim());
+                            }
+                        } catch(e) {}
+                        
+                        uploadedScriptContent = content;
+                        showNotification('Script file loaded!', 'info');
+                    };
+                    reader.readAsText(file);
+                });
+            }
+
+            function applyStrategy(code, name = 'Auto Trend Analyzer') {
                 if (!code) {
-                    showNotification('Please paste a script first.', 'loss');
+                    showNotification('Please upload a script file first.', 'loss');
                     return;
                 }
                 
@@ -17581,6 +17615,8 @@ Please check the admin panel to approve.
                 setTimeout(() => {
                     activeCustomScript = true;
                     scriptVisibility = true;
+                    
+                    chartScriptIndicator.querySelector('.script-name').textContent = name;
                     
                     scriptStatus.style.display = 'block';
                     scriptStatus.className = 'script-status-box script-active';
@@ -17599,6 +17635,10 @@ Please check the admin panel to approve.
                     
                     showNotification('Script applied successfully!', 'win');
                 }, 1500);
+            }
+
+            applyScriptBtn?.addEventListener('click', () => {
+                applyStrategy(uploadedScriptContent, 'Auto Trend Analyzer');
             });
 
             clearScriptBtn?.addEventListener('click', () => {
@@ -17608,7 +17648,9 @@ Please check the admin panel to approve.
                 scriptStatus.style.display = 'none';
                 applyScriptBtn.style.display = 'block';
                 clearScriptBtn.style.display = 'none';
-                scriptInput.value = '';
+                uploadedScriptContent = '';
+                if(fileNameDisplay) fileNameDisplay.textContent = 'Supports .txt, .js, .script';
+                if(fileUploadInput) fileUploadInput.value = '';
                 
                 chartScriptIndicator.style.display = 'none';
                 
@@ -17631,14 +17673,12 @@ Please check the admin panel to approve.
                 }
             });
 
-            // Demo Scripts Copy Logic
-            document.querySelectorAll('.copy-demo-btn').forEach(btn => {
+            // Demo Scripts Run Logic
+            document.querySelectorAll('.copy-demo-btn').forEach((btn, idx) => {
                 btn.addEventListener('click', (e) => {
                     const scriptCode = e.target.getAttribute('data-script');
-                    if (scriptInput) {
-                        scriptInput.value = scriptCode;
-                        showNotification('Demo strategy loaded! Click Apply to test.', 'info');
-                    }
+                    const strategyName = idx === 0 ? 'Price Action Reversal' : 'Momentum Breakout';
+                    applyStrategy(scriptCode, strategyName);
                 });
             });
 
