@@ -6857,7 +6857,7 @@
                             <span class="sentiment-percent" id="sentiment-percent-up">50%</span>
                         </div>
                         <div id="chart-utc-time-display"></div>
-                        <div id="chart-script-indicator" style="position: absolute; top: 10px; left: 10px; z-index: 100; display: none; align-items: center; gap: 8px; background: rgba(16, 18, 21, 0.8); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 4px 8px; color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace; backdrop-filter: blur(4px);">
+                        <div id="chart-script-indicator" style="position: absolute; top: 10px; left: 10px; z-index: 100; display: none; align-items: center; gap: 8px; background: transparent; border: none; padding: 0; color: #10B981; font-size: 11px; font-family: 'JetBrains Mono', monospace;">
                             <span class="script-name" style="font-weight: 600;">Auto Trend Analyzer</span>
                             <button class="script-toggle-btn" id="script-visibility-btn" title="Toggle Script Visibility" style="background: transparent; border: none; color: #707A8A; cursor: pointer; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -7815,9 +7815,29 @@
 
                         <textarea id="custom-script-input" class="script-textarea" placeholder="// Paste your PineScript or JS algorithm here...&#10;&#10;function analyzeMarket(data) {&#10;  // Your logic&#10;}"></textarea>
                         
-                        <div style="display: flex; gap: 10px;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 24px;">
                             <button id="apply-script-btn" class="save-button" style="flex: 1; background: #10B981;">Apply Script</button>
                             <button id="clear-script-btn" class="save-button" style="flex: 1; background: rgba(255,59,48,0.1); color: #FF3B30; display: none;">Stop Script</button>
+                        </div>
+                        
+                        <div class="demo-scripts-container" style="background: rgba(16, 18, 21, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px;">
+                            <h4 style="margin-top: 0; color: #EAECEF; font-size: 1rem; margin-bottom: 12px;">Demo Strategies</h4>
+                            
+                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 1: Price Action Reversal</span>
+                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Price Action Reversal', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    // Bullish Engulfing Detection&#10;    if (data.prevClose < data.prevOpen && data.close > data.open) {&#10;        if (data.close > data.prevOpen && data.open < data.prevClose) {&#10;            return SIGNAL_UP;&#10;        }&#10;    }&#10;    // Bearish Engulfing Detection&#10;    if (data.prevClose > data.prevOpen && data.close < data.open) {&#10;        if (data.close < data.prevOpen && data.open > data.prevClose) {&#10;            return SIGNAL_DOWN;&#10;        }&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(255,255,255,0.1); border: none; color: #EAECEF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Copy</button>
+                                </div>
+                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Analyzes bullish and bearish engulfing candlestick patterns to predict reversals.</p>
+                            </div>
+                            
+                            <div class="demo-script-item" style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #10B981; font-weight: 600; font-size: 0.9rem;">Strategy 2: Momentum Breakout</span>
+                                    <button class="copy-demo-btn" data-script="//@version=5&#10;indicator('Momentum Breakout', overlay=true)&#10;&#10;function analyzeMarket(data) {&#10;    let bodySize = Math.abs(data.close - data.open);&#10;    let wickSize = data.high - data.low - bodySize;&#10;    &#10;    // High momentum breakout&#10;    if (bodySize > data.avgBodySize * 1.5 && wickSize < bodySize * 0.2) {&#10;        if (data.close > data.open) return SIGNAL_UP;&#10;        if (data.close < data.open) return SIGNAL_DOWN;&#10;    }&#10;    return SIGNAL_WAIT;&#10;}&#10;&#10;executeEngine(analyzeMarket);" style="background: rgba(255,255,255,0.1); border: none; color: #EAECEF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Copy</button>
+                                </div>
+                                <p style="color: #707A8A; font-size: 0.75rem; margin: 0;">Detects strong momentum candles with large bodies and small wicks for breakout trading.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -13911,11 +13931,11 @@ Timestamp: ${new Date().toISOString()}
                     if (sig === 'UP') {
                         const yL = ((maxP - c.low) / (maxP - minP)) * mainChartHeight;
                         ctx.fillStyle = '#10B981'; ctx.font = 'bold 12px Inter'; ctx.textAlign = 'center';
-                        ctx.fillText('▲ UP', x + cW / 2, yL + 18);
+                        ctx.fillText('U', x + cW / 2, yL + 14);
                     } else if (sig === 'DOWN') {
                         const yH = ((maxP - c.high) / (maxP - minP)) * mainChartHeight;
                         ctx.fillStyle = '#FF3B30'; ctx.font = 'bold 12px Inter'; ctx.textAlign = 'center';
-                        ctx.fillText('▼ DOWN', x + cW / 2, yH - 8);
+                        ctx.fillText('D', x + cW / 2, yH - 6);
                     }
                 }
             });
@@ -17610,6 +17630,18 @@ Please check the admin panel to approve.
                     scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'block';
                 }
             });
+
+            // Demo Scripts Copy Logic
+            document.querySelectorAll('.copy-demo-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const scriptCode = e.target.getAttribute('data-script');
+                    if (scriptInput) {
+                        scriptInput.value = scriptCode;
+                        showNotification('Demo strategy loaded! Click Apply to test.', 'info');
+                    }
+                });
+            });
+
             backBtns.forEach(btn => btn.addEventListener('click', (e) => {
                 if (window.appViewHistory && window.appViewHistory.length > 0) {
                     window.history.back();
