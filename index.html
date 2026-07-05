@@ -6857,6 +6857,13 @@
                             <span class="sentiment-percent" id="sentiment-percent-up">50%</span>
                         </div>
                         <div id="chart-utc-time-display"></div>
+                        <div id="chart-script-indicator" style="position: absolute; top: 10px; left: 10px; z-index: 100; display: none; align-items: center; gap: 8px; background: rgba(16, 18, 21, 0.8); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 4px 8px; color: #10B981; font-size: 12px; font-family: 'JetBrains Mono', monospace; backdrop-filter: blur(4px);">
+                            <span class="script-name" style="font-weight: 600;">Auto Trend Analyzer</span>
+                            <button class="script-toggle-btn" id="script-visibility-btn" title="Toggle Script Visibility" style="background: transparent; border: none; color: #707A8A; cursor: pointer; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon-closed" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
                         <canvas id="chart-canvas"></canvas>
                         <canvas id="drawing-canvas"></canvas>
                         <div id="chart-loader-overlay">
@@ -17527,6 +17534,81 @@ Please check the admin panel to approve.
             });
             document.getElementById('settings-close-btn')?.addEventListener('click', () => {
                 showView('chart');
+            });
+            
+            // Scripts Logic
+            const applyScriptBtn = document.getElementById('apply-script-btn');
+            const clearScriptBtn = document.getElementById('clear-script-btn');
+            const scriptStatus = document.getElementById('script-status-indicator');
+            const scriptInput = document.getElementById('custom-script-input');
+            const chartScriptIndicator = document.getElementById('chart-script-indicator');
+            const scriptVisibilityBtn = document.getElementById('script-visibility-btn');
+
+            let scriptVisibility = true;
+
+            applyScriptBtn?.addEventListener('click', () => {
+                const code = scriptInput.value.trim();
+                if (!code) {
+                    showNotification('Please paste a script first.', 'loss');
+                    return;
+                }
+                
+                // Show Loading
+                applyScriptBtn.innerHTML = '<div class="ictex-loader small"></div> Analyzing...';
+                applyScriptBtn.disabled = true;
+                applyScriptBtn.style.opacity = '0.7';
+
+                setTimeout(() => {
+                    activeCustomScript = true;
+                    scriptVisibility = true;
+                    
+                    scriptStatus.style.display = 'block';
+                    scriptStatus.className = 'script-status-box script-active';
+                    scriptStatus.innerHTML = '✅ Script Run';
+                    
+                    applyScriptBtn.innerHTML = 'Apply Script';
+                    applyScriptBtn.disabled = false;
+                    applyScriptBtn.style.opacity = '1';
+                    applyScriptBtn.style.display = 'none';
+                    clearScriptBtn.style.display = 'block';
+                    
+                    chartScriptIndicator.style.display = 'flex';
+                    chartScriptIndicator.classList.remove('hidden-script');
+                    scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'block';
+                    scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'none';
+                    
+                    showNotification('Script applied successfully!', 'win');
+                }, 1500);
+            });
+
+            clearScriptBtn?.addEventListener('click', () => {
+                activeCustomScript = false;
+                customScriptSignals = {};
+                
+                scriptStatus.style.display = 'none';
+                applyScriptBtn.style.display = 'block';
+                clearScriptBtn.style.display = 'none';
+                scriptInput.value = '';
+                
+                chartScriptIndicator.style.display = 'none';
+                
+                showNotification('Script stopped and cleared.', 'info');
+            });
+
+            scriptVisibilityBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                scriptVisibility = !scriptVisibility;
+                activeCustomScript = scriptVisibility;
+                
+                if (scriptVisibility) {
+                    chartScriptIndicator.classList.remove('hidden-script');
+                    scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'block';
+                    scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'none';
+                } else {
+                    chartScriptIndicator.classList.add('hidden-script');
+                    scriptVisibilityBtn.querySelector('.eye-icon-open').style.display = 'none';
+                    scriptVisibilityBtn.querySelector('.eye-icon-closed').style.display = 'block';
+                }
             });
             backBtns.forEach(btn => btn.addEventListener('click', (e) => {
                 if (window.appViewHistory && window.appViewHistory.length > 0) {
