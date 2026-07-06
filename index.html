@@ -15,6 +15,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>ICTEX Trade - Premium Platform</title>
+    <link rel="icon" type="image/png" href="logo/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -786,9 +787,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            color: #bdc3c7;
-            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        .payout-label {
+            color: #ffffff;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .payout-dotted-line {
+            flex-grow: 1;
+            border-bottom: 2px dotted rgba(255, 255, 255, 0.3);
+            margin: 0 10px;
+            height: 10px;
         }
         .payout-info-new {
             display: flex;
@@ -816,9 +830,9 @@
             transform: translate(-50%, -50%);
             background: var(--bg-color);
             padding: 0 6px;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            color: var(--text-secondary);
+            color: #ffffff;
             z-index: 2;
             border-radius: 4px;
             letter-spacing: 0.8px;
@@ -833,25 +847,25 @@
             display: flex;
             align-items: center;
             background-color: #1C1F26;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            height: 52px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255,255,255,0.08);
             position: relative;
             z-index: 1;
             transition: all 0.3s ease;
         }
         .input-stepper:hover {
-            border-color: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.45);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 5px rgba(255,255,255,0.15);
         }
         .stepper-display {
             flex-grow: 1;
             text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #F8FAFC;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #FFFFFF;
             cursor: pointer;
             height: 100%;
             display: flex;
@@ -2198,6 +2212,39 @@
         .color-swatch-item.selected {
             border-color: var(--color-accent);
         }
+        .swatch-scroll-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .swatch-scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: rgba(41, 98, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            border: none;
+            padding: 0;
+            margin-top: -5px;
+        }
+        .swatch-scroll-arrow.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .swatch-scroll-arrow.left { left: 0; }
+        .swatch-scroll-arrow.right { right: 0; }
+        .swatch-scroll-arrow svg { width: 16px; height: 16px; }
         .color-swatch-item div {
             width: 100%;
             height: 100%;
@@ -2607,86 +2654,89 @@
         #view-settings .settings-list-container {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            padding: 0 1.25rem;
+            gap: 4px;
+            padding: 0 1rem;
         }
         #view-settings .settings-list-item.glass-card {
-            background: rgba(26, 32, 53, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border-radius: 1rem;
-            padding: 1rem;
+            background: #2B2F3A;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: transform 0.15s ease, background 0.15s ease;
+            transition: background 0.15s ease;
             text-decoration: none;
             color: #fff;
             cursor: pointer;
             box-sizing: border-box;
+            border: none;
+            box-shadow: none !important;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
         }
         #view-settings .settings-list-item.glass-card:active {
-            transform: scale(0.97);
+            background: #22252C;
+            transform: scale(0.98);
         }
         #view-settings .settings-list-item.glass-card-purple {
-            background: rgba(43, 25, 84, 0.6);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1rem;
-            padding: 1rem;
+            background: #2B2F3A;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: transform 0.15s ease;
+            transition: background 0.15s ease;
             text-decoration: none;
             color: #fff;
             cursor: pointer;
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
+            border: none;
+            box-shadow: none !important;
         }
         #view-settings .settings-list-item.glass-card-purple:active {
-            transform: scale(0.97);
+            background: #22252C;
+            transform: scale(0.98);
         }
         #view-settings .glass-card-purple-gradient {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right, rgba(139, 92, 246, 0.1), transparent);
-            pointer-events: none;
+            display: none;
         }
         #view-settings .item-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         #view-settings .icon-wrapper {
-            width: 3rem;
-            height: 3rem;
-            border-radius: 0.75rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            border: none;
         }
         #view-settings .icon-wrapper svg {
-            width: 1.5rem;
-            height: 1.5rem;
-            color: #A8B3C7;
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #fff;
+            stroke-width: 2.5;
         }
         #view-settings .item-info {
             display: flex;
             flex-direction: column;
             text-align: left;
+            justify-content: center;
         }
         #view-settings .item-title {
-            font-weight: 600;
-            font-size: 1.125rem;
+            font-weight: 700;
+            font-size: 0.95rem;
             color: #fff;
             margin: 0;
             text-align: left !important;
+            letter-spacing: 0.2px;
         }
         #view-settings .item-subtitle {
             color: #cbd5e1;
@@ -2705,28 +2755,26 @@
             color: #c084fc;
         }
         #view-settings .logout-button {
-            background: rgba(26, 32, 53, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 1rem;
-            padding: 1rem;
+            background: #2B2F3A;
+            border: none;
+            border-radius: 4px;
+            padding: 0.6rem 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            transition: transform 0.15s ease, background 0.15s ease;
-            text-decoration: none;
+            transition: all 0.15s ease;
             color: #ef4444;
             cursor: pointer;
-            width: 100%;
-            margin-top: 1.5rem;
-            font-weight: 600;
-            font-size: 1.125rem;
+            width: auto;
+            min-width: 120px;
+            margin: 1.5rem auto;
+            font-weight: 700;
+            font-size: 0.9rem;
             box-sizing: border-box;
         }
         #view-settings .logout-button:hover {
-            background: rgba(239, 68, 68, 0.1);
+            background: #22252C;
         }
         #view-settings .logout-button:active {
             transform: scale(0.97);
@@ -3072,7 +3120,7 @@
         .currency-symbol {
             font-size: 20px;
             font-weight: 600;
-            color: #00D1FF;
+            color: #fff;
             margin-right: 8px;
         }
         .deposit-input-premium {
@@ -4044,42 +4092,23 @@
         .btn-payout:disabled { background: #334155; color: #94A3B8; box-shadow: none; cursor: not-allowed; }
         
         .withdraw-footer-trust { text-align: center; font-size: 0.75rem; color: #707A8A; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 15px; font-weight: 600; }
-        #transaction-list-container { padding: 0; display: flex; flex-direction: column; gap: 10px; }
-        .transaction-item { background: linear-gradient(145deg, var(--primary-surface), #1a1d21); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.2);}
-        .transaction-item[data-type="deposit"] { border-left-color: var(--color-up); }
-        .transaction-item[data-type="withdraw"] { border-left-color: var(--color-down); }
-        .transaction-item[data-type="bonus"] { border-left-color: var(--color-golden); }
-        .transaction-item[data-type="subscription"] { border-left-color: var(--color-purple); }
-        .transaction-item[data-type="transfer"] { border-left-color: var(--color-accent); }
-        .empty-state-card { min-height: 56vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 24px; color: var(--text-secondary); }
-        .empty-state-card svg { width:72px; height:72px; margin-bottom:14px; opacity:0.72; color: var(--color-accent); }
-        .empty-state-card h3 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.2rem; }
-        .rewards-hero-card, .analysis-hero-card { background: radial-gradient(circle at top, rgba(41,98,255,0.18), transparent 45%), linear-gradient(145deg, rgba(43,49,57,0.96), rgba(16,18,21,0.98)); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 22px; margin: 0 10px 20px; box-shadow: 0 12px 30px rgba(0,0,0,0.28); position: relative; overflow:hidden; }
-        .rewards-hero-card::after, .analysis-hero-card::after { content:''; position:absolute; inset:auto -25% -45% auto; width:180px; height:180px; background: radial-gradient(circle, rgba(0,200,83,0.18), transparent 68%); pointer-events:none; }
-        .rewards-hero-card h3, .analysis-hero-card h3 { margin:0 0 6px; text-align:left; font-size:1.12rem; }
-        .rewards-hero-sub, .analysis-hero-sub { text-align:left; color: var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0; }
-        .tasks-container { display:flex; flex-direction:column; gap:16px; }
-        .task-card { border-radius: 18px; background: linear-gradient(160deg, rgba(43,49,57,0.92), rgba(16,18,21,0.98)); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 12px 28px rgba(0,0,0,0.26); }
-        .task-card::before { width: 5px; border-radius: 0 10px 10px 0; background: linear-gradient(180deg, var(--color-accent), #5e8fff); }
-        .task-card.completed::before { background: linear-gradient(180deg, var(--color-up), #4ee39e); }
-        .task-reward-tag { box-shadow: inset 0 0 0 1px rgba(0,200,83,0.12); }
-        .analysis-filters { display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 10px 20px; }
-        .filter-btn { background: linear-gradient(145deg, var(--secondary-surface), var(--primary-surface)); border: 1px solid rgba(255,255,255,0.06); color: var(--text-primary); padding: 12px 8px; border-radius: 12px; font-weight: 700; }
-        .filter-btn.active { background: linear-gradient(135deg, rgba(41,98,255,0.95), rgba(68,138,255,0.95)); box-shadow: 0 8px 18px rgba(41,98,255,0.28); }
-        .analysis-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 10px; }
-        .stat-card { background: linear-gradient(160deg, rgba(43,49,57,0.88), rgba(16,18,21,0.98)); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 14px; box-shadow: 0 10px 24px rgba(0,0,0,0.24); }
-        .stat-card-title { font-size: 0.78rem; letter-spacing: 0.7px; }
-        .stat-card-value { font-size: 1.55rem; }
-        .ti-left { display: flex; flex-direction: column; gap: 6px; }
-        .ti-order-id { font-weight: 500; font-size: 1rem; }
-        .ti-date { font-size: 0.8rem; color: var(--text-secondary); }
-        .ti-status { font-weight: 700; font-size: 0.85rem; text-transform: capitalize; }
-        .ti-status-succeeded { color: var(--color-up); } .ti-status-pending { color: var(--color-pending); } .ti-status-failed { color: var(--color-down); } .ti-status-canceled { color: var(--text-secondary); }
-        .ti-right { text-align: right; }
-        .ti-amount { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-        .ti-amount-positive { color: var(--color-up); } .ti-amount-negative { color: var(--color-down); }
-        .ti-details { color: var(--text-secondary); font-size: 0.8rem; } .ti-type { text-transform: capitalize; }
-        .cancel-withdraw-btn { background-color: var(--color-down); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin-top: 5px; }
+        #transaction-list-container { padding: 0; display: flex; flex-direction: column; gap: 0; }
+        .transaction-item { background: transparent; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 6px; }
+        .transaction-item:last-child { border-bottom: none; }
+        .ti-row { display: flex; justify-content: space-between; align-items: center; }
+        .ti-id { font-weight: 500; font-size: 0.95rem; color: #fff; }
+        .ti-amount { font-size: 0.95rem; font-weight: 700; }
+        .ti-amount-positive { color: #00C853; } 
+        .ti-amount-negative { color: #E8304A; }
+        .ti-date { font-size: 0.85rem; color: #fff; }
+        .ti-method { font-size: 0.85rem; color: #fff; font-weight: 500; }
+        .ti-status { font-size: 0.85rem; font-weight: 500; text-transform: capitalize; }
+        .ti-status-successed, .ti-status-succeeded, .ti-status-success, .ti-status-successful, .ti-status-completed, .ti-status-approved { color: #00C853; } 
+        .ti-status-pending { color: #F5A623; } 
+        .ti-status-failed { color: #E8304A; } 
+        .ti-status-canceled { color: #9CA3AF; }
+        .ti-type { font-size: 0.85rem; color: #fff; }
+        .cancel-withdraw-btn { background-color: #E8304A; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin-top: 5px; align-self: flex-end; }
         .analysis-filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .filter-btn { background: var(--secondary-surface); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
         .filter-btn.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
@@ -5110,33 +5139,7 @@
         #email-verification-modal.visible.failure-state .ev-envelope-main { animation: ev-shake 0.5s 0.1s ease-in-out; }
         @keyframes ev-draw { to { stroke-dashoffset: 0; } }
         @keyframes ev-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-
-
-        /* ADMIN PANEL STYLES */
-        #view-admin-panel .page-content { padding: 0; }
-        .admin-tabs { display: flex; background-color: var(--primary-surface); flex-wrap: wrap;}
-        .admin-tab { flex: 1; padding: 15px 5px; text-align: center; background: none; border: none; color: var(--text-secondary); font-weight: 500; border-bottom: 3px solid transparent; cursor: pointer; min-width: 90px;}
-        .admin-tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
-        .admin-tab-content { display: none; padding: 15px; max-height: calc(100vh - 100px); overflow-y: auto;}
-        .admin-tab-content.active { display: block; }
-        .admin-section { margin-bottom: 25px; }
-        .admin-section h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
-        .price-editor-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .price-currency-group h4 { margin: 0 0 10px; }
-        .price-input-group { display: grid; grid-template-columns: 80px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
-        .price-input-group label { font-weight: 500; font-size: 0.9rem; }
-        .admin-request-card, .admin-user-card { background: var(--primary-surface); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--color-pending); }
-        .admin-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; margin-bottom: 8px; word-break: break-all; }
-        .admin-card-row .label { color: var(--text-secondary); flex-shrink: 0; margin-right: 10px; }
-        .admin-card-row .value { font-weight: 500; text-align: right; }
-        .admin-card-row .screenshot-link { color: var(--color-accent); text-decoration: underline; }
-        .admin-actions { display: flex; gap: 10px; margin-top: 15px; }
-        .action-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; color: white; font-weight: 700; cursor: pointer; }
-        .admin-actions .approve { background-color: var(--color-up); }
-        .admin-actions .reject { background-color: var(--color-down); }
-        .admin-user-card { border-left-color: var(--color-accent); }
-        .admin-user-card .extend-input { width: 60px; margin: 0 10px; }
-    
+  
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
         :root {
@@ -5790,10 +5793,6 @@
         .lb-badge.pro { background: linear-gradient(135deg, #F59E0B, #B45309); color: #FFFFFF; border: 1px solid #FBBF24; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
         .lb-badge.master { background: linear-gradient(135deg, #10B981, #047857); color: #FFFFFF; border: 1px solid #34D399; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
-        /* Admin Panels Styling Fixes */
-        .admin-panel-block { background: var(--secondary-surface); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .admin-panel-block h4 { margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem; }
-
     /* PREMIUM TAILWIND-STYLE BALANCE PILL */
     .premium-balance-pill {
         background: rgba(30, 35, 45, 0.6);
@@ -6307,12 +6306,18 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="display:flex; align-items:center; gap:6px; font-size: 1.05rem; color: #fff; margin-bottom: 4px;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="-33.45 -33.45 401.40 401.40" fill="var(--color-up)"><path d="M332.797,13.699c-1.489-1.306-3.608-1.609-5.404-0.776L2.893,163.695c-1.747,0.812-2.872,2.555-2.893,4.481 s1.067,3.693,2.797,4.542l91.833,45.068c1.684,0.827,3.692,0.64,5.196-0.484l89.287-66.734l-70.094,72.1 c-1,1.029-1.51,2.438-1.4,3.868l6.979,90.889c0.155,2.014,1.505,3.736,3.424,4.367c0.513,0.168,1.04,0.25,1.561,0.25 c1.429,0,2.819-0.613,3.786-1.733l48.742-56.482l60.255,28.79c1.308,0.625,2.822,0.651,4.151,0.073 c1.329-0.579,2.341-1.705,2.775-3.087L334.27,18.956C334.864,17.066,334.285,15.005,332.797,13.699z"/></svg>
-                        Live Account
-                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="-33.45 -33.45 401.40 401.40" fill="var(--color-up)"><path d="M332.797,13.699c-1.489-1.306-3.608-1.609-5.404-0.776L2.893,163.695c-1.747,0.812-2.872,2.555-2.893,4.481 s1.067,3.693,2.797,4.542l91.833,45.068c1.684,0.827,3.692,0.64,5.196-0.484l89.287-66.734l-70.094,72.1 c-1,1.029-1.51,2.438-1.4,3.868l6.979,90.889c0.155,2.014,1.505,3.736,3.424,4.367c0.513,0.168,1.04,0.25,1.561,0.25 c1.429,0,2.819-0.613,3.786-1.733l48.742-56.482l60.255,28.79c1.308,0.625,2.822,0.651,4.151,0.073 c1.329-0.579,2.341-1.705,2.775-3.087L334.27,18.956C334.864,17.066,334.285,15.005,332.797,13.699z"/></svg>
+                    Live Account
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
                     <div id="switcher-real-balance" class="dropdown-balance-text" style="font-size: 1.1rem; font-weight: 700; color: #fff;">0.00 USDT</div>
+                    <div id="switcher-bonus-balance" style="display: none; align-items: center; gap: 4px; background: rgba(255, 193, 7, 0.1); padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(255, 193, 7, 0.2);">
+                        <span style="color: #FFC107; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">Bonus:</span>
+                        <span id="switcher-bonus-amount" style="color: #fff; font-size: 0.8rem; font-weight: 700;">0.00</span>
+                    </div>
                 </div>
             </div>
+        </div>
 
             <!-- Demo Account -->
             <div style="display: flex; flex-direction: column; padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
@@ -6553,9 +6558,6 @@
                         Already have an account? 
                         <a class="text-action-blue font-bold hover:underline transition-all" style="color: #0CCF56; font-weight: 700; cursor: pointer;" id="show-login">Log In</a>
                     </p>
-                    <div class="flex gap-6 justify-center" style="display: flex; justify-content: center; gap: 24px; margin-top: 8px;">
-                        <a class="text-xs text-outline hover:text-on-surface-variant transition-colors" style="font-size: 12px; color: #8d90a2;" href="#">Privacy Policy</a>
-                        <a class="text-xs text-outline hover:text-on-surface-variant transition-colors" style="font-size: 12px; color: #8d90a2;" href="#">Terms of Service</a>
                     </div>
                 </div>
             </div>
@@ -6649,18 +6651,7 @@
                             <div class="dot w-4 h-4 bg-white rounded-full transition-transform duration-200 translate-x-6" style="width: 16px; height: 16px; background-color: white; border-radius: 50%; transform: translateX(24px); transition: transform 0.2s;"></div>
                         </div>
                     </div>
-                    <div class="h-px bg-border-glass" style="height: 1px; background-color: rgba(255, 255, 255, 0.07); margin: 4px 0;"></div>
-                    <!-- Checkbox: Terms -->
-                    <div class="flex gap-4 items-start cursor-pointer group" style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;" onclick="window.toggleRegistrationCheckbox('reg-terms-check')">
-                        <div class="mt-1 w-5 h-5 rounded bg-surface-variant border border-border-glass flex items-center justify-center transition-all duration-200 group-hover:border-action-blue" id="reg-terms-check" style="position: relative; width: 20px; height: 20px; background-color: #32353a; border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 4px; transition: all 0.2s;">
-                            <span class="material-symbols-outlined text-xs text-on-primary hidden" id="reg-terms-icon" style="color: #002780; font-size: 14px; font-weight: bold;">check</span>
-                        </div>
-                        <div class="flex flex-col gap-1" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-                            <p class="text-sm leading-relaxed text-on-surface-variant" style="color: #c3c5d8; font-size: 14px; margin: 0; line-height: 1.5;">
-                                I agree to the <span class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;">Terms of Service</span> and <span class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;">Risk Disclosure</span> policies.
-                            </p>
-                        </div>
-                    </div>
+
                 </div>
                 <!-- Image Decorator -->
                 <div class="relative w-full aspect-video rounded-xl overflow-hidden glass-card mt-4" style="border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 12px; aspect-ratio: 16/9; overflow: hidden; position: relative; margin-top: 16px; width: 100%;">
@@ -6889,10 +6880,10 @@
                             </div>
                         </div>
                         <div class="controls-row-1">
-                            <span>Fixed Time mode</span>
+                            <span class="payout-label">Payout</span>
+                            <div class="payout-dotted-line"></div>
                             <div class="payout-info-new">
-                                <span>Profit: </span>
-                                <span id="payout-amount-new">+USDT 8.50</span>
+                                <span id="payout-amount-new" style="color:var(--color-up); font-weight: 800;">+USDT 8.50</span>
                             </div>
                         </div>
                         <div class="controls-row-2">
@@ -7109,9 +7100,9 @@
                         </button>
                     </div>
                     <div class="page-content" style="display:flex; flex-direction:column; padding-top:10px;">
-                        <div class="history-tabs-container" style="display:flex; justify-content:center; gap: 10px; margin-bottom: 15px; background: var(--secondary-surface); padding: 5px; border-radius: 8px;">
-                            <button class="admin-tab active" id="tab-active-btn" style="flex:1; border-radius: 6px;" onclick="document.getElementById('active-list-container').style.display='block'; document.getElementById('history-list-container').style.display='none'; this.classList.add('active'); document.getElementById('tab-history-btn').classList.remove('active');">Active Trade</button>
-                            <button class="admin-tab" id="tab-history-btn" style="flex:1; border-radius: 6px;" onclick="document.getElementById('history-list-container').style.display='block'; document.getElementById('active-list-container').style.display='none'; this.classList.add('active'); document.getElementById('tab-active-btn').classList.remove('active');">History</button>
+                        <div class="history-tabs-container" style="display:flex; justify-content:center; gap: 5px; margin-bottom: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 5px; border-radius: 10px;">
+                            <button id="tab-active-btn" style="flex:1; padding: 10px 0; border-radius: 8px; background: #2962FF; color: #fff; border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: 0.2s;" onclick="document.getElementById('active-list-container').style.display='block'; document.getElementById('history-list-container').style.display='none'; this.style.background='#2962FF'; this.style.color='#fff'; document.getElementById('tab-history-btn').style.background='transparent'; document.getElementById('tab-history-btn').style.color='#8BA0B8';">Active Trade</button>
+                            <button id="tab-history-btn" style="flex:1; padding: 10px 0; border-radius: 8px; background: transparent; color: #8BA0B8; border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: 0.2s;" onclick="document.getElementById('history-list-container').style.display='block'; document.getElementById('active-list-container').style.display='none'; this.style.background='#2962FF'; this.style.color='#fff'; document.getElementById('tab-active-btn').style.background='transparent'; document.getElementById('tab-active-btn').style.color='#8BA0B8';">History</button>
                         </div>
                         <div id="history-loader-wrapper" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding: 60px 0; gap:15px;">
                             <div class="auth-loader is-visible loader-host" data-loader-size="small" style="display:flex; margin:0;"></div>
@@ -7392,11 +7383,16 @@
                 <div id="view-settings" class="view">
                     <div class="page-content">
                         <!-- NEW HEADER -->
-                        <header class="settings-header" style="justify-content: center; text-align: center; padding-bottom: 1.5rem;">
+                        <header class="settings-header" style="display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 0.25rem 1rem 1.25rem 1rem;">
                             <div style="position: relative; z-index: 10;">
-                                <h1 class="settings-header-title">Settings</h1>
-                                <p class="settings-header-subtitle">Manage your account and preferences</p>
+                                <h1 class="settings-header-title" style="font-size: 1.15rem; font-weight: 700;">Settings</h1>
                             </div>
+                            <button id="settings-close-btn" class="settings-close-btn" style="background: transparent; border: none; color: #9CA3AF; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s, color 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.05)';" onmouseout="this.style.color='#9CA3AF'; this.style.background='transparent';">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
                         </header>
                         <div class="settings-list-container">
                             <!-- Account Item -->
@@ -7467,7 +7463,7 @@
                             <a class="settings-list-item glass-card" data-view="transactions">
                                 <div class="item-left">
                                     <div class="icon-wrapper">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" data-name=" 1" viewBox="0 0 128 128" fill="currentColor"><path d="M117.14,105.86H10.86A10.87,10.87,0,0,1,0,95V33A10.87,10.87,0,0,1,10.86,22.14H117.14A10.87,10.87,0,0,1,128,33V95A10.87,10.87,0,0,1,117.14,105.86ZM10.86,26.14A6.87,6.87,0,0,0,4,33V95a6.87,6.87,0,0,0,6.86,6.86H117.14A6.87,6.87,0,0,0,124,95V33a6.87,6.87,0,0,0-6.86-6.86Z"/><path d="M37.2 69.84H21.71a4 4 0 0 1-4-4V53.6a4 4 0 0 1 4-4H37.2a4 4 0 0 1 4 4V65.84A4 4 0 0 1 37.2 69.84zM21.71 53.6V65.84H37.2V53.6zM62.82 88.14H19.42a2 2 0 0 1 0-4h43.4a2 2 0 0 1 0 4zM84.31 88.14H71.69a2 2 0 0 1 0-4H84.31a2 2 0 0 1 0 4zM82.56 68a2 2 0 0 1-1.63-3.16 8.87 8.87 0 0 0 0-10.18 2 2 0 0 1 3.27-2.31 12.89 12.89 0 0 1 0 14.8A2 2 0 0 1 82.56 68zM89.77 71.66a1.91 1.91 0 0 1-1-.3 2 2 0 0 1-.65-2.75 16.94 16.94 0 0 0 0-17.78 2 2 0 1 1 3.4-2.11 21 21 0 0 1 0 22A2 2 0 0 1 89.77 71.66z"/><path d="M97.25,75.52a2,2,0,0,1-1.72-3,25.29,25.29,0,0,0,0-25.57,2,2,0,0,1,3.45-2,29.29,29.29,0,0,1,0,29.62A2,2,0,0,1,97.25,75.52Z"/><path d="M105,79.53a2,2,0,0,1-1-.27,2,2,0,0,1-.75-2.72,34.08,34.08,0,0,0,0-33.64,2,2,0,0,1,3.48-2,38.08,38.08,0,0,1,0,37.6A2,2,0,0,1,105,79.53Z"/></svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">Transactions</h2>
@@ -7497,7 +7493,9 @@
                             <a class="settings-list-item glass-card" data-view="miner">
                                 <div class="item-left">
                                     <div class="icon-wrapper">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M14.83 9.17a3.1 3.1 0 0 0-2.12-.88H9v8h3.97a3 3 0 0 0 2.12-.88 3.1 3.1 0 0 0 .88-2.12c0-1.4-.95-2.61-2.29-2.95 1.13-.39 1.9-1.5 1.9-2.77a2.9 2.9 0 0 0-.75-2.06z"></path><path d="M9 12h5.5"></path><path d="M11 8V6"></path><path d="M14 8V6"></path><path d="M11 18v-2"></path><path d="M14 18v-2"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="bitcoin" fill="currentColor">
+                                          <path d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21ZM14,7V6a1,1,0,0,0-2,0V7H11V6A1,1,0,0,0,9,6V7H8A1,1,0,0,0,8,9H9v6H8a1,1,0,0,0,0,2H9v1a1,1,0,0,0,2,0V17h1v1a1,1,0,0,0,2,0V17a3,3,0,0,0,3-3,3,3,0,0,0-.77-2A3,3,0,0,0,17,10,3,3,0,0,0,14,7Zm0,8H11V13h3a1,1,0,0,1,0,2Zm0-4H11V9h3a1,1,0,0,1,0,2Z"></path>
+                                        </svg>
                                     </div>
                                     <div class="item-info">
                                         <h2 class="item-title">BTC Mining</h2>
@@ -8016,68 +8014,54 @@
                          <div style="width: 34px;"></div>
                     </div>
                     <div class="page-content">
-                        <h3>Terms & Conditions</h3>
-                        <h4>1. Acceptance of Terms</h4>
-                        <p>By registering for and using the ICTEX trading platform ("Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, do not use the Service.</p>
+                        <!-- Intro -->
+                        <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #25282F;">
+                            <div style="margin-top: 24px; background: #2B3139; padding: 16px; border-radius: 8px; border-left: 4px solid #FF3B30;">
+                                <h4 style="color: #FF3B30; font-weight: bold; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                                    HIGH RISK WARNING
+                                </h4>
+                                <p style="font-size: 14px; color: #707A8A; margin: 0; text-align: left;">Trading on financial markets involves a high degree of risk and may not be suitable for all investors. The possibility exists that you could sustain a loss of some or all of your initial investment. You should carefully consider your investment objectives, level of experience, and risk appetite before trading.</p>
+                            </div>
+                        </div>
 
-                        <h4>2. Eligibility and Account</h4>
-                        <p>You must be at least 18 years old to use our Service. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to provide accurate and complete information during registration.</p>
+                        <h4>1. Introduction</h4>
+                        <p>These Terms and Conditions ("Agreement") govern your access to and use of the ICTEX Trade platform, including its website, mobile applications, and API services (collectively, the "Platform"). By registering for an account or using the Platform, you agree to be legally bound by this Agreement.</p>
+                        
+                        <h4>2. Client Qualifications and KYC</h4>
+                        <p>To use our services, you must be at least 18 years of age and legally competent to form a binding contract. You agree to provide true, accurate, and complete information during the registration process. As part of our Anti-Money Laundering (AML) and Know Your Customer (KYC) policies, we may require you to verify your identity by providing government-issued ID, proof of address, and other relevant documents before you can deposit or withdraw funds.</p>
 
                         <h4>3. Deposits and Withdrawals</h4>
-                        <p>
-                            <ul>
-                                <li>All transactions are processed in USD. Conversions from other currencies are subject to prevailing exchange rates.</li>
-                                <li>You agree to use only payment methods that belong to you.</li>
-                                <li>Withdrawals are subject to verification processes, including but not limited to KYC (Know Your Customer) checks. We reserve the right to delay or reject withdrawals if fraudulent activity is suspected.</li>
-                                <li>Bonus funds are for trading purposes only and cannot be withdrawn directly. Profits made from trading with bonus funds may be withdrawn subject to specific promotional rules.</li>
-                            </ul>
-                        </p>
+                        <p>Funds can be deposited into your trading account using the approved payment methods listed on the Platform. We do not accept third-party payments; all deposits and withdrawals must be made from/to accounts in your own name.</p>
+                        <p>Withdrawal requests are subject to review and processing times. The Platform reserves the right to impose withdrawal limits and fees as outlined in our fee schedule.</p>
 
-                        <h4>4. Trading and Risk Disclosure</h4>
-                        <p>Trading in financial markets involves a high level of risk and may not be suitable for all investors. You acknowledge that you understand these risks and that you are trading with funds you can afford to lose. ICTEX does not provide financial advice. The market data provided is for informational purposes only, and we are not liable for any trading decisions you make based on it.</p>
-                        
+                        <h4>4. Order Execution and Market Data</h4>
+                        <p>The Platform provides real-time market data and order execution services. You acknowledge that due to market volatility and technical factors, order execution prices may differ from the prices displayed at the time of order entry (slippage). The Platform is not liable for any losses resulting from such discrepancies, transmission delays, or system failures.</p>
+
                         <h4>5. Prohibited Activities</h4>
-                        <p>You are prohibited from:
-                            <ul>
-                                <li>Using any automated software or bots to interact with the platform.</li>
-                                <li>Opening multiple accounts without prior written consent.</li>
-                                <li>Engaging in any form of market manipulation, arbitrage, or fraudulent activity.</li>
-                                <li>Using the Service for any illegal activities, including money laundering.</li>
-                                <li>Engaging in any form of platform manipulation, including but not limited to exploiting trade timing or pricing glitches. Any such activity may result in immediate account suspension and forfeiture of all funds.</li>
-                                <li>Placing an excessive number of concurrent trades before prior trades are resolved. This is considered high-risk gambling behavior and may lead to temporary account suspension.</li>
-                            </ul>
-                            Violation of these rules may result in immediate account suspension, forfeiture of funds, and legal action.
-                        </p>
-                        
-                        <h4>6. Limitation of Liability</h4>
-                        <p>The Service is provided "as is." We do not guarantee that the Service will be uninterrupted or error-free. In no event shall ICTEX, its directors, or employees be liable for any direct, indirect, or consequential loss or damage arising out of your use of the Service.</p>
+                        <p>Users are strictly prohibited from engaging in the following activities:</p>
+                        <ul>
+                            <li>Using automated trading bots, algorithmic software, or API exploits without explicit written permission.</li>
+                            <li>Arbitrage trading, latency abuse, or any strategy aimed at exploiting technical discrepancies in our pricing feeds.</li>
+                            <li>Creating multiple accounts to bypass promotional limits or manipulate the platform.</li>
+                            <li>Engaging in market manipulation, wash trading, or insider trading.</li>
+                        </ul>
+                        <p>Violation of these rules may result in immediate account suspension, cancellation of trades, and confiscation of funds.</p>
 
-                        <h4>7. Account Termination</h4>
-                        <p>We reserve the right to suspend or terminate your account at our sole discretion, without notice, for any violation of these Terms or for any other reason.</p>
-                        
-                        <h4>8. Mentor Program</h4>
-                        <p>
-                            <ul>
-                                <li>Every newly created account is automatically enabled as a Mentor account. No task completion, deposit, trade history, or manual approval is required to activate Mentor access.</li>
-                                <li>If a new user opens the site through a valid referral link, the referral code may be filled automatically during registration.</li>
-                                <li>When a referred user completes a deposit, the Mentor earns a 5% deposit bonus, which is credited to the Deposit Bonus Wallet.</li>
-                                <li>The Deposit Bonus Wallet can be claimed to the real balance once it reaches a minimum of $10.</li>
-                                <li>The Partner Program unlocks automatically at 100 active members. Once unlocked, the user may join instantly without admin approval. Each Partner cycle lasts 30 days and pays $1.5 per active member to the Salary Wallet.</li>
-                                <li>The Salary Wallet can be claimed to the real balance once it reaches a minimum of $1000.</li>
-                                <li>If the number of active members falls below 100 after Partner activation, a 10-day grace period applies. If the requirement is not restored within the grace period, Partner access may be deactivated.</li>
-                                <li>ICTEX reserves the right to review, suspend, or terminate Mentor or Partner benefits in cases of fraud, abuse, platform manipulation, or violation of these Terms.</li>
-                            </ul>
-                        </p>
-                        
-                        <h4>9. Amendments</h4>
-                        <p>We may amend these Terms at any time by posting the revised version on our platform. Your continued use of the Service after such changes constitutes your acceptance of the new Terms.</p>
+                        <h4>6. Privacy and Data Protection</h4>
+                        <p>We are committed to protecting your personal information. Our use of your personal data is governed by our Privacy Policy, which details how we collect, store, and process your information in compliance with applicable data protection laws.</p>
+
+                        <h4>7. Limitation of Liability</h4>
+                        <p>To the maximum extent permitted by law, ICTEX Trade and its affiliates, directors, or employees shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, arising out of or related to your use of the Platform.</p>
+
+                        <h4>8. Governing Law and Dispute Resolution</h4>
+                        <p>This Agreement shall be governed by and construed in accordance with the applicable laws of our operating jurisdiction. Any disputes arising from this Agreement shall be resolved through binding arbitration or in the competent courts of our jurisdiction, as determined by ICTEX Trade.</p>
                     </div>
                 </div>
 
                 <div id="view-deposit-new" class="view">
                     <div class="page-header">
                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2 style="background: linear-gradient(90deg, #a1c9ff, #00D1FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">Deposit</h2>
+                        <h2 style="color: #fff; font-weight: 800;">Deposit</h2>
                     </div>
                     
                     <div class="page-content" style="padding-bottom: 220px; position: relative;">
@@ -8097,8 +8081,8 @@
                                 </div>
                                 <!-- Quick Select Grid -->
                                 <div class="deposit-quick-grid">
-                                    <button type="button" class="quick-amount-btn-new" data-amount="5">$5</button>
                                     <button type="button" class="quick-amount-btn-new" data-amount="10">$10</button>
+                                    <button type="button" class="quick-amount-btn-new" data-amount="20">$20</button>
                                     <button type="button" class="quick-amount-btn-new" data-amount="50">$50</button>
                                     <button type="button" class="quick-amount-btn-new" data-amount="100">$100</button>
                                 </div>
@@ -8111,42 +8095,54 @@
                                     <span class="active-deals-badge">Active Deals</span>
                                 </div>
                                 <div id="promo-option-btn-container" class="promo-option-btn-container">
-                                    <!-- Tier 1 -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-10P-15TEX" data-min="150" data-percent="10">
+                                <!-- First Deposit Bonus -->
+                                    <button type="button" class="promo-option-btn glass-card-bonus featured" data-code="FIRST-DEPOSIT-50" data-min="10" data-percent="50">
+                                        <div class="promo-best-val-tag" style="background:var(--color-up);color:#000;">First Deposit</div>
                                         <div class="promo-left">
-                                            <span class="promo-lbl-green">+10% TRADING BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $150</span>
+                                            <span class="promo-lbl-green" style="color:var(--color-up);">+50% WELCOME BONUS</span>
+                                            <span class="promo-lbl-sub">For your first deposit only</span>
                                         </div>
-                                        <div class="promo-right-green">+$15</div>
+                                        <div class="promo-right-green" style="color:var(--color-up);">50%</div>
                                     </button>
                                     
-                                    <!-- Tier 2 - Best Value -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus featured" data-code="IC-30P-70TEX" data-min="700" data-percent="30">
-                                        <div class="promo-best-val-tag">Best Value</div>
-                                        <div class="promo-left">
-                                            <span class="promo-lbl-cyan">+30% ELITE BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $700</span>
-                                        </div>
-                                        <div class="promo-right-cyan">+$210</div>
-                                    </button>
+                                    <div id="extra-bonuses-container" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
+                                        <!-- Tier 1 -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-10P-15TEX" data-min="150" data-percent="10">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-green">+10% TRADING BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $150</span>
+                                            </div>
+                                            <div class="promo-right-green">+$15</div>
+                                        </button>
+                                        
+                                        <!-- Tier 2 - Best Value -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-30P-70TEX" data-min="700" data-percent="30">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-cyan">+30% ELITE BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $700</span>
+                                            </div>
+                                            <div class="promo-right-cyan">+$210</div>
+                                        </button>
 
-                                    <!-- Tier 3 -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-50P-300TEX" data-min="3000" data-percent="50">
-                                        <div class="promo-left">
-                                            <span class="promo-lbl-green">+50% PLATINUM BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $3,000</span>
-                                        </div>
-                                        <div class="promo-right-green">+$1,500</div>
-                                    </button>
+                                        <!-- Tier 3 -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-50P-300TEX" data-min="3000" data-percent="50">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-green">+50% PLATINUM BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $3,000</span>
+                                            </div>
+                                            <div class="promo-right-green">+$1,500</div>
+                                        </button>
 
-                                    <!-- Tier 4 -->
-                                    <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-150P-5K" data-min="5000" data-percent="150">
-                                        <div class="promo-left">
-                                            <span class="promo-lbl-green">+150% VIP HYPER BONUS</span>
-                                            <span class="promo-lbl-sub">For deposits over $5,000</span>
-                                        </div>
-                                        <div class="promo-right-green">+$7,500</div>
-                                    </button>
+                                        <!-- Tier 4 -->
+                                        <button type="button" class="promo-option-btn glass-card-bonus" data-code="IC-150P-5K" data-min="5000" data-percent="150">
+                                            <div class="promo-left">
+                                                <span class="promo-lbl-green">+150% VIP HYPER BONUS</span>
+                                                <span class="promo-lbl-sub">For deposits over $5,000</span>
+                                            </div>
+                                            <div class="promo-right-green">+$7,500</div>
+                                        </button>
+                                    </div>
+                                    <button type="button" id="view-all-bonuses-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); width: 100%; padding: 8px; border-radius: 8px; margin-top: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s;">View All</button>
                                 </div>
                             </div>
 
@@ -8199,132 +8195,6 @@
                     <div class="page-content" id="payment-details-content-new"></div>
                 </div>
 
-                <!-- Admin Tab: Payments & KYC -->
-                <div id="view-admin-panel" class="view">
-                    <div class="page-header">
-                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2>Admin Panel</h2>
-                    </div>
-                    <div class="page-content">
-                        <div class="admin-tabs">
-                            <button class="admin-tab active" data-tab="admin-payments">Payments & Rates</button>
-                            <button class="admin-tab" data-tab="admin-deposits">Deposits</button>
-                            <button class="admin-tab" data-tab="admin-withdraws">Withdraws</button>
-                            <button class="admin-tab" data-tab="server-control">Server Setup</button>
-                        </div>
-                        
-                        <!-- Tab: Payments Setup -->
-                        <div id="admin-tab-admin-payments" class="admin-tab-content active">
-                            <div class="admin-panel-block">
-                                <h4>Exchange Rates</h4>
-                                <div class="form-input-group">
-                                    <label>Deposit Rate (1 USD = BDT)</label>
-                                    <input type="number" id="admin-deposit-rate" class="form-input" value="120">
-                                </div>
-                                <div class="form-input-group" style="margin-top: 10px;">
-                                    <label>Withdraw Rate (1 USD = BDT)</label>
-                                    <input type="number" id="admin-withdraw-rate" class="form-input" value="123">
-                                </div>
-                            </div>
-                            
-                            <div class="admin-panel-block">
-                                <h4>Mobile Banking Numbers (Comma Separated)</h4>
-                                <div class="form-input-group">
-                                    <label>Bkash Numbers</label>
-                                    <input type="text" id="admin-bkash-numbers" class="form-input" placeholder="e.g. 017.., 018..">
-                                </div>
-                                <div class="form-input-group" style="margin-top: 10px;">
-                                    <label>Nagad Numbers</label>
-                                    <input type="text" id="admin-nagad-numbers" class="form-input" placeholder="e.g. 017.., 018..">
-                                </div>
-                                <div class="form-input-group" style="margin-top: 10px;">
-                                    <label>Rocket Numbers</label>
-                                    <input type="text" id="admin-rocket-numbers" class="form-input" placeholder="e.g. 017.., 018..">
-                                </div>
-                            </div>
-                            
-                            <div class="admin-panel-block">
-                                <h4>Maintenance Modes</h4>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                    <span>Bkash Maintenance</span>
-                                    <input type="checkbox" id="admin-bkash-maint" style="width:20px;height:20px;">
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                    <span>Nagad Maintenance</span>
-                                    <input type="checkbox" id="admin-nagad-maint" style="width:20px;height:20px;">
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                    <span>Rocket Maintenance</span>
-                                    <input type="checkbox" id="admin-rocket-maint" style="width:20px;height:20px;">
-                                </div>
-                            </div>
-
-                            <div class="admin-panel-block">
-                                <h4>Trade Duration Controls (1m & 2m)</h4>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
-                                    <span>Real Account:</span>
-                                    <div>
-                                        <label><input type="checkbox" id="admin-real-1m"> Show 1m</label>
-                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-real-2m"> Show 2m</label>
-                                    </div>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
-                                    <span>Demo Account:</span>
-                                    <div>
-                                        <label><input type="checkbox" id="admin-demo-1m"> Show 1m</label>
-                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-demo-2m"> Show 2m</label>
-                                    </div>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                    <span>Tournament:</span>
-                                    <div>
-                                        <label><input type="checkbox" id="admin-tour-1m"> Show 1m</label>
-                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-tour-2m"> Show 2m</label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button id="save-payment-settings-btn" class="save-button" style="width:100%;">Save Settings</button>
-                        </div>
-                        
-                        <!-- Tab: Deposits -->
-                        <div id="admin-tab-admin-deposits" class="admin-tab-content">
-                            <p>Loading deposits...</p>
-                        </div>
-
-                        <!-- Tab: Withdraws -->
-                        <div id="admin-tab-admin-withdraws" class="admin-tab-content">
-                            <p>Loading withdraws...</p>
-                        </div>
-
-                        <!-- Tab: Server Setup -->
-                        <div id="admin-tab-server-control" class="admin-tab-content">
-                            <div class="admin-section" style="padding: 15px;">
-                                <h3 style="margin-top: 0;">Server Load Balancing</h3>
-                                
-                                <div style="background: var(--secondary-surface); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color);">
-                                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0 0 5px 0;">Currently Active Render Server:</p>
-                                    <p id="current-active-server-display" style="color: var(--color-up); font-weight: bold; font-family: monospace; margin: 0; word-break: break-all;">Loading...</p>
-                                </div>
-                                
-                                <div class="form-input-group">
-                                    <label style="color: var(--text-secondary); font-size: 0.85rem;">New Render URL (e.g., https://ict-serv-2.onrender.com)</label>
-                                    <input type="text" id="new-server-url-input" class="form-input" placeholder="Paste the new https link here">
-                                </div>
-                                
-                                <button id="switch-server-btn" class="save-button" style="width: 100%; margin-top: 15px; background: var(--color-accent); font-size: 1.1rem;">Update Server for All Users</button>
-                                
-                                <div style="background: rgba(255, 152, 0, 0.1); padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #ff9800;">
-                                    <p style="font-size: 0.8rem; color: var(--text-primary); margin: 0; line-height: 1.5;">
-                                        <strong style="color: #ff9800;">Warning:</strong> When you click this button, all active users worldwide will automatically disconnect and reconnect to the new server within 2 seconds. Do not abuse this button.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-
             </main>
             
             <!-- Sidebar overlay -->
@@ -8372,7 +8242,7 @@
                             <button class="market-filter-btn" data-filter="stock">STOCK</button>
                         </div>
                         <div class="market-list-header">
-                            <span class="header-label"></span>
+                            <span class="header-label" style="text-align: center;">Pin</span>
                             <span class="header-label"></span>
                             <span class="header-label">Pair Name</span>
                             <span class="header-label">24h Change</span>
@@ -8388,12 +8258,11 @@
                 <div class="modal-content">
                     <div class="bottom-sheet-handle"></div>
                     <div class="chart-tools-header">
-                        <h3 style="font-size: 1.1rem; font-weight: 500; padding-left: 10px;">Chart Tools</h3>
+                        <h3 style="font-size: 1.1rem; font-weight: 500; padding-left: 10px;">Indicators</h3>
                         <button id="chart-tools-close-btn">&times;</button>
                     </div>
                     <div class="chart-tools-body">
                         <div class="chart-tools-content active" id="tools-tab-indicators">
-                            <h4 class="drawing-tools-section-title">INDICATORS</h4>
                             <ul class="indicator-list" id="indicator-list">
                             </ul>
                         </div>
@@ -8652,11 +8521,27 @@
                         </div>
                         <div class="options-section">
                             <h4>UP CANDLE COLOR <button class="reset-btn-inline" id="reset-up-color-btn">Reset</button></h4>
-                            <div class="color-swatch-container" id="up-candle-color-container"></div>
+                            <div class="swatch-scroll-wrapper">
+                                <button class="swatch-scroll-arrow left" onclick="this.nextElementSibling.scrollBy({left: -150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+                                </button>
+                                <div class="color-swatch-container" id="up-candle-color-container" onscroll="if(window.updateSwatchScrollIndicators) window.updateSwatchScrollIndicators(this)"></div>
+                                <button class="swatch-scroll-arrow right" onclick="this.previousElementSibling.scrollBy({left: 150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="options-section">
                             <h4>DOWN CANDLE COLOR <button class="reset-btn-inline" id="reset-down-color-btn">Reset</button></h4>
-                            <div class="color-swatch-container" id="down-candle-color-container"></div>
+                            <div class="swatch-scroll-wrapper">
+                                <button class="swatch-scroll-arrow left" onclick="this.nextElementSibling.scrollBy({left: -150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+                                </button>
+                                <div class="color-swatch-container" id="down-candle-color-container" onscroll="if(window.updateSwatchScrollIndicators) window.updateSwatchScrollIndicators(this)"></div>
+                                <button class="swatch-scroll-arrow right" onclick="this.previousElementSibling.scrollBy({left: 150, behavior: 'smooth'})">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -8850,17 +8735,6 @@
             appId: "1:755532704199:web:b27d7c9e7d0f4ac76291e2"
         };
         firebase.initializeApp(firebaseConfig);
-
-    // ----- DEMO BALANCE FIREBASE SYNC -----
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
-        if (key === 'demoBalance' && window.auth && auth.currentUser && window.database) {
-            database.ref('users/' + auth.currentUser.uid + '/demoBalance').set(parseFloat(value));
-        }
-    };
-    // --------------------------------------
-
         const auth = firebase.auth();
         const database = firebase.database();
         const storage = firebase.storage();
@@ -9326,33 +9200,6 @@
         const analysisFilterContainer = document.querySelector('.analysis-filters');
         const withdrawForm = document.getElementById('withdraw-form');
         const withdrawAmountInput = document.getElementById('withdraw-amount');
-        
-        // --- Dynamic Rate Calculation Event Listeners ---
-        if(depositAmountInputNew) {
-            depositAmountInputNew.addEventListener('input', function() {
-                const val = parseFloat(this.value);
-                const disp = document.getElementById('deposit-calc-display');
-                if(val && val > 0 && window.globalDepositRate) {
-                    disp.style.display = 'block';
-                    disp.textContent = `You have to pay: ${(val * window.globalDepositRate).toLocaleString()} BDT`;
-                } else {
-                    disp.style.display = 'none';
-                }
-            });
-        }
-        if(withdrawAmountInput) {
-            withdrawAmountInput.addEventListener('input', function() {
-                const val = parseFloat(this.value);
-                const disp = document.getElementById('withdraw-calc-display');
-                if(val && val > 0 && window.globalWithdrawRate) {
-                    disp.style.display = 'block';
-                    disp.textContent = `You will receive: ${(val * window.globalWithdrawRate).toLocaleString()} BDT`;
-                } else {
-                    disp.style.display = 'none';
-                }
-            });
-        }
-
         const withdrawFeeInfo = document.getElementById('withdraw-fee-info');
         const withdrawMethodSelector = document.getElementById('withdraw-method-selector');
         const withdrawMethodModal = document.getElementById('withdraw-method-modal');
@@ -9726,6 +9573,22 @@
         let demoBalance = parseFloat(localStorage.getItem('demoBalance'));
         if (isNaN(demoBalance)) { demoBalance = 10000; localStorage.setItem('demoBalance', demoBalance); }
         let canvasWidth, canvasHeight, historicalData = [], myActiveBets = [], tradeHistory = [], fullTradeHistory = [];
+        window.appViewHistory = [];
+        window.updateSwatchScrollIndicators = function(container) {
+            if (!container) return;
+            const wrapper = container.parentElement;
+            if (!wrapper) return;
+            const leftArrow = wrapper.querySelector('.left');
+            const rightArrow = wrapper.querySelector('.right');
+            if (leftArrow) {
+                if(container.scrollLeft > 5) leftArrow.classList.add('visible');
+                else leftArrow.classList.remove('visible');
+            }
+            if (rightArrow) {
+                if(container.scrollLeft < container.scrollWidth - container.clientWidth - 5) rightArrow.classList.add('visible');
+                else rightArrow.classList.remove('visible');
+            }
+        };
         let currentView = 'chart', lastFrameTime = 0, animationFrameId;
         let isPanning = false, isScaling = false, isPinching = false;
         let panStartX = 0, scaleStartY = 0, initialPinchDistance = 0, panDragDistance = 0, viewOffset = 0;
@@ -9861,15 +9724,14 @@
 
         function ensureValidDuration() {
             const allowed = getAvailableDurations();
-            if (!allowed.includes(expirySettings.value)) {
-                expirySettings.value = allowed[0] || 180;
-                localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
-                updateExpiryDisplay();
-                try { updateTradeOptionsModalUI(); } catch(e){}
-            }
+            // Forcefully set the first available timeframe as default on reload or admin change
+            expirySettings.value = allowed[0] || 60;
+            localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
+            updateExpiryDisplay();
+            try { updateTradeOptionsModalUI(); } catch(e){}
         }
 
-        const COLOR_GRID_TEXT = '#707A8A';
+        const COLOR_GRID_TEXT = '#FFFFFF';
         const RIGHT_PADDING = 65, CANDLE_PATH_STEPS = 1000, MAX_STORED_CANDLES = 5000, FUTURE_SPACE_CANDLES = 5;
         const RSI_PANE_HEIGHT = 80;
         const MACD_PANE_HEIGHT = 80;
@@ -9887,9 +9749,7 @@
                 supportResistance: { active: false, period: 50, supColor: '#2962ff', resColor: '#D50000' },
                 bollinger: { active: false, period: 20, stdDev: 2, color: '#9C27B0' },
                 rsi: { active: false, period: 14, color: '#ff9800' },
-                ema: { active: false, period: 14, color: '#00E676' },
-                vwap: { active: false, color: '#f2f5f8' },
-                macd: { active: false, fast: 12, slow: 26, signal: 9, colorMacd: '#2962ff', colorSignal: '#ff9800', colorHistUp: 'rgba(0, 200, 83, 0.5)', colorHistDown: 'rgba(255, 59, 48, 0.5)' }
+                ema: { active: false, period: 14, color: '#00E676' }
             }
         };
         const availableIndicators = [
@@ -9897,9 +9757,7 @@
             { id: 'ema', name: 'Moving Average (EMA)' },
             { id: 'supportResistance', name: 'Support & Resistance' },
             { id: 'bollinger', name: 'Bollinger Bands' },
-            { id: 'vwap', name: 'VWAP' },
-            { id: 'rsi', name: 'RSI Oscillator' },
-            { id: 'macd', name: 'MACD' }
+            { id: 'rsi', name: 'RSI Oscillator' }
         ];
         const availableColors = {
             palette: [
@@ -10355,6 +10213,7 @@
             auth.onAuthStateChanged(async user => {
                 if (user) {
                     if (window.isExplicitLoginFlow) return; // Prevent glitch during manual login
+
                     try {
                         const snap = await database.ref(`users/${user.uid}`).once('value');
                         const userData = snap.val();
@@ -10738,10 +10597,7 @@
         const activateTerminalBtn = document.getElementById('activate-terminal-btn');
         if (activateTerminalBtn) {
             activateTerminalBtn.addEventListener('click', () => {
-                if (!isTermsAccepted) {
-                    showNotification('Please agree to the Terms of Service to continue.', 'loss');
-                    return;
-                }
+
                 
                 const user = auth.currentUser;
                 if (!user) {
@@ -10957,7 +10813,7 @@
                     const user = userCredential.user;
                     const numericId = Date.now().toString().slice(-8);
                     const defaultDisplayName = `#${numericId}`;
-                    const generatedMentorId = Math.random().toString(36).substring(2, 10).toUpperCase();
+                    const generatedMentorId = numericId; // Mentor ID is now identical to Trader ID
                     const userData = {
                         name: defaultDisplayName, nickname: '', email, password, numericId, country, countryCode,
                         mentorId: mentorDataForStudent ? mentorDataForStudent.mentorId : null,
@@ -11418,6 +11274,7 @@
             if (viewId === currentView) return;
             
             if (!isPopState) {
+                window.appViewHistory.push(currentView);
                 window.history.pushState({ view: viewId }, '', window.location.pathname + window.location.search);
             }
 
@@ -11537,7 +11394,7 @@
             
             setTimeout(() => {
                 loader.style.display = 'none';
-                if (document.getElementById('tab-active-btn').classList.contains('active')) {
+                if (document.getElementById('tab-active-btn').style.color !== 'rgb(139, 160, 184)' && document.getElementById('tab-active-btn').style.color !== '#8BA0B8') {
                     activeList.style.display = 'block';
                 } else {
                     historyList.style.display = 'block';
@@ -11563,7 +11420,6 @@
         else if (viewId === 'mentor-users') initMentorUserListPage();
         else if (viewId === 'admin-mentors') renderAdminMentorsPage();
         else if (viewId === 'admin-users') renderAdminUsersPage();
-        else if (viewId === 'admin-panel') initAdminPanel();
     }
     
     function getTraderTier(totalProfitLoss = 0) {
@@ -11987,10 +11843,10 @@ Timestamp: ${new Date().toISOString()}
         { id: 'nagad', name: 'Nagad', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQovGX4BWR7KQrVAOJxjQPR6ZtvAY4dLmbC8VOaj-IXlAKSLTB-u3tvKMW_&s=10', details: { type: 'manual', number: '01752067094', instructions: 'Please use the "Send Money" option and enter the exact BDT amount shown.' } },
         { id: 'rocket', name: 'Rocket', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP0eawh77HPEryf218TiXutIyR4EXTAJhbiWHg_ManMg&s=10', details: { type: 'manual', number: '01800000000', instructions: 'Please use the "Send Money" option and enter the exact BDT amount shown.' } },
         { id: 'gpay', name: 'G Pay', status: 'coming-soon', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH6zlma32FMWqNOAnJJbAv3aSKGTUibNSdMF8YFA1KXQ&s' },
-        { id: 'binance', name: 'Binance Pay', status: 'active', logo: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1778979120673_file_00000000a9647206a4af2bf828400907.png', details: { type: 'qr', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1773969059022_1000258798.png', pay_id: '505820464', instructions: 'Scan the QR code with your Binance App or use the Pay ID. Send the exact USD amount.' } },
+        { id: 'binance', name: 'Binance Pay', status: 'active', logo: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1778979120673_file_00000000a9647206a4af2bf828400907.png', details: { type: 'qr', qr_image: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ixbrokerbinance.png', instructions: 'Scan the QR code with your Binance App. Send the exact USD amount.' } },
         { id: 'tether', name: 'USDT (TRC20)', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQRSJGSSrXoszL7c7QGzKWfXLn3UPQFMAvqfFaiq8xK9-OjDx1MOhJlug&s=10', details: { type: 'address', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774143805279_1000258950.jpg', address: 'TRWZqTgWSVeBXMPEkhSzcqXyfsnuWW3o6t', instructions: 'Only send USDT on the TRC20 network to this address. Ensure you cover any network fees.' } },
-        { id: 'hstn-pay', name: 'HSTN Pay', status: 'active', logo: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', details: { type: 'address', networkLabel: 'HSTN Chain USDT', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', address: 'TQS2UubYVLSMaIy53OiWW8VDNNtQkoIJHC', instructions: 'Only send USDT on the HSTN Chain to this address. Send the exact amount and ensure the network is selected correctly.', brandTitle: 'HSTN Pay © ICTEX', brandUrl: 'https://hstnpay.hstn.me' } },
-        { id: 'telegram_pay', name: 'Telegram Pay', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJOISwXgNAD-GnWiVJ6gbGO_eeAEUhYrWFcOrykD-At-3UxY_V31hU_P0&s=10', link: 'https://t.me/ictextelepay_bot' }
+        // { id: 'hstn-pay', name: 'HSTN Pay', status: 'active', logo: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', details: { type: 'address', networkLabel: 'HSTN Chain USDT', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', address: 'TQS2UubYVLSMaIy53OiWW8VDNNtQkoIJHC', instructions: 'Only send USDT on the HSTN Chain to this address. Send the exact amount and ensure the network is selected correctly.', brandTitle: 'HSTN Pay © ICTEX', brandUrl: 'https://hstnpay.hstn.me' } },
+        { id: 'telegram_pay', name: 'Telegram Pay', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJOISwXgNAD-GnWiVJ6gbGO_eeAEUhYrWFcOrykD-At-3UxY_V31hU_P0&s=10', link: 'https://t.me/ictextelepay_bot', customSubtitle: '<div style="color:#10b981; font-weight:700; font-size:10px; display:block; line-height:1.2; margin-top:5px; text-align:center; background: rgba(16,185,129,0.1); padding: 5px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.2);">🌍 All Country Payment Method Available</div>' }
     ];
 
     const withdrawMethods = [
@@ -12053,7 +11909,19 @@ Timestamp: ${new Date().toISOString()}
                     });
                 });
 
-                paymentMethods = baseMethods;
+                // Apply maintenance modes to static HTML payment methods
+                paymentMethods.forEach(pm => {
+                    if (pm.id === 'bkash' && data.bkashMaint) pm.status = 'maintenance';
+                    if (pm.id === 'nagad' && data.nagadMaint) pm.status = 'maintenance';
+                    if (pm.id === 'rocket' && data.rocketMaint) pm.status = 'maintenance';
+                    if (pm.id === 'binance' && data.binanceMaint) pm.status = 'maintenance';
+                    if (pm.id === 'tether' && data.usdtMaint) pm.status = 'maintenance';
+                    if (pm.id === 'hstn-pay' && data.hstnMaint) pm.status = 'maintenance';
+                    if (pm.id === 'telegram_pay' && data.tgMaint) pm.status = 'maintenance';
+                    if (pm.id === 'gpay' && data.gpayMaint) pm.status = 'maintenance';
+                });
+                
+                // paymentMethods = baseMethods; (Removed so HTML overrides Firebase dynamic arrays)
 
                 let wmConfig = {};
                 try { wmConfig = JSON.parse(data.withdrawMaintConfig || '{}'); } catch(e){}
@@ -12290,7 +12158,33 @@ Timestamp: ${new Date().toISOString()}
                 else if(t.type === 'subscription') { methodDisplay = `AI Subscription`; }
                 const cancelButton = (t.type === 'withdraw' && t.status === 'pending') ? `<button class="cancel-withdraw-btn" data-tx-id="${t.id}" data-amount="${Math.abs(t.amount)}" data-bonus="${t.bonusRemoved || 0}">Cancel</button>` : '';
                 const amountValue = typeof t.amount === 'string' ? t.amount : `$${Math.abs(t.amount).toFixed(2)}`;
-                return `<div class="transaction-item" data-type="${t.type}"><div class="ti-left"><div class="ti-order-id">ID: ${transactionId}</div><div class="ti-date">${formattedDate}</div><div class="ti-status ti-status-${t.status}">${t.status}</div></div><div class="ti-right"><div class="ti-amount ti-amount-${amountClass}">${amountPrefix}${amountValue}</div><div class="ti-details">${methodDisplay} <span class="ti-type">${t.type}</span></div>${cancelButton}</div></div>`;
+                let typeDisplay = 'Deposit';
+                if (t.type === 'withdraw') typeDisplay = 'Payout';
+                else if (t.type === 'bonus') typeDisplay = 'Claim';
+                else if (t.type === 'subscription') typeDisplay = 'Subscription';
+                else if (t.type === 'transfer') typeDisplay = 'Transfer';
+                
+                let statusDisplay = t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Pending';
+                const lowerStatus = statusDisplay.toLowerCase();
+                if (lowerStatus === 'successed' || lowerStatus === 'success' || lowerStatus === 'successful' || lowerStatus === 'succeeded') {
+                    statusDisplay = 'Succeeded';
+                }
+                
+                return `<div class="transaction-item" data-type="${t.type}">
+                    <div class="ti-row">
+                        <span class="ti-id">${transactionId}</span>
+                        <span class="ti-amount ti-amount-${amountClass}">${amountPrefix}${amountValue}</span>
+                    </div>
+                    <div class="ti-row">
+                        <span class="ti-date">${formattedDate}</span>
+                        <span class="ti-method">${methodDisplay}</span>
+                    </div>
+                    <div class="ti-row">
+                        <span class="ti-status ti-status-${statusDisplay.toLowerCase()}">${statusDisplay}</span>
+                        <span class="ti-type">${typeDisplay}</span>
+                    </div>
+                    ${cancelButton}
+                </div>`;
             }).join('');
         }
         
@@ -13305,7 +13199,19 @@ Timestamp: ${new Date().toISOString()}
 
                 if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
                     SoundEngine.warning();
-                    showNotification(`Invalid amount (min ${minInvestment}) or insufficient balance.`, 'loss'); 
+                    if (investmentAmount > currentBalance && !isDemoAccount && !isTournamentAccount) {
+                        const tifmModal = document.getElementById('trade-insufficient-funds-modal');
+                        if (tifmModal) {
+                            document.getElementById('tifm-amount-title').textContent = `Real balance is less than ${investmentAmount.toFixed(2)} $`;
+                            tifmModal.classList.add('visible');
+                        } else {
+                            showNotification('Insufficient balance.', 'loss');
+                        }
+                    } else if (investmentAmount > currentBalance) {
+                        showNotification('Insufficient balance.', 'loss');
+                    } else {
+                        showNotification(`Invalid amount (min ${minInvestment})`, 'loss'); 
+                    }
                     isBetActionInProgress = false; btnUp.disabled = false; btnDown.disabled = false;
                     return; 
                 }
@@ -13328,20 +13234,7 @@ Timestamp: ${new Date().toISOString()}
                     return; 
                 }
                 
-                const tradeTime = formatTimeLong(expirySettings.value);
-                const tradeMessage = `
-New Trade Placed!
--------------------------
-User: ${currentUserData.name} (${currentUserData.numericId})
-Market: ${currentMarket}
-Direction: ${direction.toUpperCase()}
-Duration: ${tradeTime}
-Amount: ${investmentAmount.toFixed(2)} USDT
-Balance: ${currentBalance.toFixed(2)} USDT
--------------------------
-`;
-                // শুধুমাত্র রিয়েল অ্যাকাউন্টের ক্ষেত্রে টেলিগ্রামে মেসেজ যাবে
-                if(!isDemoAccount && !isTournamentAccount) sendTelegramNotification(tradeMessage); 
+                // Telegram notification for trades is now handled securely by server.js
                 SoundEngine.tradePlaced();
 
                 let realDeduction = (investmentAmount <= realBalance) ? investmentAmount : realBalance;
@@ -13749,7 +13642,7 @@ Balance: ${currentBalance.toFixed(2)} USDT
             
             const timeValueMinutes = expirySettings.value / 60;
             let displayTimeText = `${timeValueMinutes} min`;
-            if (fixedTimeModeLabel) fixedTimeModeLabel.textContent = 'Fixed Time mode';
+            if (fixedTimeModeLabel) fixedTimeModeLabel.textContent = 'Payout';
             
             // 🔥 58 SEC BUG FIX: Use Math.floor on total milliseconds to prevent rounding jumps
             const secondsInCurrentCandle = Math.floor((now.getTime() % 60000) / 1000);
@@ -13954,11 +13847,37 @@ Balance: ${currentBalance.toFixed(2)} USDT
                 drawCandle(c, x, cW, cS, minP, maxP, mainChartHeight);
             });
 
+            const runningIdx = (N - 1) - minIndex;
+            if (runningIdx >= 0 && runningIdx < vC.length) {
+                const c = vC[runningIdx];
+                if (c) {
+                    const runningX = (runningIdx * cW) + xShift + (cW / 2);
+                    const yH = ((maxP - c.high) / (maxP - minP)) * mainChartHeight;
+                    const yL = ((maxP - c.low) / (maxP - minP)) * mainChartHeight;
+                    const gap = 8;
+                    
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.setLineDash([4, 4]);
+                    if (yH - gap > 0) {
+                        ctx.moveTo(runningX, 0);
+                        ctx.lineTo(runningX, yH - gap);
+                    }
+                    if (yL + gap < canvasHeight) {
+                        ctx.moveTo(runningX, yL + gap);
+                        ctx.lineTo(runningX, canvasHeight);
+                    }
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+
             if (chartSettings.indicators.sma.active) drawSMA(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.ema.active) drawEMA(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.bollinger.active) drawBollingerBands(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.supportResistance.active) drawSupportResistance(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
-            if (chartSettings.indicators.vwap.active) drawVWAP(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             
             let currentPaneY = mainChartHeight;
             if (hasRSI) {
@@ -14301,6 +14220,13 @@ Balance: ${currentBalance.toFixed(2)} USDT
 
             const xPos = ((numCandlesOnScreen - 1) * candleWidth) + xShift + (candleWidth / 2);
 
+            const priceText = p.toFixed(5);
+            ctx.font = 'bold 11px Roboto';
+            const textMetrics = ctx.measureText(priceText);
+            const tagWidth = textMetrics.width + 16;
+            const tagHeight = 22;
+            const tagX = canvasWidth - tagWidth - 2;
+
             if (pulseAnimation.opacity > 0) {
                 ctx.beginPath();
                 ctx.arc(xPos, y, pulseAnimation.radius, 0, 2 * Math.PI);
@@ -14308,12 +14234,23 @@ Balance: ${currentBalance.toFixed(2)} USDT
                 ctx.fill();
             }
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.save();
+            ctx.strokeStyle = '#FFFFFF';
             ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
             ctx.beginPath();
-            ctx.moveTo(xPos, y);
-            ctx.lineTo(chartDrawWidth, y);
+            
+            const hGap = Math.max(6, candleWidth / 2 + 2);
+            if (xPos - hGap > 0) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(xPos - hGap, y);
+            }
+            if (xPos + hGap < tagX) {
+                ctx.moveTo(xPos + hGap, y);
+                ctx.lineTo(tagX, y);
+            }
             ctx.stroke();
+            ctx.restore();
 
             ctx.save();
             ctx.translate(xPos, y);
@@ -14323,12 +14260,6 @@ Balance: ${currentBalance.toFixed(2)} USDT
             ctx.fillRect(-diamondSize, -diamondSize, diamondSize * 2, diamondSize * 2);
             ctx.restore();
 
-            const priceText = p.toFixed(5);
-            ctx.font = 'bold 11px Roboto';
-            const textMetrics = ctx.measureText(priceText);
-            const tagWidth = textMetrics.width + 16;
-            const tagHeight = 22;
-            const tagX = canvasWidth - tagWidth - 2;
             const color = (historicalData.length > 1 && p >= historicalData[historicalData.length-2].close) ? chartSettings.colors.up : chartSettings.colors.down;
             ctx.fillStyle = color;
             ctx.beginPath();
@@ -14865,8 +14796,20 @@ Balance: ${currentBalance.toFixed(2)} USDT
 
             const rBalText = document.getElementById('switcher-real-balance');
             const dBalText = document.getElementById('switcher-demo-balance');
-            if (rBalText) rBalText.textContent = isBalanceVisible ? formatMoney(balance) : '*******';
+            const bBalContainer = document.getElementById('switcher-bonus-balance');
+            const bBalAmount = document.getElementById('switcher-bonus-amount');
+            
+            if (rBalText) rBalText.textContent = isBalanceVisible ? formatMoney(realBalance) : '*******';
             if (dBalText) dBalText.textContent = isBalanceVisible ? formatMoney(demoBalance) : '*******';
+
+            if (bBalContainer && bBalAmount) {
+                if (bonusBalance > 0) {
+                    bBalContainer.style.display = 'flex';
+                    bBalAmount.textContent = isBalanceVisible ? formatMoney(bonusBalance) : '***';
+                } else {
+                    bBalContainer.style.display = 'none'; // Hide completely if bonus is 0
+                }
+            }
 
             const emailEl = document.getElementById('dropdown-user-email');
             if (emailEl && currentUserData) {
@@ -15012,7 +14955,7 @@ Balance: ${currentBalance.toFixed(2)} USDT
                     </div>
                     <div class="pm-card-bottom">
                         <div class="pm-card-title">${m.name}</div>
-                        <div class="pm-card-subtitle">Min. $10</div>
+                        ${m.customSubtitle ? m.customSubtitle : `<div class="pm-card-subtitle">Min. $10</div>`}
                     </div>
                     ${extraTags}
                 `;
@@ -15055,6 +14998,9 @@ Balance: ${currentBalance.toFixed(2)} USDT
                 const randomData = method.details.dataOptions[Math.floor(Math.random() * method.details.dataOptions.length)];
                 currentVal = randomData.val;
                 currentQR = randomData.qr;
+            } else {
+                currentVal = method.details.pay_id || method.details.address || method.details.number || '';
+                currentQR = method.details.qr_image || '';
             }
 
             if (currentQR) {
@@ -15272,12 +15218,23 @@ Please check the admin panel to approve.
                         let bonusAmount = 0;
                         if(request.promoCode && promoCodesDB[request.promoCode] && promoCodesDB[request.promoCode].status === 'active') {
                             const promo = promoCodesDB[request.promoCode];
-                            const usageCount = (currentUserData.promoUsage && currentUserData.promoUsage[request.promoCode]) || 0;
-                            const limit = (request.promoCode === 'IC-50P-300TEX' || request.promoCode === 'IC-150P-5K') ? 3 : 2; 
-                            if(request.amountUSD >= promo.minDeposit && usageCount < limit) {
-                                bonusAmount = request.amountUSD * (promo.bonusPercentage / 100);
-                                if(promo.maxBonus) bonusAmount = Math.min(bonusAmount, promo.maxBonus);
-                                database.ref(`users/${uid}/promoUsage/${request.promoCode}`).set(firebase.database.ServerValue.increment(1));
+                            
+                            let isValidPromo = true;
+                            if (promo.isFirstDepositOnly) {
+                                const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                                if (depositCount > 0) {
+                                    isValidPromo = false;
+                                }
+                            }
+                            
+                            if (isValidPromo) {
+                                const usageCount = (currentUserData.promoUsage && currentUserData.promoUsage[request.promoCode]) || 0;
+                                const limit = (request.promoCode === 'IC-50P-300TEX' || request.promoCode === 'IC-150P-5K') ? 3 : 2; 
+                                if(request.amountUSD >= promo.minDeposit && usageCount < limit) {
+                                    bonusAmount = request.amountUSD * (promo.bonusPercentage / 100);
+                                    if(promo.maxBonus) bonusAmount = Math.min(bonusAmount, promo.maxBonus);
+                                    database.ref(`users/${uid}/promoUsage/${request.promoCode}`).set(firebase.database.ServerValue.increment(1));
+                                }
                             }
                         }
                         
@@ -15564,15 +15521,8 @@ Please check the admin panel to approve.
         }
 
         function loadAndApplySettings() {
-            const savedExpiry = localStorage.getItem('expirySettings');
-            if (savedExpiry) {
-                try {
-                    const parsed = JSON.parse(savedExpiry);
-                    if (timeSteps.includes(parsed.value)) {
-                        expirySettings = parsed;
-                    }
-                } catch(e) { }
-            }
+            // Apply the first available timeframe on refresh automatically
+            ensureValidDuration();
             
             const savedChartSettings = localStorage.getItem('chartSettings');
             if (savedChartSettings) {
@@ -16022,7 +15972,7 @@ Please check the admin panel to approve.
             try {
                 const mentorSnapshot = await database.ref(`mentors/${user.uid}`).once('value');
                 const existingMentorData = mentorSnapshot.exists() ? mentorSnapshot.val() : null;
-                const mentorId = existingMentorData?.mentorId || Math.random().toString(36).substring(2, 10).toUpperCase();
+                const mentorId = existingMentorData?.mentorId || currentUserData.numericId || Math.random().toString(36).substring(2, 10).toUpperCase();
                 const mentorProfile = {
                     uid: user.uid,
                     name: currentUserData.name || currentUserData.nickname || `#${currentUserData.numericId || 'USER'}`,
@@ -16233,7 +16183,7 @@ Please check the admin panel to approve.
                         </div>
                         <div class="mentor-stat-card premium">
                             <div class="label">Partner Salary Rate</div>
-                            <div class="value">$1.5 / User</div>
+                            <div class="value">$3 / User</div>
                         </div>
                     </div>
 
@@ -16278,7 +16228,7 @@ Please check the admin panel to approve.
                                     <span class="salary-tier-title">Salary Wallet → Real Balance</span>
                                     <span class="salary-tier-reward">Min $1000</span>
                                 </div>
-                                <p class="mentor-card-copy">Partner salary is calculated at $1.5 for each active member during the active 30-day cycle. Once the Salary Wallet reaches $1000 or more, it can be claimed to the real balance.</p>
+                                <p class="mentor-card-copy">Partner salary is calculated at $3 for each active member during the active 30-day cycle. Once the Salary Wallet reaches $1000 or more, it can be claimed to the real balance.</p>
                                 <button class="salary-apply-btn" id="claim-salary-wallet-btn" ${!canClaimSalary ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
                             </div>
                         </div>
@@ -16311,7 +16261,7 @@ Please check the admin panel to approve.
             const salaryStatus = mentorData.salaryStatus || null;
 
             const REQUIRED_USERS = 100;
-            const SALARY_PER_USER = 1.5;
+            const SALARY_PER_USER = 3;
 
             let contentHTML = '';
 
@@ -16347,7 +16297,7 @@ Please check the admin panel to approve.
                     <div class="salary-tier-card premium">
                         <div class="salary-tier-header">
                             <span class="salary-tier-title">ICTEX Partner Program</span>
-                            <span class="salary-tier-reward">$1.5 / Active Member</span>
+                            <span class="salary-tier-reward">$3 / Active Member</span>
                         </div>
                         <div class="salary-tier-progress-info">
                             <span>${activeUsers} / ${REQUIRED_USERS}</span>
@@ -16356,7 +16306,7 @@ Please check the admin panel to approve.
                         <div class="salary-progress-bar">
                             <div class="salary-progress-bar-inner" style="width: ${progress}%;"></div>
                         </div>
-                        <p class="mentor-card-copy">The Partner Program unlocks automatically once you reach 100 active members. Tap the button to join instantly—no admin approval is required. After activation, a 30-day cycle begins and pays $1.5 per active member into your Salary Wallet.</p>
+                        <p class="mentor-card-copy">The Partner Program unlocks automatically once you reach 100 active members. Tap the button to join instantly—no admin approval is required. After activation, a 30-day cycle begins and pays $3 per active member into your Salary Wallet.</p>
                         <button class="salary-apply-btn" id="apply-partner-btn" ${!unlocked ? 'disabled' : ''}>${unlocked ? 'Join Partner Now' : 'Unlock at 100 Active Members'}</button>
                     </div>
                 `;
@@ -16387,7 +16337,7 @@ Please check the admin panel to approve.
                 graceActive: false,
                 graceEndDate: null,
                 requiredUsers: 100,
-                salaryPerUser: 1.5,
+                salaryPerUser: 3,
                 lastProcessedCycleEnd: null
             };
 
@@ -16589,7 +16539,7 @@ Please check the admin panel to approve.
             if (salaryData && salaryData.status === 'active') {
                 const now = Date.now();
                 const requiredUsers = salaryData.requiredUsers || 100;
-                const salaryPerUser = salaryData.salaryPerUser || 1.5;
+                const salaryPerUser = salaryData.salaryPerUser || 3;
                 const periodEnd = salaryData.periodEnd || salaryData.endDate || 0;
 
                 if (activeCount >= requiredUsers && salaryData.graceActive) {
@@ -16651,195 +16601,7 @@ Please check the admin panel to approve.
         async function handleMentorWithdraw(e) {
             e.preventDefault();
             showNotification('Withdraw removed. Use Claim Center instead.', 'info');
-        }
-
-        // --- NEW ADMIN TABS LOGIC ---
-        function initAdminPanel() {
-            // Tab switching
-            document.querySelectorAll('.admin-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.getElementById(`admin-tab-${tab.dataset.tab}`).classList.add('active');
-                    
-                    if (tab.dataset.tab === 'admin-payments') populateAdminPaymentSettings();
-                    else if (tab.dataset.tab === 'admin-deposits') loadAdminDeposits();
-                    else if (tab.dataset.tab === 'admin-withdraws') loadAdminWithdraws();
-                });
-            });
-            
-            // Save Settings Event
-            document.getElementById('save-payment-settings-btn').addEventListener('click', saveAdminPaymentSettings);
-            
-            // Initial Load
-            populateAdminPaymentSettings();
-        }
-        
-        function populateAdminPaymentSettings() {
-            document.getElementById('admin-deposit-rate').value = adminPaymentSettings.depositRateBDT || 120;
-            document.getElementById('admin-withdraw-rate').value = adminPaymentSettings.withdrawRateBDT || 123;
-            
-            document.getElementById('admin-bkash-numbers').value = (adminPaymentSettings.bkashNumbers || []).join(', ');
-            document.getElementById('admin-nagad-numbers').value = (adminPaymentSettings.nagadNumbers || []).join(', ');
-            document.getElementById('admin-rocket-numbers').value = (adminPaymentSettings.rocketNumbers || []).join(', ');
-            
-            document.getElementById('admin-binance-data').value = adminPaymentSettings.binanceData || '';
-            document.getElementById('admin-usdt-data').value = adminPaymentSettings.usdtData || '';
-
-            document.getElementById('admin-bkash-maint').checked = adminPaymentSettings.bkashMaint || false;
-            document.getElementById('admin-nagad-maint').checked = adminPaymentSettings.nagadMaint || false;
-            document.getElementById('admin-rocket-maint').checked = adminPaymentSettings.rocketMaint || false;
-            document.getElementById('admin-binance-maint').checked = adminPaymentSettings.binanceMaint || false;
-            document.getElementById('admin-usdt-maint').checked = adminPaymentSettings.usdtMaint || false;
-            document.getElementById('admin-hstn-maint').checked = adminPaymentSettings.hstnMaint || false;
-            document.getElementById('admin-tg-maint').checked = adminPaymentSettings.tgMaint || false;
-            document.getElementById('admin-gpay-maint').checked = adminPaymentSettings.gpayMaint || false;
-
-            document.getElementById('admin-custom-deposit-methods').value = adminPaymentSettings.customDepositMethods || '';
-            document.getElementById('admin-withdraw-maint-config').value = adminPaymentSettings.withdrawMaintConfig || '{}';
-            
-            document.getElementById('admin-real-1m').checked = adminDurationSettings.real.m1;
-            document.getElementById('admin-real-2m').checked = adminDurationSettings.real.m2;
-            document.getElementById('admin-demo-1m').checked = adminDurationSettings.demo.m1;
-            document.getElementById('admin-demo-2m').checked = adminDurationSettings.demo.m2;
-            document.getElementById('admin-tour-1m').checked = adminDurationSettings.tour.m1;
-            document.getElementById('admin-tour-2m').checked = adminDurationSettings.tour.m2;
-        }
-
-        async function saveAdminPaymentSettings() {
-            const btn = document.getElementById('save-payment-settings-btn');
-            btn.disabled = true;
-            btn.textContent = 'Saving...';
-            
-            // Validate JSON before saving
-            const customDepData = document.getElementById('admin-custom-deposit-methods').value.trim();
-            if (customDepData) {
-                try { JSON.parse(customDepData); } catch(e) {
-                    showNotification('Invalid JSON in Custom Deposit Methods', 'loss');
-                    btn.disabled = false; btn.textContent = 'Save Settings'; return;
-                }
-            }
-
-            const customWithData = document.getElementById('admin-withdraw-maint-config').value.trim() || '{}';
-            try { JSON.parse(customWithData); } catch(e) {
-                showNotification('Invalid JSON in Withdraw Config', 'loss');
-                btn.disabled = false; btn.textContent = 'Save Settings'; return;
-            }
-
-            const settings = {
-                depositRateBDT: parseFloat(document.getElementById('admin-deposit-rate').value),
-                withdrawRateBDT: parseFloat(document.getElementById('admin-withdraw-rate').value),
-                bkashNumbers: document.getElementById('admin-bkash-numbers').value.split(',').map(s => s.trim()).filter(Boolean),
-                nagadNumbers: document.getElementById('admin-nagad-numbers').value.split(',').map(s => s.trim()).filter(Boolean),
-                rocketNumbers: document.getElementById('admin-rocket-numbers').value.split(',').map(s => s.trim()).filter(Boolean),
-                binanceData: document.getElementById('admin-binance-data').value,
-                usdtData: document.getElementById('admin-usdt-data').value,
-                bkashMaint: document.getElementById('admin-bkash-maint').checked,
-                nagadMaint: document.getElementById('admin-nagad-maint').checked,
-                rocketMaint: document.getElementById('admin-rocket-maint').checked,
-                binanceMaint: document.getElementById('admin-binance-maint').checked,
-                usdtMaint: document.getElementById('admin-usdt-maint').checked,
-                hstnMaint: document.getElementById('admin-hstn-maint').checked,
-                tgMaint: document.getElementById('admin-tg-maint').checked,
-                gpayMaint: document.getElementById('admin-gpay-maint').checked,
-                customDepositMethods: customDepData,
-                withdrawMaintConfig: customWithData
-            };
-            
-            const durSettings = {
-                real: { m1: document.getElementById('admin-real-1m').checked, m2: document.getElementById('admin-real-2m').checked },
-                demo: { m1: document.getElementById('admin-demo-1m').checked, m2: document.getElementById('admin-demo-2m').checked },
-                tour: { m1: document.getElementById('admin-tour-1m').checked, m2: document.getElementById('admin-tour-2m').checked }
-            };
-
-            try {
-                await database.ref('admin/settings/payments').set(settings);
-                await database.ref('admin/settings/durations').set(durSettings);
-                showNotification('Settings updated successfully.', 'win');
-            } catch(e) {
-                console.error(e);
-                showNotification('Failed to save settings.', 'loss');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Save Settings';
-            }
-        }
-
-        function loadAdminDeposits() {
-            const container = document.getElementById('admin-tab-admin-deposits');
-            database.ref('deposit_requests').orderByChild('status').equalTo('pending').on('value', snapshot => {
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<p>No pending deposits.</p>';
-                    return;
-                }
-                let html = '';
-                snapshot.forEach(child => {
-                    const req = child.val();
-                    const reqId = child.key;
-                    html += `
-                        <div class="admin-request-card">
-                            <div class="admin-card-row"><span class="label">User:</span><span class="value">${req.userName} (${req.userId.slice(-6)})</span></div>
-                            <div class="admin-card-row"><span class="label">Invoice:</span><span class="value">${req.invoiceId}</span></div>
-                            <div class="admin-card-row"><span class="label">Method:</span><span class="value">${req.method}</span></div>
-                            <div class="admin-card-row"><span class="label">Amount:</span><span class="value">$${req.amountUSD}</span></div>
-                            <div class="admin-card-row"><span class="label">TXID:</span><span class="value">${req.txId || 'N/A'}</span></div>
-                            <div class="admin-actions">
-                                <button class="action-btn approve" onclick="handleDepositAction('${reqId}', 'succeeded')">Approve</button>
-                                <button class="action-btn reject" onclick="handleDepositAction('${reqId}', 'rejected')">Reject</button>
-                            </div>
-                        </div>`;
-                });
-                container.innerHTML = html;
-            });
-        }
-
-        function loadAdminWithdraws() {
-            const container = document.getElementById('admin-tab-admin-withdraws');
-            database.ref('withdraw_requests').orderByChild('status').equalTo('pending').on('value', snapshot => {
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<p>No pending withdraws.</p>';
-                    return;
-                }
-                let html = '';
-                snapshot.forEach(child => {
-                    const req = child.val();
-                    const reqId = child.key;
-                    html += `
-                        <div class="admin-request-card">
-                            <div class="admin-card-row"><span class="label">User:</span><span class="value">${req.userName} (${req.userId.slice(-6)})</span></div>
-                            <div class="admin-card-row"><span class="label">Amount:</span><span class="value">$${req.amount}</span></div>
-                            <div class="admin-card-row"><span class="label">Method:</span><span class="value">${req.method}</span></div>
-                            <div class="admin-card-row"><span class="label">Account:</span><span class="value">${req.accountId}</span></div>
-                            <div class="admin-actions">
-                                <button class="action-btn approve" onclick="handleWithdrawAction('${reqId}', 'succeeded')">Approve</button>
-                                <button class="action-btn reject" onclick="handleWithdrawAction('${reqId}', 'rejected')">Reject</button>
-                            </div>
-                        </div>`;
-                });
-                container.innerHTML = html;
-            });
-        }
-
-        window.handleDepositAction = async function(reqId, status) {
-            if (!confirm(`Are you sure you want to mark this deposit as ${status}?`)) return;
-            try {
-                await database.ref(`deposit_requests/${reqId}`).update({ status: status });
-                showNotification(`Deposit ${status}.`, 'info');
-            } catch(e) {
-                showNotification('Action failed.', 'loss');
-            }
-        };
-
-        window.handleWithdrawAction = async function(reqId, status) {
-            if (!confirm(`Are you sure you want to mark this withdraw as ${status}?`)) return;
-            try {
-                await database.ref(`withdraw_requests/${reqId}`).update({ status: status });
-                showNotification(`Withdraw ${status}.`, 'info');
-            } catch(e) {
-                showNotification('Action failed.', 'loss');
-            }
-        };
+        }     
             
         async function initApp(user) {
             const uid = user.uid;
@@ -16891,30 +16653,9 @@ Please check the admin panel to approve.
                 setTimeout(() => resolveExpiredBets(true), 500); 
             }, 1000);
             
-            backBtns.forEach(btn => {
-                const originalView = btn.dataset.view;
-                const settingsViews = ['profile', 'kyc', 'withdraw', 'withdraw-success', 'analysis', 'transactions', 'rewards', 'miner', 'miner-history', 'terms', 'leaderboard', 'mentor', 'mentor-users', 'admin-mentors', 'admin-users', 'admin-panel'];
-                const paymentViews = ['deposit-new', 'deposit-methods', 'payment-details', 'ai-payment-methods', 'ai-payment-details'];
-                
-                if (settingsViews.includes(originalView)) {
-                    btn.dataset.view = 'settings';
-                } else if (paymentViews.includes(originalView)) {
-                     btn.dataset.view = 'chart';
-                }
-            });
+
             
-            database.ref(`users/${uid}/isAdmin`).once('value', snapshot => {
-                if (snapshot.val() === true) {
-                    const nav = document.getElementById('app-nav');
-                    const adminNavBtn = document.createElement('button');
-                    adminNavBtn.className = 'nav-btn-new';
-                    adminNavBtn.dataset.view = 'admin-panel'; 
-                    adminNavBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 3a.993.993 0 0 0-.853.488L3.23 15.176c-.469.812.11 1.824.996 1.824h15.548c.886 0 1.465-1.012.996-1.824L12.852 3.488A.993.993 0 0 0 12 3zm-1.04 12.133a1.5 1.5 0 1 1 2.08 0a1.5 1.5 0 0 1-2.08 0zm.54-7.633a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4z"/></svg>
-                        <span>Admin</span>`;
-                    nav.appendChild(adminNavBtn);
-                }
-            });
+            // Admin button injection removed for security
             
             const copyIdBtn = document.getElementById('copy-id-btn');
             if (copyIdBtn) {
@@ -17188,6 +16929,7 @@ Please check the admin panel to approve.
             const promoCodesRef = database.ref('admin/promo_codes');
             promoCodesRef.on('value', (snapshot) => {
                 promoCodesDB = snapshot.exists() ? snapshot.val() : {};
+                if (!promoCodesDB['FIRST-DEPOSIT-50']) promoCodesDB['FIRST-DEPOSIT-50'] = { bonusPercentage: 50, minDeposit: 10, status: 'active', isFirstDepositOnly: true };
                 if (!promoCodesDB['IC-10P-15TEX']) promoCodesDB['IC-10P-15TEX'] = { bonusPercentage: 10, minDeposit: 150, status: 'active' };
                 if (!promoCodesDB['IC-30P-70TEX']) promoCodesDB['IC-30P-70TEX'] = { bonusPercentage: 30, minDeposit: 700, status: 'active' };
                 if (!promoCodesDB['IC-50P-300TEX']) promoCodesDB['IC-50P-300TEX'] = { bonusPercentage: 50, minDeposit: 3000, status: 'active' };
@@ -17206,18 +16948,64 @@ Please check the admin panel to approve.
                     }
                     // -----------------------------
 
-                    
-                    // Sync Demo Balance from Admin
-                    if (data.demoBalance !== undefined) {
-                        let localDemo = parseFloat(localStorage.getItem('demoBalance')) || 0;
-                        if (Math.abs(localDemo - data.demoBalance) > 0.01) {
-                            demoBalance = parseFloat(data.demoBalance);
-                            originalSetItem.call(localStorage, 'demoBalance', demoBalance);
-                            if (window.isDemoAccount) updateBalance();
-                        }
-                    }
                     currentUserData = data; currentUserData.uid = uid;
-
+                    
+                    // Update Promo UI
+                    setTimeout(() => {
+                        const container = document.getElementById('promo-option-btn-container');
+                        const extraContainer = document.getElementById('extra-bonuses-container');
+                        const viewAllBtn = document.getElementById('view-all-bonuses-btn');
+                        
+                        if (extraContainer && container && viewAllBtn) {
+                            while(extraContainer.firstChild) {
+                                container.insertBefore(extraContainer.firstChild, viewAllBtn);
+                            }
+                            extraContainer.remove();
+                        }
+                        
+                        if (container) {
+                            const promoBtns = Array.from(container.querySelectorAll('.promo-option-btn'));
+                            const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                            
+                            let firstVisibleIndex = -1;
+                            promoBtns.forEach((btn, index) => {
+                                if (btn.dataset.code === 'FIRST-DEPOSIT-50' && depositCount > 0) {
+                                    btn.style.display = 'none';
+                                    btn.classList.remove('extra-promo-offer');
+                                } else {
+                                    if (firstVisibleIndex === -1) {
+                                        firstVisibleIndex = index;
+                                        btn.style.display = 'flex';
+                                        btn.classList.remove('extra-promo-offer');
+                                    } else {
+                                        btn.style.display = 'none';
+                                        btn.classList.add('extra-promo-offer');
+                                    }
+                                }
+                            });
+                            
+                            if (viewAllBtn) {
+                                viewAllBtn.style.display = 'block';
+                                viewAllBtn.dataset.expanded = 'false';
+                                viewAllBtn.textContent = 'View All';
+                                
+                                if (!viewAllBtn.hasAttribute('data-listener')) {
+                                    viewAllBtn.setAttribute('data-listener', 'true');
+                                    viewAllBtn.addEventListener('click', () => {
+                                        const extraOffers = container.querySelectorAll('.extra-promo-offer');
+                                        const isExpanded = viewAllBtn.dataset.expanded === 'true';
+                                        
+                                        extraOffers.forEach(btn => {
+                                            btn.style.display = isExpanded ? 'none' : 'flex';
+                                        });
+                                        
+                                        viewAllBtn.dataset.expanded = isExpanded ? 'false' : 'true';
+                                        viewAllBtn.textContent = isExpanded ? 'View All' : 'Hide';
+                                    });
+                                }
+                            }
+                        }
+                    }, 0);
                     const localProfilePic = localStorage.getItem(`clientProfilePic_${uid}`);
                     if (localProfilePic) currentUserData.profilePicUrl = localProfilePic;
                     userTaskProgress = currentUserData.taskProgress || {};
@@ -17671,7 +17459,16 @@ Please check the admin panel to approve.
                     openNotificationsPage(e);
                 }, true);
             });
-            backBtns.forEach(btn => btn.addEventListener('click', (e) => showView(e.currentTarget.dataset.view)));
+            document.getElementById('settings-close-btn')?.addEventListener('click', () => {
+                showView('chart');
+            });
+            backBtns.forEach(btn => btn.addEventListener('click', (e) => {
+                if (window.appViewHistory && window.appViewHistory.length > 0) {
+                    window.history.back();
+                } else {
+                    showView(e.currentTarget.dataset.view);
+                }
+            }));
             headerProfileBtn.addEventListener('click', (e) => {
                 if (unreadNotificationCount > 0) {
                     showView('notifications');
@@ -17718,7 +17515,7 @@ Please check the admin panel to approve.
                     showActionResultModal({
                         status: 'success',
                         title: 'Referral & Partner Rules',
-                        message: '1) Every new account becomes a Mentor automatically. 2) Opening the site with a referral link fills the referral code automatically and opens the registration screen first. 3) When a referred user makes a deposit, the Mentor earns a 5% deposit bonus in the Deposit Bonus Wallet. 4) The Deposit Bonus Wallet can be claimed to the real balance once it reaches at least $10. 5) The Salary Wallet can be claimed to the real balance once it reaches at least $1000. 6) The Partner Program unlocks at 100 active members and joins instantly with no admin approval. 7) Each Partner cycle lasts 30 days and pays $1.5 per active member into the Salary Wallet. 8) If active members drop below 100, a 10-day grace period begins. If the count is not restored in time, Partner access becomes inactive.',
+                        message: '1) Every new account becomes a Mentor automatically. 2) Opening the site with a referral link fills the referral code automatically and opens the registration screen first. 3) When a referred user makes a deposit, the Mentor earns a 5% deposit bonus in the Deposit Bonus Wallet. 4) The Deposit Bonus Wallet can be claimed to the real balance once it reaches at least $10. 5) The Salary Wallet can be claimed to the real balance once it reaches at least $1000. 6) The Partner Program unlocks at 100 active members and joins instantly with no admin approval. 7) Each Partner cycle lasts 30 days and pays $3 per active member into the Salary Wallet. 8) If active members drop below 100, a 10-day grace period begins. If the count is not restored in time, Partner access becomes inactive.',
                         buttonText: 'OK'
                     });
                 });
@@ -17769,9 +17566,20 @@ Please check the admin panel to approve.
                 ifmModal.addEventListener('click', (e) => { if(e.target === ifmModal) ifmModal.classList.remove('visible'); });
                 document.getElementById('ifm-deposit-btn').addEventListener('click', () => {
                     ifmModal.classList.remove('visible');
-                    showView('deposit-new'); // Go directly to deposit screen
+                    showView('deposit-new');
                 });
             }
+            
+            const tifmModal = document.getElementById('trade-insufficient-funds-modal');
+            if (tifmModal) {
+                document.getElementById('tifm-close-btn').addEventListener('click', () => tifmModal.classList.remove('visible'));
+                tifmModal.addEventListener('click', (e) => { if(e.target === tifmModal) tifmModal.classList.remove('visible'); });
+                document.getElementById('tifm-deposit-btn').addEventListener('click', () => {
+                    tifmModal.classList.remove('visible');
+                    showView('deposit-new');
+                });
+            }
+
             // --- END TOURNAMENT IFRAME COMMUNICATION ---
             document.getElementById('multiple-trades-warning-close-btn').addEventListener('click', () => multipleTradesWarningModal.classList.remove('visible'));
             termsLink.addEventListener('click', (e) => { e.preventDefault(); showView('terms'); });
@@ -17990,7 +17798,19 @@ Please check the admin panel to approve.
                 if (!code) return;
                 
                 if (promoCodesDB[code] && promoCodesDB[code].status === 'active') {
-                    currentDepositData.promo = promoCodesDB[code];
+                    const promoData = promoCodesDB[code];
+                    
+                    if (promoData.isFirstDepositOnly) {
+                        const depositCount = (currentUserData.taskProgress && currentUserData.taskProgress.depositCount) ? currentUserData.taskProgress.depositCount : 0;
+                        if (depositCount > 0) {
+                            promoFeedbackEl.className = 'promo-feedback error visible';
+                            promoFeedbackText.textContent = `This code is only valid for your first deposit.`;
+                            document.querySelectorAll('.promo-option-btn').forEach(b => b.classList.remove('active'));
+                            return;
+                        }
+                    }
+
+                    currentDepositData.promo = promoData;
                     currentDepositData.promoCode = code;
                     promoCodeInput.value = code;
                     promoFeedbackEl.className = 'promo-feedback success visible';
@@ -18028,6 +17848,20 @@ Please check the admin panel to approve.
                     handleApplyPromoCode(code); 
                 } 
             });
+            
+            const viewAllBonusesBtn = document.getElementById('view-all-bonuses-btn');
+            const extraBonusesContainer = document.getElementById('extra-bonuses-container');
+            if (viewAllBonusesBtn && extraBonusesContainer) {
+                viewAllBonusesBtn.addEventListener('click', () => {
+                    if (extraBonusesContainer.style.display === 'none') {
+                        extraBonusesContainer.style.display = 'flex';
+                        viewAllBonusesBtn.textContent = 'Show Less';
+                    } else {
+                        extraBonusesContainer.style.display = 'none';
+                        viewAllBonusesBtn.textContent = 'View All';
+                    }
+                });
+            }
 
             const settingsNotificationsLinkEl = document.getElementById('settings-notifications-link');
             if (settingsNotificationsLinkEl) {
@@ -18201,6 +18035,9 @@ Please check the admin panel to approve.
             
             // Handle mobile hardware back button
             window.addEventListener('popstate', (e) => {
+                if (window.appViewHistory && window.appViewHistory.length > 0) {
+                    window.appViewHistory.pop();
+                }
                 if (e.state && e.state.view) {
                     showView(e.state.view, true);
                 } else {
@@ -18565,6 +18402,12 @@ Please check the admin panel to approve.
                 `).join('');
 
                 attachDisplayOptionsListeners();
+                setTimeout(() => {
+                    if (window.updateSwatchScrollIndicators) {
+                        window.updateSwatchScrollIndicators(upColorContainer);
+                        window.updateSwatchScrollIndicators(downColorContainer);
+                    }
+                }, 50);
             }
 
             function attachDisplayOptionsListeners() {
@@ -19376,37 +19219,7 @@ Please check the admin panel to approve.
         setTimeout(enforceMobileOnly, 700);
     })();
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.addEventListener('click', async (e) => {
-            if (e.target && e.target.id === 'switch-server-btn') {
-                const urlInput = document.getElementById('new-server-url-input').value.trim();
-                const switchBtn = document.getElementById('switch-server-btn');
-                
-                if (!urlInput || !urlInput.startsWith('https://')) {
-                    // showNotification('Error: Please enter a valid URL starting with https://', 'loss');
-                    return;
-                }
-
-                if (confirm("Confirm Server Switch?\n\nAll users will be disconnected and moved to:\n" + urlInput)) {
-                    try {
-                        switchBtn.disabled = true;
-                        switchBtn.textContent = "Switching...";
-                        
-                        await firebase.database().ref('admin/settings/activeServerUrl').set(urlInput);
-                        
-                        // showNotification('Success! All users are moving to the new server.', 'win');
-                        document.getElementById('new-server-url-input').value = '';
-                    } catch (error) {
-                        console.error("Server switch failed:", error);
-                        // showNotification('Failed to update server. Check console.', 'loss');
-                    } finally {
-                        switchBtn.disabled = false;
-                        switchBtn.textContent = "Update Server for All Users";
-                    }
-                }
-            }
-        });
-    });
+    
     </script>
 
     <!-- Account Switch Modal -->
@@ -19426,6 +19239,55 @@ Please check the admin panel to approve.
                 </div>
                 <div class="as-to-account-box" id="as-to-account"></div>
                 <button class="as-done-btn" id="as-close-done-btn">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Insufficient Funds Modal -->
+    <style>
+        #trade-insufficient-funds-modal .modal-content {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+            overflow: hidden;
+            max-width: 650px;
+            background-color: #1a1d24;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        @media (max-width: 600px) {
+            #trade-insufficient-funds-modal .modal-content {
+                flex-direction: column;
+                max-width: 90vw;
+            }
+            #tifm-img-container {
+                padding: 10px !important;
+                height: 120px;
+            }
+            #tifm-img-container img {
+                height: 100%;
+                width: auto;
+            }
+            #tifm-text-container {
+                padding: 20px 15px !important;
+            }
+        }
+    </style>
+    <div class="modal-overlay" id="trade-insufficient-funds-modal" style="z-index: 10000;">
+        <div class="modal-content" style="position: relative; border-radius: 12px;">
+            <button id="tifm-close-btn" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: #707A8A; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; z-index: 10;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div id="tifm-img-container" style="flex: 1; background-color: #c42646; display: flex; justify-content: center; align-items: center; padding: 20px;">
+                <img src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1776588374188_701f8b64b2a60a602fd0.png" style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
+            <div id="tifm-text-container" style="flex: 1.5; padding: 35px 30px; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+                <h3 id="tifm-amount-title" style="font-size: 1.25rem; font-weight: 800; margin: 0 0 12px 0; color: #fff; line-height: 1.4;">Real balance is less than 1,000.00 $</h3>
+                <p style="font-size: 0.9rem; color: #8BA0B8; margin: 0 0 20px 0; line-height: 1.5;">You have insufficient funds! Try investing a smaller amount or top up your balance.</p>
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px;"></div>
+                <p style="font-size: 0.8rem; color: #8BA0B8; margin: 0 0 25px 0; line-height: 1.4;">Risk Warning: Trading in the financial markets carries risks. You should only invest the amount you can afford to lose.</p>
+                <button id="tifm-deposit-btn" style="background-color: var(--color-up); color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: fit-content; transition: 0.2s opacity;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Deposit funds
+                </button>
             </div>
         </div>
     </div>
