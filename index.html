@@ -8854,9 +8854,9 @@
         firebase.initializeApp(firebaseConfig);
 
     // ----- DEMO BALANCE FIREBASE SYNC -----
-    const originalSetItem = localStorage.setItem;
+    const originalSetItem = localStorage.setItem.bind(localStorage);
     localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
+        originalSetItem(key, value);
         if (key === 'demoBalance' && window.auth && auth.currentUser && window.database) {
             database.ref('users/' + auth.currentUser.uid + '/demoBalance').set(parseFloat(value));
         }
