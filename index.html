@@ -7681,6 +7681,7 @@
                                  <div class="form-input-group">
                                      <label for="withdraw-amount" style="font-weight: 700;">Amount (USDT)</label>
                                      <input type="number" id="withdraw-amount" class="form-input" placeholder="Min $100" style="font-size: 1.1rem; font-weight: 700;" required>
+                                     <div id="withdraw-calc-display" style="color: #0CCF56; font-size: 13px; margin-top: 8px; font-weight: 600; display: none;"></div>
                                      <p id="withdraw-fee-info" style="font-size: 0.8rem; color: var(--color-golden); margin-top: 6px; font-weight: 600;"></p>
                                  </div>
                                 <div class="form-input-group"> <label style="font-weight: 700;">Payment method</label> <div id="withdraw-method-selector" class="custom-select" data-value="binance-pay">Binance Pay</div> </div>
@@ -8094,6 +8095,7 @@
                                 <div class="deposit-amount-box-premium">
                                     <span class="currency-symbol">$</span>
                                     <input type="number" id="deposit-amount-usd-new" class="deposit-input-premium" placeholder="0.00" min="10" required>
+                                    <div id="deposit-calc-display" style="color: #0CCF56; font-size: 13px; margin-top: 8px; text-align: center; font-weight: 600; display: none;"></div>
                                 </div>
                                 <!-- Quick Select Grid -->
                                 <div class="deposit-quick-grid">
@@ -9326,6 +9328,33 @@
         const analysisFilterContainer = document.querySelector('.analysis-filters');
         const withdrawForm = document.getElementById('withdraw-form');
         const withdrawAmountInput = document.getElementById('withdraw-amount');
+        
+        // --- Dynamic Rate Calculation Event Listeners ---
+        if(depositAmountInputNew) {
+            depositAmountInputNew.addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                const disp = document.getElementById('deposit-calc-display');
+                if(val && val > 0 && window.globalDepositRate) {
+                    disp.style.display = 'block';
+                    disp.textContent = `You have to pay: ${(val * window.globalDepositRate).toLocaleString()} BDT`;
+                } else {
+                    disp.style.display = 'none';
+                }
+            });
+        }
+        if(withdrawAmountInput) {
+            withdrawAmountInput.addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                const disp = document.getElementById('withdraw-calc-display');
+                if(val && val > 0 && window.globalWithdrawRate) {
+                    disp.style.display = 'block';
+                    disp.textContent = `You will receive: ${(val * window.globalWithdrawRate).toLocaleString()} BDT`;
+                } else {
+                    disp.style.display = 'none';
+                }
+            });
+        }
+
         const withdrawFeeInfo = document.getElementById('withdraw-fee-info');
         const withdrawMethodSelector = document.getElementById('withdraw-method-selector');
         const withdrawMethodModal = document.getElementById('withdraw-method-modal');
@@ -10328,6 +10357,54 @@
             auth.onAuthStateChanged(async user => {
                 if (user) {
                     if (window.isExplicitLoginFlow) return; // Prevent glitch during manual login
+
+                    // DYNAMIC PAYMENTS LISTENER
+                    window.globalDepositRate = 115;
+                    window.globalWithdrawRate = 115;
+                    database.ref('settings/payments').on('value', snap => {
+                        if(snap.exists()) {
+                            const p = snap.val();
+                            window.globalDepositRate = parseFloat(p.depositRate) || 115;
+                            window.globalWithdrawRate = parseFloat(p.withdrawRate) || 115;
+                            
+                            // Update deposit methods
+                            if(typeof paymentMethods !== 'undefined') {
+                                const bkash = paymentMethods.find(m=>m.id==='bkash');
+                                if(bkash && p.bkash) { bkash.status = p.bkash.status; if(bkash.details) bkash.details.number = p.bkash.number; }
+                                
+                                const nagad = paymentMethods.find(m=>m.id==='nagad');
+                                if(nagad && p.nagad) { nagad.status = p.nagad.status; if(nagad.details) nagad.details.number = p.nagad.number; }
+                                
+                                const rocket = paymentMethods.find(m=>m.id==='rocket');
+                                if(rocket && p.rocket) { rocket.status = p.rocket.status; if(rocket.details) rocket.details.number = p.rocket.number; }
+                                
+                                const binance = paymentMethods.find(m=>m.id==='binance');
+                                if(binance && p.binance) { 
+                                    binance.status = p.binance.status; 
+                                    if(binance.details) { binance.details.pay_id = p.binance.pay_id; binance.details.qr_image = p.binance.qr_image; }
+                                }
+                                if(typeof renderNewPaymentMethods === 'function') renderNewPaymentMethods();
+                            }
+                            
+                            // Update withdraw methods
+                            if(typeof withdrawMethods !== 'undefined') {
+                                const wBkash = withdrawMethods.find(m=>m.id==='bkash');
+                                if(wBkash && p.bkash) wBkash.status = p.bkash.status;
+                                
+                                const wNagad = withdrawMethods.find(m=>m.id==='nagad');
+                                if(wNagad && p.nagad) wNagad.status = p.nagad.status;
+                                
+                                const wRocket = withdrawMethods.find(m=>m.id==='rocket');
+                                if(wRocket && p.rocket) wRocket.status = p.rocket.status;
+                                
+                                const wBinance = withdrawMethods.find(m=>m.id==='binance-pay');
+                                if(wBinance && p.binance) wBinance.status = p.binance.status;
+                                
+                                // Actually withdraw methods rendering doesn't strictly depend on status in the same way, but let's keep it consistent
+                            }
+                        }
+                    });
+
 
                     try {
                         const snap = await database.ref(`users/${user.uid}`).once('value');
