@@ -5110,7 +5110,33 @@
         #email-verification-modal.visible.failure-state .ev-envelope-main { animation: ev-shake 0.5s 0.1s ease-in-out; }
         @keyframes ev-draw { to { stroke-dashoffset: 0; } }
         @keyframes ev-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-  
+
+
+        /* ADMIN PANEL STYLES */
+        #view-admin-panel .page-content { padding: 0; }
+        .admin-tabs { display: flex; background-color: var(--primary-surface); flex-wrap: wrap;}
+        .admin-tab { flex: 1; padding: 15px 5px; text-align: center; background: none; border: none; color: var(--text-secondary); font-weight: 500; border-bottom: 3px solid transparent; cursor: pointer; min-width: 90px;}
+        .admin-tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+        .admin-tab-content { display: none; padding: 15px; max-height: calc(100vh - 100px); overflow-y: auto;}
+        .admin-tab-content.active { display: block; }
+        .admin-section { margin-bottom: 25px; }
+        .admin-section h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .price-editor-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .price-currency-group h4 { margin: 0 0 10px; }
+        .price-input-group { display: grid; grid-template-columns: 80px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .price-input-group label { font-weight: 500; font-size: 0.9rem; }
+        .admin-request-card, .admin-user-card { background: var(--primary-surface); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--color-pending); }
+        .admin-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; margin-bottom: 8px; word-break: break-all; }
+        .admin-card-row .label { color: var(--text-secondary); flex-shrink: 0; margin-right: 10px; }
+        .admin-card-row .value { font-weight: 500; text-align: right; }
+        .admin-card-row .screenshot-link { color: var(--color-accent); text-decoration: underline; }
+        .admin-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .action-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; color: white; font-weight: 700; cursor: pointer; }
+        .admin-actions .approve { background-color: var(--color-up); }
+        .admin-actions .reject { background-color: var(--color-down); }
+        .admin-user-card { border-left-color: var(--color-accent); }
+        .admin-user-card .extend-input { width: 60px; margin: 0 10px; }
+    
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
         :root {
@@ -5764,6 +5790,10 @@
         .lb-badge.pro { background: linear-gradient(135deg, #F59E0B, #B45309); color: #FFFFFF; border: 1px solid #FBBF24; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
         .lb-badge.master { background: linear-gradient(135deg, #10B981, #047857); color: #FFFFFF; border: 1px solid #34D399; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
+        /* Admin Panels Styling Fixes */
+        .admin-panel-block { background: var(--secondary-surface); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .admin-panel-block h4 { margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem; }
+
     /* PREMIUM TAILWIND-STYLE BALANCE PILL */
     .premium-balance-pill {
         background: rgba(30, 35, 45, 0.6);
@@ -6277,18 +6307,12 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="display:flex; align-items:center; gap:6px; font-size: 1.05rem; color: #fff; margin-bottom: 4px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="-33.45 -33.45 401.40 401.40" fill="var(--color-up)"><path d="M332.797,13.699c-1.489-1.306-3.608-1.609-5.404-0.776L2.893,163.695c-1.747,0.812-2.872,2.555-2.893,4.481 s1.067,3.693,2.797,4.542l91.833,45.068c1.684,0.827,3.692,0.64,5.196-0.484l89.287-66.734l-70.094,72.1 c-1,1.029-1.51,2.438-1.4,3.868l6.979,90.889c0.155,2.014,1.505,3.736,3.424,4.367c0.513,0.168,1.04,0.25,1.561,0.25 c1.429,0,2.819-0.613,3.786-1.733l48.742-56.482l60.255,28.79c1.308,0.625,2.822,0.651,4.151,0.073 c1.329-0.579,2.341-1.705,2.775-3.087L334.27,18.956C334.864,17.066,334.285,15.005,332.797,13.699z"/></svg>
-                    Live Account
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <div id="switcher-real-balance" class="dropdown-balance-text" style="font-size: 1.1rem; font-weight: 700; color: #fff;">0.00 USDT</div>
-                    <div id="switcher-bonus-balance" style="display: none; align-items: center; gap: 4px; background: rgba(255, 193, 7, 0.1); padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(255, 193, 7, 0.2);">
-                        <span style="color: #FFC107; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">Bonus:</span>
-                        <span id="switcher-bonus-amount" style="color: #fff; font-size: 0.8rem; font-weight: 700;">0.00</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="-33.45 -33.45 401.40 401.40" fill="var(--color-up)"><path d="M332.797,13.699c-1.489-1.306-3.608-1.609-5.404-0.776L2.893,163.695c-1.747,0.812-2.872,2.555-2.893,4.481 s1.067,3.693,2.797,4.542l91.833,45.068c1.684,0.827,3.692,0.64,5.196-0.484l89.287-66.734l-70.094,72.1 c-1,1.029-1.51,2.438-1.4,3.868l6.979,90.889c0.155,2.014,1.505,3.736,3.424,4.367c0.513,0.168,1.04,0.25,1.561,0.25 c1.429,0,2.819-0.613,3.786-1.733l48.742-56.482l60.255,28.79c1.308,0.625,2.822,0.651,4.151,0.073 c1.329-0.579,2.341-1.705,2.775-3.087L334.27,18.956C334.864,17.066,334.285,15.005,332.797,13.699z"/></svg>
+                        Live Account
                     </div>
+                    <div id="switcher-real-balance" class="dropdown-balance-text" style="font-size: 1.1rem; font-weight: 700; color: #fff;">0.00 USDT</div>
                 </div>
             </div>
-        </div>
 
             <!-- Demo Account -->
             <div style="display: flex; flex-direction: column; padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
@@ -6633,7 +6657,7 @@
                         </div>
                         <div class="flex flex-col gap-1" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
                             <p class="text-sm leading-relaxed text-on-surface-variant" style="color: #c3c5d8; font-size: 14px; margin: 0; line-height: 1.5;">
-                                I agree to the <a href="#" data-view="terms" class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;" onclick="event.stopPropagation(); window.showView('terms'); return false;">Terms of Service</a> and <a href="#" data-view="terms" class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;" onclick="event.stopPropagation(); window.showView('terms'); return false;">Risk Disclosure</a> policies.
+                                I agree to the <span class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;">Terms of Service</span> and <span class="text-action-blue underline" style="color: #0CCF56; text-decoration: underline;">Risk Disclosure</span> policies.
                             </p>
                         </div>
                     </div>
@@ -7085,9 +7109,9 @@
                         </button>
                     </div>
                     <div class="page-content" style="display:flex; flex-direction:column; padding-top:10px;">
-                        <div class="history-tabs-container" style="display:flex; justify-content:center; gap: 5px; margin-bottom: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 5px; border-radius: 10px;">
-                            <button id="tab-active-btn" style="flex:1; padding: 10px 0; border-radius: 8px; background: #2962FF; color: #fff; border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: 0.2s;" onclick="document.getElementById('active-list-container').style.display='block'; document.getElementById('history-list-container').style.display='none'; this.style.background='#2962FF'; this.style.color='#fff'; document.getElementById('tab-history-btn').style.background='transparent'; document.getElementById('tab-history-btn').style.color='#8BA0B8';">Active Trade</button>
-                            <button id="tab-history-btn" style="flex:1; padding: 10px 0; border-radius: 8px; background: transparent; color: #8BA0B8; border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: 0.2s;" onclick="document.getElementById('history-list-container').style.display='block'; document.getElementById('active-list-container').style.display='none'; this.style.background='#2962FF'; this.style.color='#fff'; document.getElementById('tab-active-btn').style.background='transparent'; document.getElementById('tab-active-btn').style.color='#8BA0B8';">History</button>
+                        <div class="history-tabs-container" style="display:flex; justify-content:center; gap: 10px; margin-bottom: 15px; background: var(--secondary-surface); padding: 5px; border-radius: 8px;">
+                            <button class="admin-tab active" id="tab-active-btn" style="flex:1; border-radius: 6px;" onclick="document.getElementById('active-list-container').style.display='block'; document.getElementById('history-list-container').style.display='none'; this.classList.add('active'); document.getElementById('tab-history-btn').classList.remove('active');">Active Trade</button>
+                            <button class="admin-tab" id="tab-history-btn" style="flex:1; border-radius: 6px;" onclick="document.getElementById('history-list-container').style.display='block'; document.getElementById('active-list-container').style.display='none'; this.classList.add('active'); document.getElementById('tab-active-btn').classList.remove('active');">History</button>
                         </div>
                         <div id="history-loader-wrapper" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding: 60px 0; gap:15px;">
                             <div class="auth-loader is-visible loader-host" data-loader-size="small" style="display:flex; margin:0;"></div>
@@ -7992,47 +8016,61 @@
                          <div style="width: 34px;"></div>
                     </div>
                     <div class="page-content">
-                        <!-- Intro -->
-                        <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #25282F;">
-                            <div style="margin-top: 24px; background: #2B3139; padding: 16px; border-radius: 8px; border-left: 4px solid #FF3B30;">
-                                <h4 style="color: #FF3B30; font-weight: bold; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-                                    HIGH RISK WARNING
-                                </h4>
-                                <p style="font-size: 14px; color: #707A8A; margin: 0; text-align: left;">Trading on financial markets involves a high degree of risk and may not be suitable for all investors. The possibility exists that you could sustain a loss of some or all of your initial investment. You should carefully consider your investment objectives, level of experience, and risk appetite before trading.</p>
-                            </div>
-                        </div>
+                        <h3>Terms & Conditions</h3>
+                        <h4>1. Acceptance of Terms</h4>
+                        <p>By registering for and using the ICTEX trading platform ("Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, do not use the Service.</p>
 
-                        <h4>1. Introduction</h4>
-                        <p>These Terms and Conditions ("Agreement") govern your access to and use of the ICTEX Trade platform, including its website, mobile applications, and API services (collectively, the "Platform"). By registering for an account or using the Platform, you agree to be legally bound by this Agreement.</p>
-                        
-                        <h4>2. Client Qualifications and KYC</h4>
-                        <p>To use our services, you must be at least 18 years of age and legally competent to form a binding contract. You agree to provide true, accurate, and complete information during the registration process. As part of our Anti-Money Laundering (AML) and Know Your Customer (KYC) policies, we may require you to verify your identity by providing government-issued ID, proof of address, and other relevant documents before you can deposit or withdraw funds.</p>
+                        <h4>2. Eligibility and Account</h4>
+                        <p>You must be at least 18 years old to use our Service. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to provide accurate and complete information during registration.</p>
 
                         <h4>3. Deposits and Withdrawals</h4>
-                        <p>Funds can be deposited into your trading account using the approved payment methods listed on the Platform. We do not accept third-party payments; all deposits and withdrawals must be made from/to accounts in your own name.</p>
-                        <p>Withdrawal requests are subject to review and processing times. The Platform reserves the right to impose withdrawal limits and fees as outlined in our fee schedule.</p>
+                        <p>
+                            <ul>
+                                <li>All transactions are processed in USD. Conversions from other currencies are subject to prevailing exchange rates.</li>
+                                <li>You agree to use only payment methods that belong to you.</li>
+                                <li>Withdrawals are subject to verification processes, including but not limited to KYC (Know Your Customer) checks. We reserve the right to delay or reject withdrawals if fraudulent activity is suspected.</li>
+                                <li>Bonus funds are for trading purposes only and cannot be withdrawn directly. Profits made from trading with bonus funds may be withdrawn subject to specific promotional rules.</li>
+                            </ul>
+                        </p>
 
-                        <h4>4. Order Execution and Market Data</h4>
-                        <p>The Platform provides real-time market data and order execution services. You acknowledge that due to market volatility and technical factors, order execution prices may differ from the prices displayed at the time of order entry (slippage). The Platform is not liable for any losses resulting from such discrepancies, transmission delays, or system failures.</p>
-
+                        <h4>4. Trading and Risk Disclosure</h4>
+                        <p>Trading in financial markets involves a high level of risk and may not be suitable for all investors. You acknowledge that you understand these risks and that you are trading with funds you can afford to lose. ICTEX does not provide financial advice. The market data provided is for informational purposes only, and we are not liable for any trading decisions you make based on it.</p>
+                        
                         <h4>5. Prohibited Activities</h4>
-                        <p>Users are strictly prohibited from engaging in the following activities:</p>
-                        <ul>
-                            <li>Using automated trading bots, algorithmic software, or API exploits without explicit written permission.</li>
-                            <li>Arbitrage trading, latency abuse, or any strategy aimed at exploiting technical discrepancies in our pricing feeds.</li>
-                            <li>Creating multiple accounts to bypass promotional limits or manipulate the platform.</li>
-                            <li>Engaging in market manipulation, wash trading, or insider trading.</li>
-                        </ul>
-                        <p>Violation of these rules may result in immediate account suspension, cancellation of trades, and confiscation of funds.</p>
+                        <p>You are prohibited from:
+                            <ul>
+                                <li>Using any automated software or bots to interact with the platform.</li>
+                                <li>Opening multiple accounts without prior written consent.</li>
+                                <li>Engaging in any form of market manipulation, arbitrage, or fraudulent activity.</li>
+                                <li>Using the Service for any illegal activities, including money laundering.</li>
+                                <li>Engaging in any form of platform manipulation, including but not limited to exploiting trade timing or pricing glitches. Any such activity may result in immediate account suspension and forfeiture of all funds.</li>
+                                <li>Placing an excessive number of concurrent trades before prior trades are resolved. This is considered high-risk gambling behavior and may lead to temporary account suspension.</li>
+                            </ul>
+                            Violation of these rules may result in immediate account suspension, forfeiture of funds, and legal action.
+                        </p>
+                        
+                        <h4>6. Limitation of Liability</h4>
+                        <p>The Service is provided "as is." We do not guarantee that the Service will be uninterrupted or error-free. In no event shall ICTEX, its directors, or employees be liable for any direct, indirect, or consequential loss or damage arising out of your use of the Service.</p>
 
-                        <h4>6. Privacy and Data Protection</h4>
-                        <p>We are committed to protecting your personal information. Our use of your personal data is governed by our Privacy Policy, which details how we collect, store, and process your information in compliance with applicable data protection laws.</p>
-
-                        <h4>7. Limitation of Liability</h4>
-                        <p>To the maximum extent permitted by law, ICTEX Trade and its affiliates, directors, or employees shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, arising out of or related to your use of the Platform.</p>
-
-                        <h4>8. Governing Law and Dispute Resolution</h4>
-                        <p>This Agreement shall be governed by and construed in accordance with the applicable laws of our operating jurisdiction. Any disputes arising from this Agreement shall be resolved through binding arbitration or in the competent courts of our jurisdiction, as determined by ICTEX Trade.</p>
+                        <h4>7. Account Termination</h4>
+                        <p>We reserve the right to suspend or terminate your account at our sole discretion, without notice, for any violation of these Terms or for any other reason.</p>
+                        
+                        <h4>8. Mentor Program</h4>
+                        <p>
+                            <ul>
+                                <li>Every newly created account is automatically enabled as a Mentor account. No task completion, deposit, trade history, or manual approval is required to activate Mentor access.</li>
+                                <li>If a new user opens the site through a valid referral link, the referral code may be filled automatically during registration.</li>
+                                <li>When a referred user completes a deposit, the Mentor earns a 5% deposit bonus, which is credited to the Deposit Bonus Wallet.</li>
+                                <li>The Deposit Bonus Wallet can be claimed to the real balance once it reaches a minimum of $10.</li>
+                                <li>The Partner Program unlocks automatically at 100 active members. Once unlocked, the user may join instantly without admin approval. Each Partner cycle lasts 30 days and pays $1.5 per active member to the Salary Wallet.</li>
+                                <li>The Salary Wallet can be claimed to the real balance once it reaches a minimum of $1000.</li>
+                                <li>If the number of active members falls below 100 after Partner activation, a 10-day grace period applies. If the requirement is not restored within the grace period, Partner access may be deactivated.</li>
+                                <li>ICTEX reserves the right to review, suspend, or terminate Mentor or Partner benefits in cases of fraud, abuse, platform manipulation, or violation of these Terms.</li>
+                            </ul>
+                        </p>
+                        
+                        <h4>9. Amendments</h4>
+                        <p>We may amend these Terms at any time by posting the revised version on our platform. Your continued use of the Service after such changes constitutes your acceptance of the new Terms.</p>
                     </div>
                 </div>
 
@@ -8059,8 +8097,8 @@
                                 </div>
                                 <!-- Quick Select Grid -->
                                 <div class="deposit-quick-grid">
+                                    <button type="button" class="quick-amount-btn-new" data-amount="5">$5</button>
                                     <button type="button" class="quick-amount-btn-new" data-amount="10">$10</button>
-                                    <button type="button" class="quick-amount-btn-new" data-amount="20">$20</button>
                                     <button type="button" class="quick-amount-btn-new" data-amount="50">$50</button>
                                     <button type="button" class="quick-amount-btn-new" data-amount="100">$100</button>
                                 </div>
@@ -8159,6 +8197,132 @@
                         <h2>Payment</h2>
                     </div>
                     <div class="page-content" id="payment-details-content-new"></div>
+                </div>
+
+                <!-- Admin Tab: Payments & KYC -->
+                <div id="view-admin-panel" class="view">
+                    <div class="page-header">
+                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
+                        <h2>Admin Panel</h2>
+                    </div>
+                    <div class="page-content">
+                        <div class="admin-tabs">
+                            <button class="admin-tab active" data-tab="admin-payments">Payments & Rates</button>
+                            <button class="admin-tab" data-tab="admin-deposits">Deposits</button>
+                            <button class="admin-tab" data-tab="admin-withdraws">Withdraws</button>
+                            <button class="admin-tab" data-tab="server-control">Server Setup</button>
+                        </div>
+                        
+                        <!-- Tab: Payments Setup -->
+                        <div id="admin-tab-admin-payments" class="admin-tab-content active">
+                            <div class="admin-panel-block">
+                                <h4>Exchange Rates</h4>
+                                <div class="form-input-group">
+                                    <label>Deposit Rate (1 USD = BDT)</label>
+                                    <input type="number" id="admin-deposit-rate" class="form-input" value="120">
+                                </div>
+                                <div class="form-input-group" style="margin-top: 10px;">
+                                    <label>Withdraw Rate (1 USD = BDT)</label>
+                                    <input type="number" id="admin-withdraw-rate" class="form-input" value="123">
+                                </div>
+                            </div>
+                            
+                            <div class="admin-panel-block">
+                                <h4>Mobile Banking Numbers (Comma Separated)</h4>
+                                <div class="form-input-group">
+                                    <label>Bkash Numbers</label>
+                                    <input type="text" id="admin-bkash-numbers" class="form-input" placeholder="e.g. 017.., 018..">
+                                </div>
+                                <div class="form-input-group" style="margin-top: 10px;">
+                                    <label>Nagad Numbers</label>
+                                    <input type="text" id="admin-nagad-numbers" class="form-input" placeholder="e.g. 017.., 018..">
+                                </div>
+                                <div class="form-input-group" style="margin-top: 10px;">
+                                    <label>Rocket Numbers</label>
+                                    <input type="text" id="admin-rocket-numbers" class="form-input" placeholder="e.g. 017.., 018..">
+                                </div>
+                            </div>
+                            
+                            <div class="admin-panel-block">
+                                <h4>Maintenance Modes</h4>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                    <span>Bkash Maintenance</span>
+                                    <input type="checkbox" id="admin-bkash-maint" style="width:20px;height:20px;">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                    <span>Nagad Maintenance</span>
+                                    <input type="checkbox" id="admin-nagad-maint" style="width:20px;height:20px;">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                    <span>Rocket Maintenance</span>
+                                    <input type="checkbox" id="admin-rocket-maint" style="width:20px;height:20px;">
+                                </div>
+                            </div>
+
+                            <div class="admin-panel-block">
+                                <h4>Trade Duration Controls (1m & 2m)</h4>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
+                                    <span>Real Account:</span>
+                                    <div>
+                                        <label><input type="checkbox" id="admin-real-1m"> Show 1m</label>
+                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-real-2m"> Show 2m</label>
+                                    </div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
+                                    <span>Demo Account:</span>
+                                    <div>
+                                        <label><input type="checkbox" id="admin-demo-1m"> Show 1m</label>
+                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-demo-2m"> Show 2m</label>
+                                    </div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                    <span>Tournament:</span>
+                                    <div>
+                                        <label><input type="checkbox" id="admin-tour-1m"> Show 1m</label>
+                                        <label style="margin-left: 10px;"><input type="checkbox" id="admin-tour-2m"> Show 2m</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button id="save-payment-settings-btn" class="save-button" style="width:100%;">Save Settings</button>
+                        </div>
+                        
+                        <!-- Tab: Deposits -->
+                        <div id="admin-tab-admin-deposits" class="admin-tab-content">
+                            <p>Loading deposits...</p>
+                        </div>
+
+                        <!-- Tab: Withdraws -->
+                        <div id="admin-tab-admin-withdraws" class="admin-tab-content">
+                            <p>Loading withdraws...</p>
+                        </div>
+
+                        <!-- Tab: Server Setup -->
+                        <div id="admin-tab-server-control" class="admin-tab-content">
+                            <div class="admin-section" style="padding: 15px;">
+                                <h3 style="margin-top: 0;">Server Load Balancing</h3>
+                                
+                                <div style="background: var(--secondary-surface); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color);">
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0 0 5px 0;">Currently Active Render Server:</p>
+                                    <p id="current-active-server-display" style="color: var(--color-up); font-weight: bold; font-family: monospace; margin: 0; word-break: break-all;">Loading...</p>
+                                </div>
+                                
+                                <div class="form-input-group">
+                                    <label style="color: var(--text-secondary); font-size: 0.85rem;">New Render URL (e.g., https://ict-serv-2.onrender.com)</label>
+                                    <input type="text" id="new-server-url-input" class="form-input" placeholder="Paste the new https link here">
+                                </div>
+                                
+                                <button id="switch-server-btn" class="save-button" style="width: 100%; margin-top: 15px; background: var(--color-accent); font-size: 1.1rem;">Update Server for All Users</button>
+                                
+                                <div style="background: rgba(255, 152, 0, 0.1); padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #ff9800;">
+                                    <p style="font-size: 0.8rem; color: var(--text-primary); margin: 0; line-height: 1.5;">
+                                        <strong style="color: #ff9800;">Warning:</strong> When you click this button, all active users worldwide will automatically disconnect and reconnect to the new server within 2 seconds. Do not abuse this button.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
 
             </main>
@@ -8686,6 +8850,17 @@
             appId: "1:755532704199:web:b27d7c9e7d0f4ac76291e2"
         };
         firebase.initializeApp(firebaseConfig);
+
+    // ----- DEMO BALANCE FIREBASE SYNC -----
+    const originalSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function(key, value) {
+        originalSetItem(key, value);
+        if (key === 'demoBalance' && window.auth && auth.currentUser && window.database) {
+            database.ref('users/' + auth.currentUser.uid + '/demoBalance').set(parseFloat(value));
+        }
+    };
+    // --------------------------------------
+
         const auth = firebase.auth();
         const database = firebase.database();
         const storage = firebase.storage();
@@ -9659,11 +9834,12 @@
 
         function ensureValidDuration() {
             const allowed = getAvailableDurations();
-            // Forcefully set the first available timeframe as default on reload or admin change
-            expirySettings.value = allowed[0] || 60;
-            localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
-            updateExpiryDisplay();
-            try { updateTradeOptionsModalUI(); } catch(e){}
+            if (!allowed.includes(expirySettings.value)) {
+                expirySettings.value = allowed[0] || 180;
+                localStorage.setItem('expirySettings', JSON.stringify(expirySettings));
+                updateExpiryDisplay();
+                try { updateTradeOptionsModalUI(); } catch(e){}
+            }
         }
 
         const COLOR_GRID_TEXT = '#707A8A';
@@ -9684,7 +9860,9 @@
                 supportResistance: { active: false, period: 50, supColor: '#2962ff', resColor: '#D50000' },
                 bollinger: { active: false, period: 20, stdDev: 2, color: '#9C27B0' },
                 rsi: { active: false, period: 14, color: '#ff9800' },
-                ema: { active: false, period: 14, color: '#00E676' }
+                ema: { active: false, period: 14, color: '#00E676' },
+                vwap: { active: false, color: '#f2f5f8' },
+                macd: { active: false, fast: 12, slow: 26, signal: 9, colorMacd: '#2962ff', colorSignal: '#ff9800', colorHistUp: 'rgba(0, 200, 83, 0.5)', colorHistDown: 'rgba(255, 59, 48, 0.5)' }
             }
         };
         const availableIndicators = [
@@ -9692,7 +9870,9 @@
             { id: 'ema', name: 'Moving Average (EMA)' },
             { id: 'supportResistance', name: 'Support & Resistance' },
             { id: 'bollinger', name: 'Bollinger Bands' },
-            { id: 'rsi', name: 'RSI Oscillator' }
+            { id: 'vwap', name: 'VWAP' },
+            { id: 'rsi', name: 'RSI Oscillator' },
+            { id: 'macd', name: 'MACD' }
         ];
         const availableColors = {
             palette: [
@@ -10751,7 +10931,7 @@
                     const user = userCredential.user;
                     const numericId = Date.now().toString().slice(-8);
                     const defaultDisplayName = `#${numericId}`;
-                    const generatedMentorId = numericId; // Mentor ID is now identical to Trader ID
+                    const generatedMentorId = Math.random().toString(36).substring(2, 10).toUpperCase();
                     const userData = {
                         name: defaultDisplayName, nickname: '', email, password, numericId, country, countryCode,
                         mentorId: mentorDataForStudent ? mentorDataForStudent.mentorId : null,
@@ -11357,6 +11537,7 @@
         else if (viewId === 'mentor-users') initMentorUserListPage();
         else if (viewId === 'admin-mentors') renderAdminMentorsPage();
         else if (viewId === 'admin-users') renderAdminUsersPage();
+        else if (viewId === 'admin-panel') initAdminPanel();
     }
     
     function getTraderTier(totalProfitLoss = 0) {
@@ -11780,7 +11961,7 @@ Timestamp: ${new Date().toISOString()}
         { id: 'nagad', name: 'Nagad', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQovGX4BWR7KQrVAOJxjQPR6ZtvAY4dLmbC8VOaj-IXlAKSLTB-u3tvKMW_&s=10', details: { type: 'manual', number: '01752067094', instructions: 'Please use the "Send Money" option and enter the exact BDT amount shown.' } },
         { id: 'rocket', name: 'Rocket', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP0eawh77HPEryf218TiXutIyR4EXTAJhbiWHg_ManMg&s=10', details: { type: 'manual', number: '01800000000', instructions: 'Please use the "Send Money" option and enter the exact BDT amount shown.' } },
         { id: 'gpay', name: 'G Pay', status: 'coming-soon', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH6zlma32FMWqNOAnJJbAv3aSKGTUibNSdMF8YFA1KXQ&s' },
-        { id: 'binance', name: 'Binance Pay', status: 'active', logo: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1778979120673_file_00000000a9647206a4af2bf828400907.png', details: { type: 'qr', qr_image: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ixbrokerbinance.png', pay_id: '361507032', instructions: 'Scan the QR code with your Binance App or use the Pay ID. Send the exact USD amount.' } },
+        { id: 'binance', name: 'Binance Pay', status: 'active', logo: 'https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Ictex/1778979120673_file_00000000a9647206a4af2bf828400907.png', details: { type: 'qr', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1773969059022_1000258798.png', pay_id: '505820464', instructions: 'Scan the QR code with your Binance App or use the Pay ID. Send the exact USD amount.' } },
         { id: 'tether', name: 'USDT (TRC20)', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQRSJGSSrXoszL7c7QGzKWfXLn3UPQFMAvqfFaiq8xK9-OjDx1MOhJlug&s=10', details: { type: 'address', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774143805279_1000258950.jpg', address: 'TRWZqTgWSVeBXMPEkhSzcqXyfsnuWW3o6t', instructions: 'Only send USDT on the TRC20 network to this address. Ensure you cover any network fees.' } },
         { id: 'hstn-pay', name: 'HSTN Pay', status: 'active', logo: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', details: { type: 'address', networkLabel: 'HSTN Chain USDT', qr_image: 'https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774236890748_1000259023.png', address: 'TQS2UubYVLSMaIy53OiWW8VDNNtQkoIJHC', instructions: 'Only send USDT on the HSTN Chain to this address. Send the exact amount and ensure the network is selected correctly.', brandTitle: 'HSTN Pay © ICTEX', brandUrl: 'https://hstnpay.hstn.me' } },
         { id: 'telegram_pay', name: 'Telegram Pay', status: 'active', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJOISwXgNAD-GnWiVJ6gbGO_eeAEUhYrWFcOrykD-At-3UxY_V31hU_P0&s=10', link: 'https://t.me/ictextelepay_bot' }
@@ -11846,19 +12027,7 @@ Timestamp: ${new Date().toISOString()}
                     });
                 });
 
-                // Apply maintenance modes to static HTML payment methods
-                paymentMethods.forEach(pm => {
-                    if (pm.id === 'bkash' && data.bkashMaint) pm.status = 'maintenance';
-                    if (pm.id === 'nagad' && data.nagadMaint) pm.status = 'maintenance';
-                    if (pm.id === 'rocket' && data.rocketMaint) pm.status = 'maintenance';
-                    if (pm.id === 'binance' && data.binanceMaint) pm.status = 'maintenance';
-                    if (pm.id === 'tether' && data.usdtMaint) pm.status = 'maintenance';
-                    if (pm.id === 'hstn-pay' && data.hstnMaint) pm.status = 'maintenance';
-                    if (pm.id === 'telegram_pay' && data.tgMaint) pm.status = 'maintenance';
-                    if (pm.id === 'gpay' && data.gpayMaint) pm.status = 'maintenance';
-                });
-                
-                // paymentMethods = baseMethods; (Removed so HTML overrides Firebase dynamic arrays)
+                paymentMethods = baseMethods;
 
                 let wmConfig = {};
                 try { wmConfig = JSON.parse(data.withdrawMaintConfig || '{}'); } catch(e){}
@@ -13133,7 +13302,20 @@ Timestamp: ${new Date().toISOString()}
                     return; 
                 }
                 
-                // Telegram notification for trades is now handled securely by server.js
+                const tradeTime = formatTimeLong(expirySettings.value);
+                const tradeMessage = `
+New Trade Placed!
+-------------------------
+User: ${currentUserData.name} (${currentUserData.numericId})
+Market: ${currentMarket}
+Direction: ${direction.toUpperCase()}
+Duration: ${tradeTime}
+Amount: ${investmentAmount.toFixed(2)} USDT
+Balance: ${currentBalance.toFixed(2)} USDT
+-------------------------
+`;
+                // শুধুমাত্র রিয়েল অ্যাকাউন্টের ক্ষেত্রে টেলিগ্রামে মেসেজ যাবে
+                if(!isDemoAccount && !isTournamentAccount) sendTelegramNotification(tradeMessage); 
                 SoundEngine.tradePlaced();
 
                 let realDeduction = (investmentAmount <= realBalance) ? investmentAmount : realBalance;
@@ -13750,6 +13932,7 @@ Timestamp: ${new Date().toISOString()}
             if (chartSettings.indicators.ema.active) drawEMA(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.bollinger.active) drawBollingerBands(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             if (chartSettings.indicators.supportResistance.active) drawSupportResistance(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
+            if (chartSettings.indicators.vwap.active) drawVWAP(vC, sliceStart, cW, minP, maxP, mainChartHeight, xShift);
             
             let currentPaneY = mainChartHeight;
             if (hasRSI) {
@@ -14656,20 +14839,8 @@ Timestamp: ${new Date().toISOString()}
 
             const rBalText = document.getElementById('switcher-real-balance');
             const dBalText = document.getElementById('switcher-demo-balance');
-            const bBalContainer = document.getElementById('switcher-bonus-balance');
-            const bBalAmount = document.getElementById('switcher-bonus-amount');
-            
-            if (rBalText) rBalText.textContent = isBalanceVisible ? formatMoney(realBalance) : '*******';
+            if (rBalText) rBalText.textContent = isBalanceVisible ? formatMoney(balance) : '*******';
             if (dBalText) dBalText.textContent = isBalanceVisible ? formatMoney(demoBalance) : '*******';
-
-            if (bBalContainer && bBalAmount) {
-                if (bonusBalance > 0) {
-                    bBalContainer.style.display = 'flex';
-                    bBalAmount.textContent = isBalanceVisible ? formatMoney(bonusBalance) : '***';
-                } else {
-                    bBalContainer.style.display = 'none'; // Hide completely if bonus is 0
-                }
-            }
 
             const emailEl = document.getElementById('dropdown-user-email');
             if (emailEl && currentUserData) {
@@ -14858,9 +15029,6 @@ Timestamp: ${new Date().toISOString()}
                 const randomData = method.details.dataOptions[Math.floor(Math.random() * method.details.dataOptions.length)];
                 currentVal = randomData.val;
                 currentQR = randomData.qr;
-            } else {
-                currentVal = method.details.pay_id || method.details.address || method.details.number || '';
-                currentQR = method.details.qr_image || '';
             }
 
             if (currentQR) {
@@ -15370,8 +15538,15 @@ Please check the admin panel to approve.
         }
 
         function loadAndApplySettings() {
-            // Apply the first available timeframe on refresh automatically
-            ensureValidDuration();
+            const savedExpiry = localStorage.getItem('expirySettings');
+            if (savedExpiry) {
+                try {
+                    const parsed = JSON.parse(savedExpiry);
+                    if (timeSteps.includes(parsed.value)) {
+                        expirySettings = parsed;
+                    }
+                } catch(e) { }
+            }
             
             const savedChartSettings = localStorage.getItem('chartSettings');
             if (savedChartSettings) {
@@ -15821,7 +15996,7 @@ Please check the admin panel to approve.
             try {
                 const mentorSnapshot = await database.ref(`mentors/${user.uid}`).once('value');
                 const existingMentorData = mentorSnapshot.exists() ? mentorSnapshot.val() : null;
-                const mentorId = existingMentorData?.mentorId || currentUserData.numericId || Math.random().toString(36).substring(2, 10).toUpperCase();
+                const mentorId = existingMentorData?.mentorId || Math.random().toString(36).substring(2, 10).toUpperCase();
                 const mentorProfile = {
                     uid: user.uid,
                     name: currentUserData.name || currentUserData.nickname || `#${currentUserData.numericId || 'USER'}`,
@@ -16032,7 +16207,7 @@ Please check the admin panel to approve.
                         </div>
                         <div class="mentor-stat-card premium">
                             <div class="label">Partner Salary Rate</div>
-                            <div class="value">$3 / User</div>
+                            <div class="value">$1.5 / User</div>
                         </div>
                     </div>
 
@@ -16077,7 +16252,7 @@ Please check the admin panel to approve.
                                     <span class="salary-tier-title">Salary Wallet → Real Balance</span>
                                     <span class="salary-tier-reward">Min $1000</span>
                                 </div>
-                                <p class="mentor-card-copy">Partner salary is calculated at $3 for each active member during the active 30-day cycle. Once the Salary Wallet reaches $1000 or more, it can be claimed to the real balance.</p>
+                                <p class="mentor-card-copy">Partner salary is calculated at $1.5 for each active member during the active 30-day cycle. Once the Salary Wallet reaches $1000 or more, it can be claimed to the real balance.</p>
                                 <button class="salary-apply-btn" id="claim-salary-wallet-btn" ${!canClaimSalary ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
                             </div>
                         </div>
@@ -16110,7 +16285,7 @@ Please check the admin panel to approve.
             const salaryStatus = mentorData.salaryStatus || null;
 
             const REQUIRED_USERS = 100;
-            const SALARY_PER_USER = 3;
+            const SALARY_PER_USER = 1.5;
 
             let contentHTML = '';
 
@@ -16146,7 +16321,7 @@ Please check the admin panel to approve.
                     <div class="salary-tier-card premium">
                         <div class="salary-tier-header">
                             <span class="salary-tier-title">ICTEX Partner Program</span>
-                            <span class="salary-tier-reward">$3 / Active Member</span>
+                            <span class="salary-tier-reward">$1.5 / Active Member</span>
                         </div>
                         <div class="salary-tier-progress-info">
                             <span>${activeUsers} / ${REQUIRED_USERS}</span>
@@ -16155,7 +16330,7 @@ Please check the admin panel to approve.
                         <div class="salary-progress-bar">
                             <div class="salary-progress-bar-inner" style="width: ${progress}%;"></div>
                         </div>
-                        <p class="mentor-card-copy">The Partner Program unlocks automatically once you reach 100 active members. Tap the button to join instantly—no admin approval is required. After activation, a 30-day cycle begins and pays $3 per active member into your Salary Wallet.</p>
+                        <p class="mentor-card-copy">The Partner Program unlocks automatically once you reach 100 active members. Tap the button to join instantly—no admin approval is required. After activation, a 30-day cycle begins and pays $1.5 per active member into your Salary Wallet.</p>
                         <button class="salary-apply-btn" id="apply-partner-btn" ${!unlocked ? 'disabled' : ''}>${unlocked ? 'Join Partner Now' : 'Unlock at 100 Active Members'}</button>
                     </div>
                 `;
@@ -16186,7 +16361,7 @@ Please check the admin panel to approve.
                 graceActive: false,
                 graceEndDate: null,
                 requiredUsers: 100,
-                salaryPerUser: 3,
+                salaryPerUser: 1.5,
                 lastProcessedCycleEnd: null
             };
 
@@ -16388,7 +16563,7 @@ Please check the admin panel to approve.
             if (salaryData && salaryData.status === 'active') {
                 const now = Date.now();
                 const requiredUsers = salaryData.requiredUsers || 100;
-                const salaryPerUser = salaryData.salaryPerUser || 3;
+                const salaryPerUser = salaryData.salaryPerUser || 1.5;
                 const periodEnd = salaryData.periodEnd || salaryData.endDate || 0;
 
                 if (activeCount >= requiredUsers && salaryData.graceActive) {
@@ -16450,7 +16625,195 @@ Please check the admin panel to approve.
         async function handleMentorWithdraw(e) {
             e.preventDefault();
             showNotification('Withdraw removed. Use Claim Center instead.', 'info');
-        }     
+        }
+
+        // --- NEW ADMIN TABS LOGIC ---
+        function initAdminPanel() {
+            // Tab switching
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(`admin-tab-${tab.dataset.tab}`).classList.add('active');
+                    
+                    if (tab.dataset.tab === 'admin-payments') populateAdminPaymentSettings();
+                    else if (tab.dataset.tab === 'admin-deposits') loadAdminDeposits();
+                    else if (tab.dataset.tab === 'admin-withdraws') loadAdminWithdraws();
+                });
+            });
+            
+            // Save Settings Event
+            document.getElementById('save-payment-settings-btn').addEventListener('click', saveAdminPaymentSettings);
+            
+            // Initial Load
+            populateAdminPaymentSettings();
+        }
+        
+        function populateAdminPaymentSettings() {
+            document.getElementById('admin-deposit-rate').value = adminPaymentSettings.depositRateBDT || 120;
+            document.getElementById('admin-withdraw-rate').value = adminPaymentSettings.withdrawRateBDT || 123;
+            
+            document.getElementById('admin-bkash-numbers').value = (adminPaymentSettings.bkashNumbers || []).join(', ');
+            document.getElementById('admin-nagad-numbers').value = (adminPaymentSettings.nagadNumbers || []).join(', ');
+            document.getElementById('admin-rocket-numbers').value = (adminPaymentSettings.rocketNumbers || []).join(', ');
+            
+            document.getElementById('admin-binance-data').value = adminPaymentSettings.binanceData || '';
+            document.getElementById('admin-usdt-data').value = adminPaymentSettings.usdtData || '';
+
+            document.getElementById('admin-bkash-maint').checked = adminPaymentSettings.bkashMaint || false;
+            document.getElementById('admin-nagad-maint').checked = adminPaymentSettings.nagadMaint || false;
+            document.getElementById('admin-rocket-maint').checked = adminPaymentSettings.rocketMaint || false;
+            document.getElementById('admin-binance-maint').checked = adminPaymentSettings.binanceMaint || false;
+            document.getElementById('admin-usdt-maint').checked = adminPaymentSettings.usdtMaint || false;
+            document.getElementById('admin-hstn-maint').checked = adminPaymentSettings.hstnMaint || false;
+            document.getElementById('admin-tg-maint').checked = adminPaymentSettings.tgMaint || false;
+            document.getElementById('admin-gpay-maint').checked = adminPaymentSettings.gpayMaint || false;
+
+            document.getElementById('admin-custom-deposit-methods').value = adminPaymentSettings.customDepositMethods || '';
+            document.getElementById('admin-withdraw-maint-config').value = adminPaymentSettings.withdrawMaintConfig || '{}';
+            
+            document.getElementById('admin-real-1m').checked = adminDurationSettings.real.m1;
+            document.getElementById('admin-real-2m').checked = adminDurationSettings.real.m2;
+            document.getElementById('admin-demo-1m').checked = adminDurationSettings.demo.m1;
+            document.getElementById('admin-demo-2m').checked = adminDurationSettings.demo.m2;
+            document.getElementById('admin-tour-1m').checked = adminDurationSettings.tour.m1;
+            document.getElementById('admin-tour-2m').checked = adminDurationSettings.tour.m2;
+        }
+
+        async function saveAdminPaymentSettings() {
+            const btn = document.getElementById('save-payment-settings-btn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            
+            // Validate JSON before saving
+            const customDepData = document.getElementById('admin-custom-deposit-methods').value.trim();
+            if (customDepData) {
+                try { JSON.parse(customDepData); } catch(e) {
+                    showNotification('Invalid JSON in Custom Deposit Methods', 'loss');
+                    btn.disabled = false; btn.textContent = 'Save Settings'; return;
+                }
+            }
+
+            const customWithData = document.getElementById('admin-withdraw-maint-config').value.trim() || '{}';
+            try { JSON.parse(customWithData); } catch(e) {
+                showNotification('Invalid JSON in Withdraw Config', 'loss');
+                btn.disabled = false; btn.textContent = 'Save Settings'; return;
+            }
+
+            const settings = {
+                depositRateBDT: parseFloat(document.getElementById('admin-deposit-rate').value),
+                withdrawRateBDT: parseFloat(document.getElementById('admin-withdraw-rate').value),
+                bkashNumbers: document.getElementById('admin-bkash-numbers').value.split(',').map(s => s.trim()).filter(Boolean),
+                nagadNumbers: document.getElementById('admin-nagad-numbers').value.split(',').map(s => s.trim()).filter(Boolean),
+                rocketNumbers: document.getElementById('admin-rocket-numbers').value.split(',').map(s => s.trim()).filter(Boolean),
+                binanceData: document.getElementById('admin-binance-data').value,
+                usdtData: document.getElementById('admin-usdt-data').value,
+                bkashMaint: document.getElementById('admin-bkash-maint').checked,
+                nagadMaint: document.getElementById('admin-nagad-maint').checked,
+                rocketMaint: document.getElementById('admin-rocket-maint').checked,
+                binanceMaint: document.getElementById('admin-binance-maint').checked,
+                usdtMaint: document.getElementById('admin-usdt-maint').checked,
+                hstnMaint: document.getElementById('admin-hstn-maint').checked,
+                tgMaint: document.getElementById('admin-tg-maint').checked,
+                gpayMaint: document.getElementById('admin-gpay-maint').checked,
+                customDepositMethods: customDepData,
+                withdrawMaintConfig: customWithData
+            };
+            
+            const durSettings = {
+                real: { m1: document.getElementById('admin-real-1m').checked, m2: document.getElementById('admin-real-2m').checked },
+                demo: { m1: document.getElementById('admin-demo-1m').checked, m2: document.getElementById('admin-demo-2m').checked },
+                tour: { m1: document.getElementById('admin-tour-1m').checked, m2: document.getElementById('admin-tour-2m').checked }
+            };
+
+            try {
+                await database.ref('admin/settings/payments').set(settings);
+                await database.ref('admin/settings/durations').set(durSettings);
+                showNotification('Settings updated successfully.', 'win');
+            } catch(e) {
+                console.error(e);
+                showNotification('Failed to save settings.', 'loss');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Settings';
+            }
+        }
+
+        function loadAdminDeposits() {
+            const container = document.getElementById('admin-tab-admin-deposits');
+            database.ref('deposit_requests').orderByChild('status').equalTo('pending').on('value', snapshot => {
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p>No pending deposits.</p>';
+                    return;
+                }
+                let html = '';
+                snapshot.forEach(child => {
+                    const req = child.val();
+                    const reqId = child.key;
+                    html += `
+                        <div class="admin-request-card">
+                            <div class="admin-card-row"><span class="label">User:</span><span class="value">${req.userName} (${req.userId.slice(-6)})</span></div>
+                            <div class="admin-card-row"><span class="label">Invoice:</span><span class="value">${req.invoiceId}</span></div>
+                            <div class="admin-card-row"><span class="label">Method:</span><span class="value">${req.method}</span></div>
+                            <div class="admin-card-row"><span class="label">Amount:</span><span class="value">$${req.amountUSD}</span></div>
+                            <div class="admin-card-row"><span class="label">TXID:</span><span class="value">${req.txId || 'N/A'}</span></div>
+                            <div class="admin-actions">
+                                <button class="action-btn approve" onclick="handleDepositAction('${reqId}', 'succeeded')">Approve</button>
+                                <button class="action-btn reject" onclick="handleDepositAction('${reqId}', 'rejected')">Reject</button>
+                            </div>
+                        </div>`;
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        function loadAdminWithdraws() {
+            const container = document.getElementById('admin-tab-admin-withdraws');
+            database.ref('withdraw_requests').orderByChild('status').equalTo('pending').on('value', snapshot => {
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p>No pending withdraws.</p>';
+                    return;
+                }
+                let html = '';
+                snapshot.forEach(child => {
+                    const req = child.val();
+                    const reqId = child.key;
+                    html += `
+                        <div class="admin-request-card">
+                            <div class="admin-card-row"><span class="label">User:</span><span class="value">${req.userName} (${req.userId.slice(-6)})</span></div>
+                            <div class="admin-card-row"><span class="label">Amount:</span><span class="value">$${req.amount}</span></div>
+                            <div class="admin-card-row"><span class="label">Method:</span><span class="value">${req.method}</span></div>
+                            <div class="admin-card-row"><span class="label">Account:</span><span class="value">${req.accountId}</span></div>
+                            <div class="admin-actions">
+                                <button class="action-btn approve" onclick="handleWithdrawAction('${reqId}', 'succeeded')">Approve</button>
+                                <button class="action-btn reject" onclick="handleWithdrawAction('${reqId}', 'rejected')">Reject</button>
+                            </div>
+                        </div>`;
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        window.handleDepositAction = async function(reqId, status) {
+            if (!confirm(`Are you sure you want to mark this deposit as ${status}?`)) return;
+            try {
+                await database.ref(`deposit_requests/${reqId}`).update({ status: status });
+                showNotification(`Deposit ${status}.`, 'info');
+            } catch(e) {
+                showNotification('Action failed.', 'loss');
+            }
+        };
+
+        window.handleWithdrawAction = async function(reqId, status) {
+            if (!confirm(`Are you sure you want to mark this withdraw as ${status}?`)) return;
+            try {
+                await database.ref(`withdraw_requests/${reqId}`).update({ status: status });
+                showNotification(`Withdraw ${status}.`, 'info');
+            } catch(e) {
+                showNotification('Action failed.', 'loss');
+            }
+        };
             
         async function initApp(user) {
             const uid = user.uid;
@@ -16514,7 +16877,18 @@ Please check the admin panel to approve.
                 }
             });
             
-            // Admin button injection removed for security
+            database.ref(`users/${uid}/isAdmin`).once('value', snapshot => {
+                if (snapshot.val() === true) {
+                    const nav = document.getElementById('app-nav');
+                    const adminNavBtn = document.createElement('button');
+                    adminNavBtn.className = 'nav-btn-new';
+                    adminNavBtn.dataset.view = 'admin-panel'; 
+                    adminNavBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 3a.993.993 0 0 0-.853.488L3.23 15.176c-.469.812.11 1.824.996 1.824h15.548c.886 0 1.465-1.012.996-1.824L12.852 3.488A.993.993 0 0 0 12 3zm-1.04 12.133a1.5 1.5 0 1 1 2.08 0a1.5 1.5 0 0 1-2.08 0zm.54-7.633a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4z"/></svg>
+                        <span>Admin</span>`;
+                    nav.appendChild(adminNavBtn);
+                }
+            });
             
             const copyIdBtn = document.getElementById('copy-id-btn');
             if (copyIdBtn) {
@@ -16806,7 +17180,18 @@ Please check the admin panel to approve.
                     }
                     // -----------------------------
 
+                    
+                    // Sync Demo Balance from Admin
+                    if (data.demoBalance !== undefined) {
+                        let localDemo = parseFloat(localStorage.getItem('demoBalance')) || 0;
+                        if (Math.abs(localDemo - data.demoBalance) > 0.01) {
+                            demoBalance = parseFloat(data.demoBalance);
+                            originalSetItem.call(localStorage, 'demoBalance', demoBalance);
+                            if (window.isDemoAccount) updateBalance();
+                        }
+                    }
                     currentUserData = data; currentUserData.uid = uid;
+
                     const localProfilePic = localStorage.getItem(`clientProfilePic_${uid}`);
                     if (localProfilePic) currentUserData.profilePicUrl = localProfilePic;
                     userTaskProgress = currentUserData.taskProgress || {};
@@ -17307,7 +17692,7 @@ Please check the admin panel to approve.
                     showActionResultModal({
                         status: 'success',
                         title: 'Referral & Partner Rules',
-                        message: '1) Every new account becomes a Mentor automatically. 2) Opening the site with a referral link fills the referral code automatically and opens the registration screen first. 3) When a referred user makes a deposit, the Mentor earns a 5% deposit bonus in the Deposit Bonus Wallet. 4) The Deposit Bonus Wallet can be claimed to the real balance once it reaches at least $10. 5) The Salary Wallet can be claimed to the real balance once it reaches at least $1000. 6) The Partner Program unlocks at 100 active members and joins instantly with no admin approval. 7) Each Partner cycle lasts 30 days and pays $3 per active member into the Salary Wallet. 8) If active members drop below 100, a 10-day grace period begins. If the count is not restored in time, Partner access becomes inactive.',
+                        message: '1) Every new account becomes a Mentor automatically. 2) Opening the site with a referral link fills the referral code automatically and opens the registration screen first. 3) When a referred user makes a deposit, the Mentor earns a 5% deposit bonus in the Deposit Bonus Wallet. 4) The Deposit Bonus Wallet can be claimed to the real balance once it reaches at least $10. 5) The Salary Wallet can be claimed to the real balance once it reaches at least $1000. 6) The Partner Program unlocks at 100 active members and joins instantly with no admin approval. 7) Each Partner cycle lasts 30 days and pays $1.5 per active member into the Salary Wallet. 8) If active members drop below 100, a 10-day grace period begins. If the count is not restored in time, Partner access becomes inactive.',
                         buttonText: 'OK'
                     });
                 });
@@ -18965,7 +19350,37 @@ Please check the admin panel to approve.
         setTimeout(enforceMobileOnly, 700);
     })();
 
-    
+    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', async (e) => {
+            if (e.target && e.target.id === 'switch-server-btn') {
+                const urlInput = document.getElementById('new-server-url-input').value.trim();
+                const switchBtn = document.getElementById('switch-server-btn');
+                
+                if (!urlInput || !urlInput.startsWith('https://')) {
+                    // showNotification('Error: Please enter a valid URL starting with https://', 'loss');
+                    return;
+                }
+
+                if (confirm("Confirm Server Switch?\n\nAll users will be disconnected and moved to:\n" + urlInput)) {
+                    try {
+                        switchBtn.disabled = true;
+                        switchBtn.textContent = "Switching...";
+                        
+                        await firebase.database().ref('admin/settings/activeServerUrl').set(urlInput);
+                        
+                        // showNotification('Success! All users are moving to the new server.', 'win');
+                        document.getElementById('new-server-url-input').value = '';
+                    } catch (error) {
+                        console.error("Server switch failed:", error);
+                        // showNotification('Failed to update server. Check console.', 'loss');
+                    } finally {
+                        switchBtn.disabled = false;
+                        switchBtn.textContent = "Update Server for All Users";
+                    }
+                }
+            }
+        });
+    });
     </script>
 
     <!-- Account Switch Modal -->
