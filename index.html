@@ -10305,26 +10305,8 @@
                        animationFrameId = requestAnimationFrame(gameLoop);
                     }, 50);
                 } else {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const action = urlParams.get('action');
-                    
-                    if (action !== 'login' && action !== 'register') {
-                        window.location.href = 'landing.html';
-                        return;
-                    }
-
                     authContainer.style.display = 'flex'; 
                     mainAppWrapper.style.display = 'none';
-
-                    document.querySelectorAll('.auth-form-wrapper').forEach(form => { form.classList.remove('active', 'left-out'); });
-                    if (action === 'register') {
-                        const regFormWrapper = document.getElementById('register-form-wrapper');
-                        if (regFormWrapper) regFormWrapper.classList.add('active');
-                    } else {
-                        const logFormWrapper = document.getElementById('login-form-wrapper');
-                        if (logFormWrapper) logFormWrapper.classList.add('active');
-                    }
-
                     if (isAppInitialized) {
                         isAppInitialized = false; 
                         if(animationFrameId) cancelAnimationFrame(animationFrameId);
