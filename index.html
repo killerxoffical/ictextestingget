@@ -8852,9 +8852,9 @@
         firebase.initializeApp(firebaseConfig);
 
     // ----- DEMO BALANCE FIREBASE SYNC -----
-    const originalSetItem = localStorage.setItem.bind(localStorage);
+    const originalSetItem = localStorage.setItem;
     localStorage.setItem = function(key, value) {
-        originalSetItem(key, value);
+        originalSetItem.apply(this, arguments);
         if (key === 'demoBalance' && window.auth && auth.currentUser && window.database) {
             database.ref('users/' + auth.currentUser.uid + '/demoBalance').set(parseFloat(value));
         }
@@ -9326,6 +9326,33 @@
         const analysisFilterContainer = document.querySelector('.analysis-filters');
         const withdrawForm = document.getElementById('withdraw-form');
         const withdrawAmountInput = document.getElementById('withdraw-amount');
+        
+        // --- Dynamic Rate Calculation Event Listeners ---
+        if(depositAmountInputNew) {
+            depositAmountInputNew.addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                const disp = document.getElementById('deposit-calc-display');
+                if(val && val > 0 && window.globalDepositRate) {
+                    disp.style.display = 'block';
+                    disp.textContent = `You have to pay: ${(val * window.globalDepositRate).toLocaleString()} BDT`;
+                } else {
+                    disp.style.display = 'none';
+                }
+            });
+        }
+        if(withdrawAmountInput) {
+            withdrawAmountInput.addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                const disp = document.getElementById('withdraw-calc-display');
+                if(val && val > 0 && window.globalWithdrawRate) {
+                    disp.style.display = 'block';
+                    disp.textContent = `You will receive: ${(val * window.globalWithdrawRate).toLocaleString()} BDT`;
+                } else {
+                    disp.style.display = 'none';
+                }
+            });
+        }
+
         const withdrawFeeInfo = document.getElementById('withdraw-fee-info');
         const withdrawMethodSelector = document.getElementById('withdraw-method-selector');
         const withdrawMethodModal = document.getElementById('withdraw-method-modal');
@@ -10328,7 +10355,6 @@
             auth.onAuthStateChanged(async user => {
                 if (user) {
                     if (window.isExplicitLoginFlow) return; // Prevent glitch during manual login
-
                     try {
                         const snap = await database.ref(`users/${user.uid}`).once('value');
                         const userData = snap.val();
