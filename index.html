@@ -13162,10 +13162,16 @@ Timestamp: ${new Date().toISOString()}
                 return;
             }
             isBetActionInProgress = true;
+            btnUp.disabled = true; btnDown.disabled = true;
+
+            // 1. ADD SECURITY DELAY AS REQUESTED (2 SECONDS)
+            showNotification('Validating trade... Please wait 2 seconds.', 'info');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // 2. RE-EVALUATE AMOUNTS AFTER DELAY TO PREVENT RACE CONDITIONS
             if(investmentAmount < 0.5) investmentAmount = 0.5;
             if(investmentAmount > 3000) investmentAmount = 3000;
             updateInvestmentDisplay(); 
-            btnUp.disabled = true; btnDown.disabled = true;
 
             try {
                 const uid = auth.currentUser.uid;
@@ -13197,6 +13203,7 @@ Timestamp: ${new Date().toISOString()}
                     currentBalance = myTourBalance;
                 }
 
+                // 3. STRICT RE-VALIDATION AGAINST BALANCE
                 if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
                     SoundEngine.warning();
                     if (investmentAmount > currentBalance && !isDemoAccount && !isTournamentAccount) {
