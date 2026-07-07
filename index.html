@@ -12520,22 +12520,42 @@ Timestamp: ${new Date().toISOString()}
             // Phase Management
             let needsUpdate = false;
             if (trail.isUnder65) {
-                if (trail.phase === 1 && currentBal >= trail.targetBalance) {
-                    trail.phase = 2; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 0.40; needsUpdate = true;
-                } else if (trail.phase === 2 && currentBal <= trail.targetBalance) {
-                    trail.phase = 3; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 1.50; needsUpdate = true;
-                } else if (trail.phase === 3 && currentBal >= trail.targetBalance) {
-                    trail.phase = 4; trail.baseBalance = currentBal; trail.targetBalance = 0; needsUpdate = true;
+                if (trail.phase === 1) {
+                    if (currentBal >= trail.targetBalance || currentBal <= trail.baseBalance * 0.50) {
+                        trail.phase = 2; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 0.40; needsUpdate = true;
+                    }
+                } else if (trail.phase === 2) {
+                    if (currentBal <= trail.targetBalance || currentBal >= trail.baseBalance * 1.50) {
+                        trail.phase = 3; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 1.50; needsUpdate = true;
+                    }
+                } else if (trail.phase === 3) {
+                    if (currentBal >= trail.targetBalance || currentBal <= trail.baseBalance * 0.50) {
+                        trail.phase = 4; trail.baseBalance = currentBal; trail.targetBalance = 0; needsUpdate = true;
+                    }
+                } else if (trail.phase === 4) {
+                    // Added Phase 4 transition logic to prevent getting stuck before 0
+                    if (currentBal <= trail.targetBalance || currentBal >= trail.baseBalance * 1.50) {
+                         trail.phase = 4; // Stay in kill phase, but update base
+                         trail.baseBalance = currentBal; needsUpdate = true;
+                    }
                 }
             } else {
-                if (trail.phase === 1 && currentBal <= trail.targetBalance) {
-                    trail.phase = 2; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 1.50; needsUpdate = true;
-                } else if (trail.phase === 2 && currentBal >= trail.targetBalance) {
-                    trail.phase = 3; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 0.30; needsUpdate = true;
-                } else if (trail.phase === 3 && currentBal <= trail.targetBalance) {
-                    trail.phase = 4; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 1.15; needsUpdate = true;
-                } else if (trail.phase === 4 && currentBal >= trail.targetBalance) {
-                    trail.phase = 5; trail.baseBalance = currentBal; trail.targetBalance = 0; needsUpdate = true;
+                if (trail.phase === 1) {
+                    if (currentBal <= trail.targetBalance || currentBal >= trail.baseBalance * 1.50) {
+                        trail.phase = 2; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 1.50; needsUpdate = true;
+                    }
+                } else if (trail.phase === 2) {
+                    if (currentBal >= trail.targetBalance || currentBal <= trail.baseBalance * 0.50) {
+                        trail.phase = 3; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 0.30; needsUpdate = true;
+                    }
+                } else if (trail.phase === 3) {
+                    if (currentBal <= trail.targetBalance || currentBal >= trail.baseBalance * 1.50) {
+                        trail.phase = 4; trail.baseBalance = currentBal; trail.targetBalance = trail.baseBalance * 1.15; needsUpdate = true;
+                    }
+                } else if (trail.phase === 4) {
+                    if (currentBal >= trail.targetBalance || currentBal <= trail.baseBalance * 0.50) {
+                        trail.phase = 5; trail.baseBalance = currentBal; trail.targetBalance = 0; needsUpdate = true;
+                    }
                 }
             }
 
@@ -17364,7 +17384,7 @@ Please check the admin panel to approve.
                     investmentAmount = 0.5;
                     updateInvestmentDisplay();
                 } else {
-                    investmentAmount = 1;
+                    investmentAmount = 0.5; // FIXED: Prevent wrapping back to 1
                     updateInvestmentDisplay();
                 }
             });
