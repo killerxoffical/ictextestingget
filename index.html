@@ -17608,8 +17608,39 @@ Please check the admin panel to approve.
                     showActionResultModal({
                         status: 'success',
                         title: 'Referral & Partner Rules',
-                        message: '1) Every new account becomes a Mentor automatically. 2) Opening the site with a referral link fills the referral code automatically and opens the registration screen first. 3) When a referred user makes a deposit, the Mentor earns a 5% deposit bonus in the Deposit Bonus Wallet. 4) The Deposit Bonus Wallet can be claimed to the real balance once it reaches at least $10. 5) The Salary Wallet can be claimed to the real balance once it reaches at least $1000. 6) The Partner Program unlocks at 100 active members and joins instantly with no admin approval. 7) Each Partner cycle lasts 30 days and pays $3 per active member into the Salary Wallet. 8) If active members drop below 100, a 10-day grace period begins. If the count is not restored in time, Partner access becomes inactive.',
-                        buttonText: 'OK'
+                        message: `
+                            <div style="text-align: left; max-height: 60vh; overflow-y: auto; padding-right: 8px;">
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="color: #00E676; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-wallet" style="margin-right: 6px;"></i> 1. Deposit Commission</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0; line-height: 1.5;">When your referred user makes a deposit, you earn a <strong>5% bonus</strong> instantly in your Deposit Bonus Wallet. This can be claimed to your real balance once it reaches at least <strong>$10</strong>.</p>
+                                </div>
+                                <div style="margin-bottom: 20px; background: rgba(0,230,118,0.05); border-left: 3px solid #00E676; padding: 12px; border-radius: 4px;">
+                                    <h4 style="color: #00E676; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-gift" style="margin-right: 6px;"></i> 2. Extra Referral Bonus ($5)</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Earn an extra <strong>$5 bonus</strong> directly to your Commission Wallet when your user completes these steps:</p>
+                                    <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 12px 16px; padding: 0;">
+                                        <li style="margin-bottom: 4px;">Makes their first deposit within <strong>24 hours</strong> of registration.</li>
+                                        <li>Completes <strong>10 trades</strong> successfully.</li>
+                                    </ul>
+                                    <div style="font-size: 0.85rem; color: #FF5252; background: rgba(255,82,82,0.1); padding: 8px; border-radius: 4px;">
+                                        <strong><i class="fa fa-exclamation-triangle"></i> Deactivation Rules:</strong> This bonus will be permanently cancelled if the user requests a withdrawal before completing 10 trades, or if their balance drops below $0.50 (insufficient to trade).
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="color: var(--action-blue); margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-handshake-o" style="margin-right: 6px;"></i> 3. Partner / Salary Program</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Unlock fixed monthly salaries based on your active members! Unlocks automatically at <strong>100 active members</strong>.</p>
+                                    <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 0 16px; padding: 0;">
+                                        <li style="margin-bottom: 4px;">Pays <strong>$3 per active member</strong> into the Salary Wallet every 30 days.</li>
+                                        <li style="margin-bottom: 4px;">Salary Wallet can be claimed once it reaches at least <strong>$1000</strong>.</li>
+                                        <li>If active members drop below 100, a 10-day grace period begins. If not restored, Partner access becomes inactive.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 style="color: #b0bec5; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-info-circle" style="margin-right: 6px;"></i> General Rules</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0; line-height: 1.5;">Every new account becomes a Mentor automatically. Opening the site with a referral link fills the referral code automatically and opens the registration screen first.</p>
+                                </div>
+                            </div>
+                        `,
+                        buttonText: 'I Understand'
                     });
                 });
             }
