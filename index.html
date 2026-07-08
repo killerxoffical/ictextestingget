@@ -16161,6 +16161,18 @@ Please check the admin panel to approve.
             const canClaimReferral = referralBonusBalance >= 10;
             const canClaimSalary = salaryWalletBalance >= 1000;
             const partnerActive = mentorData.partnerStatus === 'active';
+            // Calculate Current Tier
+            let currentTierName = "None";
+            let nextTierName = "Tier 1 ($60/mo)";
+            let usersNeeded = 15 - activeUsers;
+            
+            if (activeUsers >= 15 && activeUsers <= 49) { currentTierName = "Tier 1 ($60/mo)"; nextTierName = "Tier 2 ($120/mo)"; usersNeeded = 50 - activeUsers; }
+            else if (activeUsers >= 50 && activeUsers <= 99) { currentTierName = "Tier 2 ($120/mo)"; nextTierName = "Tier 3 ($300/mo)"; usersNeeded = 100 - activeUsers; }
+            else if (activeUsers >= 100 && activeUsers <= 199) { currentTierName = "Tier 3 ($300/mo)"; nextTierName = "Tier 4 ($500/mo)"; usersNeeded = 200 - activeUsers; }
+            else if (activeUsers >= 200 && activeUsers <= 299) { currentTierName = "Tier 4 ($500/mo)"; nextTierName = "Max Tier ($1500/mo)"; usersNeeded = 300 - activeUsers; }
+            else if (activeUsers >= 300) { currentTierName = "Max Tier ($1500/mo)"; nextTierName = "Max Reached"; usersNeeded = 0; }
+            
+            const isSalaryActive = mentorData.salaryActive === true;
 
             container.innerHTML = `
                 <div class="mentor-premium-shell">
@@ -16168,16 +16180,16 @@ Please check the admin panel to approve.
                         <div class="mentor-premium-hero">
                             <div class="mentor-premium-badge-row">
                                 <span class="mentor-premium-badge">Auto Mentor</span>
-                                <span class="mentor-premium-badge ${partnerActive ? 'success' : ''}">${partnerActive ? 'Partner Active' : 'Partner Locked'}</span>
+                                <span class="mentor-premium-badge ${isSalaryActive ? 'success' : ''}">${isSalaryActive ? 'Salary Program: Active' : 'Salary Program: Locked'}</span>
                             </div>
                             <div class="mentor-premium-title-row">
                                 <div class="mentor-premium-title-wrap">
                                     <h3>Premium Mentor Dashboard</h3>
-                                    <p>Receive a 5% deposit bonus whenever a referred user makes a deposit, monitor your network growth, and claim rewards from a cleaner and more structured mentor screen.</p>
+                                    <p>Receive a 5% deposit bonus whenever a referred user makes a deposit. Unlock monthly salaries based on your active members count.</p>
                                 </div>
                                 <div class="mentor-program-pill">
-                                    <span class="small-label">Unlock Goal</span>
-                                    <span class="big-value">100 Active</span>
+                                    <span class="small-label">Next Milestone</span>
+                                    <span class="big-value">${usersNeeded > 0 ? usersNeeded + ' More Active' : 'Maxed Out!'}</span>
                                 </div>
                             </div>
                             <div class="mentor-hero-balance-grid">
@@ -16189,7 +16201,7 @@ Please check the admin panel to approve.
                                 <div class="mentor-hero-balance-card">
                                     <div class="label">Salary Wallet</div>
                                     <div class="value">$${salaryWalletBalance.toFixed(2)}</div>
-                                    <div class="sub-value">Total earned: $${salaryWalletTotal.toFixed(2)}<br>Claimable from $1000</div>
+                                    <div class="sub-value">Total earned: $${salaryWalletTotal.toFixed(2)}<br>Automatic claiming from $1000</div>
                                 </div>
                             </div>
                         </div>
@@ -16209,8 +16221,8 @@ Please check the admin panel to approve.
                             <div class="value">5%</div>
                         </div>
                         <div class="mentor-stat-card premium">
-                            <div class="label">Partner Salary Rate</div>
-                            <div class="value">$3 / User</div>
+                            <div class="label">Current Salary Tier</div>
+                            <div class="value" style="font-size: 1.1rem;">${currentTierName}</div>
                         </div>
                     </div>
 
@@ -16255,7 +16267,7 @@ Please check the admin panel to approve.
                                     <span class="salary-tier-title">Salary Wallet → Real Balance</span>
                                     <span class="salary-tier-reward">Min $1000</span>
                                 </div>
-                                <p class="mentor-card-copy">Partner salary is calculated at $3 for each active member during the active 30-day cycle. Once the Salary Wallet reaches $1000 or more, it can be claimed to the real balance.</p>
+                                <p class="mentor-card-copy">Monthly salaries are processed automatically based on your active members. Once your Salary Wallet reaches $1000 or more, you can claim it directly to your real balance.</p>
                                 <button class="salary-apply-btn" id="claim-salary-wallet-btn" ${!canClaimSalary ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
                             </div>
                         </div>
@@ -16285,94 +16297,90 @@ Please check the admin panel to approve.
         function renderMentorSalarySection() {
             const container = document.getElementById('mentor-salary-section');
             const activeUsers = mentorData.studentCount?.active || 0;
-            const salaryStatus = mentorData.salaryStatus || null;
-
-            const REQUIRED_USERS = 100;
-            const SALARY_PER_USER = 3;
+            const isSalaryActive = mentorData.salaryActive === true;
 
             let contentHTML = '';
 
-            if (salaryStatus && salaryStatus.status === 'active') {
-                const periodEnd = salaryStatus.periodEnd || salaryStatus.endDate || (Date.now() + 30 * 24 * 60 * 60 * 1000);
-                const daysLeft = Math.max(0, Math.ceil((periodEnd - Date.now()) / (1000 * 60 * 60 * 24)));
-                const hasGrace = activeUsers < REQUIRED_USERS;
-                const graceEnd = salaryStatus.graceEndDate || 0;
-                const graceDaysLeft = graceEnd ? Math.max(0, Math.ceil((graceEnd - Date.now()) / (1000 * 60 * 60 * 24))) : 0;
-                const projectedSalary = activeUsers * SALARY_PER_USER;
+            if (isSalaryActive) {
+                const startDate = mentorData.salaryStartDate || Date.now();
+                const lastDate = mentorData.lastSalaryDate || startDate;
+                const nextSalaryDate = lastDate + (30 * 24 * 60 * 60 * 1000);
+                const daysLeft = Math.max(0, Math.ceil((nextSalaryDate - Date.now()) / (1000 * 60 * 60 * 24)));
+                
+                // Determine current pending salary if any
+                // Backend will create salary_requests, but for UI simplicity we show the projected
+                let projectedAmount = 0;
+                if (activeUsers >= 15 && activeUsers <= 49) projectedAmount = 60;
+                else if (activeUsers >= 50 && activeUsers <= 99) projectedAmount = 120;
+                else if (activeUsers >= 100 && activeUsers <= 199) projectedAmount = 300;
+                else if (activeUsers >= 200 && activeUsers <= 299) projectedAmount = 500;
+                else if (activeUsers >= 300) projectedAmount = 1500;
 
-                if (hasGrace) {
-                    contentHTML = `
-                        <div class="mentor-status-panel warning">
-                            <h4>Partner Active — Grace Period Running</h4>
-                            <p>Your partner status is still active, but you currently have <strong>${activeUsers}</strong> active members. You must maintain at least <strong>${REQUIRED_USERS}</strong> active members to keep partner status unlocked.</p>
-                            <p><strong>Grace period remaining:</strong> ${graceDaysLeft} day(s)</p>
-                            <p><strong>Current cycle ends in:</strong> ${daysLeft} day(s)</p>
-                        </div>`;
-                } else {
-                    contentHTML = `
-                        <div class="mentor-status-panel success">
-                            <h4>Partner Active</h4>
-                            <p>Your current 30-day partner cycle is running successfully with <strong>${activeUsers}</strong> active members.</p>
-                            <p><strong>Projected cycle reward:</strong> $${projectedSalary.toFixed(2)} (${activeUsers} × $${SALARY_PER_USER})</p>
-                            <p><strong>Cycle ends in:</strong> ${daysLeft} day(s)</p>
-                        </div>`;
-                }
-            } else {
-                const progress = Math.min(100, (activeUsers / REQUIRED_USERS) * 100);
-                const unlocked = activeUsers >= REQUIRED_USERS;
                 contentHTML = `
-                    <div class="salary-tier-card premium">
+                    <div class="mentor-status-panel success">
+                        <h4>Salary Program: Active</h4>
+                        <p>You are officially enrolled in the ICTEX Monthly Salary Program. Maintain your active members to receive automated monthly payouts.</p>
+                        <div style="display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;">
+                            <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 8px; flex: 1; min-width: 150px;">
+                                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Projected Next Payout</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-up);">$${projectedAmount}</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 8px; flex: 1; min-width: 150px;">
+                                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Time until Check</div>
+                                <div style="font-size: 1.5rem; font-weight: 700;">${daysLeft} Days</div>
+                            </div>
+                        </div>
+                    </div>`;
+            } else {
+                const progress = Math.min(100, (activeUsers / 15) * 100);
+                contentHTML = `
+                    <div class="salary-tier-card premium" style="border: 1px solid var(--action-blue);">
                         <div class="salary-tier-header">
-                            <span class="salary-tier-title">ICTEX Partner Program</span>
-                            <span class="salary-tier-reward">$3 / Active Member</span>
+                            <span class="salary-tier-title">Unlock Monthly Salary</span>
+                            <span class="salary-tier-reward">Min 15 Users</span>
                         </div>
                         <div class="salary-tier-progress-info">
-                            <span>${activeUsers} / ${REQUIRED_USERS}</span>
+                            <span>${activeUsers} / 15</span>
                             <span>Active Members</span>
                         </div>
                         <div class="salary-progress-bar">
                             <div class="salary-progress-bar-inner" style="width: ${progress}%;"></div>
                         </div>
-                        <p class="mentor-card-copy">The Partner Program unlocks automatically once you reach 100 active members. Tap the button to join instantly—no admin approval is required. After activation, a 30-day cycle begins and pays $3 per active member into your Salary Wallet.</p>
-                        <button class="salary-apply-btn" id="apply-partner-btn" ${!unlocked ? 'disabled' : ''}>${unlocked ? 'Join Partner Now' : 'Unlock at 100 Active Members'}</button>
+                        <p class="mentor-card-copy">Get at least 15 active members to automatically enter the salary program. Once active, your monthly salary will be calculated automatically based on the tiers below.</p>
                     </div>
                 `;
             }
 
-            container.innerHTML = `<h3>Partner Program</h3>${contentHTML}`;
+            // Tiers List
+            contentHTML += `
+                <div style="margin-top: 24px;">
+                    <h4 style="margin-bottom: 16px; font-size: 1rem; color: var(--text-secondary);">Salary Tiers</h4>
+                    <div style="display: grid; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                            <span>Tier 1 (15 - 49 Users)</span>
+                            <strong style="color: var(--color-up);">$60 / Month</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                            <span>Tier 2 (50 - 99 Users)</span>
+                            <strong style="color: var(--color-up);">$120 / Month</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                            <span>Tier 3 (100 - 199 Users)</span>
+                            <strong style="color: var(--color-up);">$300 / Month</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                            <span>Tier 4 (200 - 299 Users)</span>
+                            <strong style="color: var(--color-up);">$500 / Month</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                            <span>Max Tier (300+ Users)</span>
+                            <strong style="color: var(--color-up);">$1500 / Month</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            const applyBtn = document.getElementById('apply-partner-btn');
-            if (applyBtn) applyBtn.addEventListener('click', handlePartnerApply);
-        }
-
-        
-        async function handlePartnerApply() {
-            const user = auth.currentUser;
-            if (!user || !mentorData) return;
-            
-            const activeUsers = mentorData.studentCount?.active || 0;
-            if (activeUsers < 100) {
-                showNotification('The Partner Program unlocks at 100 active members.', 'info');
-                return;
-            }
-            
-            const now = Date.now();
-            const partnerApplication = {
-                status: 'active',
-                startDate: now,
-                periodEnd: now + (30 * 24 * 60 * 60 * 1000),
-                graceActive: false,
-                graceEndDate: null,
-                requiredUsers: 100,
-                salaryPerUser: 3,
-                lastProcessedCycleEnd: null
-            };
-
-            await database.ref(`mentors/${user.uid}`).update({
-                salaryStatus: partnerApplication,
-                partnerStatus: 'active'
-            });
-            showNotification('Partner Program activated successfully.', 'win');
+            container.innerHTML = `<h3>Monthly Salary Program</h3>${contentHTML}`;
         }
 
         async function handleReferralBonusClaim() {
