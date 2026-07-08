@@ -16163,118 +16163,106 @@ Please check the admin panel to approve.
             const partnerActive = mentorData.partnerStatus === 'active';
             // Calculate Current Tier Range
             let currentTierName = "None";
-            let nextTierName = "Tier 1 ($30 - $60/mo)";
+            let nextTierName = "Level 1 ($30 - $60/mo)";
             let usersNeeded = 15 - activeUsers;
             
-            if (activeUsers >= 15 && activeUsers <= 49) { currentTierName = "Tier 1 ($30 - $60/mo)"; nextTierName = "Tier 2 ($60 - $120/mo)"; usersNeeded = 50 - activeUsers; }
-            else if (activeUsers >= 50 && activeUsers <= 99) { currentTierName = "Tier 2 ($60 - $120/mo)"; nextTierName = "Tier 3 ($150 - $300/mo)"; usersNeeded = 100 - activeUsers; }
-            else if (activeUsers >= 100 && activeUsers <= 199) { currentTierName = "Tier 3 ($150 - $300/mo)"; nextTierName = "Tier 4 ($300 - $500/mo)"; usersNeeded = 200 - activeUsers; }
-            else if (activeUsers >= 200 && activeUsers <= 299) { currentTierName = "Tier 4 ($300 - $500/mo)"; nextTierName = "Max Tier ($750 - $1500/mo)"; usersNeeded = 300 - activeUsers; }
-            else if (activeUsers >= 300) { currentTierName = "Max Tier ($750 - $1500/mo)"; nextTierName = "Max Reached"; usersNeeded = 0; }
+            if (activeUsers >= 15 && activeUsers <= 49) { currentTierName = "Level 1 ($30 - $60/mo)"; nextTierName = "Level 2 ($60 - $120/mo)"; usersNeeded = 50 - activeUsers; }
+            else if (activeUsers >= 50 && activeUsers <= 99) { currentTierName = "Level 2 ($60 - $120/mo)"; nextTierName = "Level 3 ($150 - $300/mo)"; usersNeeded = 100 - activeUsers; }
+            else if (activeUsers >= 100 && activeUsers <= 199) { currentTierName = "Level 3 ($150 - $300/mo)"; nextTierName = "Level 4 ($300 - $500/mo)"; usersNeeded = 200 - activeUsers; }
+            else if (activeUsers >= 200 && activeUsers <= 299) { currentTierName = "Level 4 ($300 - $500/mo)"; nextTierName = "Max Level ($750 - $1500/mo)"; usersNeeded = 300 - activeUsers; }
+            else if (activeUsers >= 300) { currentTierName = "Max Level ($750 - $1500/mo)"; nextTierName = "Max Reached"; usersNeeded = 0; }
             
             const isSalaryActive = mentorData.salaryActive === true;
+            const totalEarning = referralBonusTotal + salaryWalletTotal;
+            const serverUrl = cachedServerUrl ? cachedServerUrl.replace(/\/$/, '') : window.location.origin;
 
             container.innerHTML = `
-                <div class="mentor-premium-shell" style="background: linear-gradient(145deg, #161b24, #0f1218); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                    <div class="mentor-premium-top">
-                        <div class="mentor-premium-hero">
-                            <div class="mentor-premium-badge-row">
-                                <span class="mentor-premium-badge" style="background: var(--action-blue); color: white;">Referral Partner</span>
-                                <span class="mentor-premium-badge ${isSalaryActive ? 'success' : ''}">${isSalaryActive ? 'Salary Program: Active' : 'Salary Program: Locked'}</span>
-                            </div>
-                            <div class="mentor-premium-title-row">
-                                <div class="mentor-premium-title-wrap">
-                                    <h3 style="font-size: 1.8rem; background: linear-gradient(90deg, #fff, #8d9ece); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Premium Referral Dashboard</h3>
-                                    <p style="color: #8d9ece; font-size: 0.95rem;">Receive a 5% deposit bonus whenever a referred user makes a deposit. Unlock monthly salaries based on your active members count.</p>
-                                </div>
-                                <div class="mentor-program-pill" style="background: rgba(30,136,229,0.1); border: 1px solid rgba(30,136,229,0.2);">
-                                    <span class="small-label" style="color: #64b5f6;">Next Milestone</span>
-                                    <span class="big-value" style="color: white;">${usersNeeded > 0 ? usersNeeded + ' More Active' : 'Maxed Out!'}</span>
-                                </div>
-                            </div>
-                            <div class="mentor-hero-balance-grid">
-                                <div class="mentor-hero-balance-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                                    <div class="label" style="color: #8d9ece;">Deposit Bonus Wallet</div>
-                                    <div class="value" style="color: var(--color-up);">$${referralBonusBalance.toFixed(2)}</div>
-                                    <div class="sub-value">Total earned: $${referralBonusTotal.toFixed(2)}<br>Claimable from $10</div>
-                                </div>
-                                <div class="mentor-hero-balance-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                                    <div class="label" style="color: #8d9ece;">Salary Wallet</div>
-                                    <div class="value" style="color: var(--color-up);">$${salaryWalletBalance.toFixed(2)}</div>
-                                    <div class="sub-value">Total earned: $${salaryWalletTotal.toFixed(2)}<br>Automatic claiming from $1000</div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="mentor-premium-shell" style="background: #000; border: none; padding-bottom: 24px;">
+                    
+                    <!-- Total Earning Header -->
+                    <div style="text-align: center; margin-bottom: 24px; padding: 24px 16px; background: radial-gradient(circle at top, rgba(30,136,229,0.15) 0%, transparent 70%); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <div style="color: #8d9ece; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Total Earnings</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #fff;">$${totalEarning.toFixed(2)}</div>
                     </div>
 
-                    <div class="mentor-dashboard-grid premium">
-                        <div class="mentor-stat-card premium" style="background: rgba(255,255,255,0.02);">
-                            <div class="label">Total Referrals</div>
-                            <div class="value">${totalUsers}</div>
-                        </div>
-                        <div class="mentor-stat-card premium" style="background: rgba(255,255,255,0.02);">
-                            <div class="label">Active Members</div>
-                            <div class="value">${activeUsers}</div>
-                        </div>
-                        <div class="mentor-stat-card premium" style="background: rgba(255,255,255,0.02);">
-                            <div class="label">Deposit Bonus Rate</div>
-                            <div class="value" style="color: var(--color-up);">5%</div>
-                        </div>
-                        <div class="mentor-stat-card premium" style="background: rgba(255,255,255,0.02);">
-                            <div class="label">Current Salary Tier</div>
-                            <div class="value" style="font-size: 1rem; color: var(--color-up);">${currentTierName}</div>
-                        </div>
-                    </div>
-
-                    <div class="mentor-link-grid">
-                        <div class="mentor-id-card premium">
-                            <div style="overflow: hidden; min-width: 0;">
-                                <div class="label">Referral Code</div>
-                                <div class="id-code">${refCode}</div>
+                    <div style="padding: 0 16px;">
+                        <!-- Small Balances -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Earned from Deposit</div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-up);">$${referralBonusTotal.toFixed(2)}</div>
                             </div>
-                            <button class="copy-btn premium" id="copy-ref-code-btn">Copy</button>
-                        </div>
-
-                        <div class="mentor-id-card premium">
-                            <div style="overflow: hidden; min-width: 0;">
-                                <div class="label">Referral Link</div>
-                                <div class="id-code id-link">${refUrl}</div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Earned from Salary</div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-up);">$${salaryWalletTotal.toFixed(2)}</div>
                             </div>
-                            <button class="copy-btn premium" id="copy-ref-link-btn">Copy</button>
                         </div>
-                    </div>
 
-                    <div class="mentor-action-buttons-container" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                        <button class="mentor-action-btn premium" id="mentor-user-list-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05c1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
-                            <span>Open Referral Users</span>
+                        <!-- User Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px;">${totalUsers}</div>
+                                <div style="font-size: 0.8rem; color: #8d9ece;">Total Members</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px;">${activeUsers}</div>
+                                <div style="font-size: 0.8rem; color: #8d9ece;">Active Members</div>
+                            </div>
+                        </div>
+
+                        <!-- Status & Commission -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Salary Status</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: ${isSalaryActive ? 'var(--color-up)' : '#ff5252'};">${isSalaryActive ? 'Active' : 'Inactive'}</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Commission</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">5%</div>
+                            </div>
+                        </div>
+
+                        <!-- Links Section -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; overflow: hidden; position: relative;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Server Link</div>
+                                <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px;">${serverUrl}</div>
+                                <button id="copy-ref-link-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 8px;"><i class="fa fa-copy"></i></button>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; overflow: hidden; position: relative;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Referral Code</div>
+                                <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px;">${refCode}</div>
+                                <button id="copy-ref-code-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 8px;"><i class="fa fa-copy"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Open User List Button -->
+                        <button id="mentor-user-list-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(30,136,229,0.1), rgba(30,136,229,0.2)); border: 1px solid rgba(30,136,229,0.3); border-radius: 12px; color: #fff; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="fa fa-users"></i> Your Referral Users
                         </button>
-                    </div>
 
-                    <div class="mentor-section-card premium">
-                        <h3>Claim Center</h3>
-                        <div class="mentor-claim-grid">
-                            <div class="salary-tier-card premium">
-                                <div class="salary-tier-header">
-                                    <span class="salary-tier-title">Deposit Bonus Wallet → Real Balance</span>
-                                    <span class="salary-tier-reward">Min $10</span>
+                        <div class="mentor-section-card premium" style="background: transparent; padding: 0; border: none;">
+                            <h3 style="font-size: 1.2rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">Claim Center</h3>
+                            <div style="display: grid; gap: 16px;">
+                                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <span style="font-weight: 600; font-size: 1rem;">Deposit Bonus Wallet</span>
+                                        <span style="font-size: 0.85rem; color: #8d9ece; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">Min $10</span>
+                                    </div>
+                                    <button class="salary-apply-btn" id="claim-referral-bonus-btn" style="width: 100%;" ${!canClaimReferral ? 'disabled' : ''}>Claim $${referralBonusBalance.toFixed(2)}</button>
                                 </div>
-                                <p class="mentor-card-copy">You receive a 5% deposit bonus whenever a referred user completes a deposit. When the Deposit Bonus Wallet reaches at least $10, you can claim the full amount to your real balance.</p>
-                                <button class="salary-apply-btn" id="claim-referral-bonus-btn" ${!canClaimReferral ? 'disabled' : ''}>Claim $${referralBonusBalance.toFixed(2)}</button>
-                            </div>
-                            <div class="salary-tier-card premium">
-                                <div class="salary-tier-header">
-                                    <span class="salary-tier-title">Salary Wallet → Real Balance</span>
-                                    <span class="salary-tier-reward">Min $1000</span>
+                                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <span style="font-weight: 600; font-size: 1rem;">Salary Wallet</span>
+                                        <span style="font-size: 0.85rem; color: #8d9ece; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">Min $100</span>
+                                    </div>
+                                    <button class="salary-apply-btn" id="claim-salary-wallet-btn" style="width: 100%;" ${salaryWalletBalance < 100 ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
                                 </div>
-                                <p class="mentor-card-copy">Monthly salaries are processed automatically based on your active members. Once your Salary Wallet reaches $1000 or more, you can claim it directly to your real balance.</p>
-                                <button class="salary-apply-btn" id="claim-salary-wallet-btn" ${!canClaimSalary ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mentor-section-card premium" id="mentor-salary-section">
-                        <h3>Partner Program</h3>
+                    <div id="mentor-salary-section" style="padding: 0 16px; margin-top: 32px;">
                     </div>
                 </div>
             `;
@@ -16284,7 +16272,7 @@ Please check the admin panel to approve.
                 navigator.clipboard.writeText(refCode).then(() => showNotification('Referral code copied.', 'info'));
             });
             document.getElementById('copy-ref-link-btn').addEventListener('click', () => {
-                navigator.clipboard.writeText(refUrl).then(() => showNotification('Referral link copied.', 'info'));
+                navigator.clipboard.writeText(serverUrl).then(() => showNotification('Server link copied.', 'info'));
             });
             document.getElementById('mentor-user-list-btn').addEventListener('click', () => showView('mentor-users'));
             const claimReferralBtn = document.getElementById('claim-referral-bonus-btn');
@@ -16360,26 +16348,26 @@ Please check the admin panel to approve.
             // Tiers List
             contentHTML += `
                 <div style="margin-top: 32px;">
-                    <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Dynamic Salary Tiers</h4>
+                    <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Dynamic Salary Levels</h4>
                     <div style="display: grid; gap: 16px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #64b5f6; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Tier 1 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(15 - 49 Users)</span></span>
+                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 1 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(15 - 49 Users)</span></span>
                             <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$30 - $60 / Month</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #4fc3f7; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Tier 2 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(50 - 99 Users)</span></span>
+                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 2 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(50 - 99 Users)</span></span>
                             <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$60 - $120 / Month</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #4dd0e1; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Tier 3 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(100 - 199 Users)</span></span>
+                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 3 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(100 - 199 Users)</span></span>
                             <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$150 - $300 / Month</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #4db6ac; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Tier 4 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(200 - 299 Users)</span></span>
+                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 4 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(200 - 299 Users)</span></span>
                             <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$300 - $500 / Month</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #81c784; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Max Tier <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(300+ Users)</span></span>
+                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Max Level <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(300+ Users)</span></span>
                             <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$750 - $1500 / Month</strong>
                         </div>
                     </div>
@@ -16455,7 +16443,6 @@ Please check the admin panel to approve.
             document.getElementById('mentor-user-search').addEventListener('input', (e) => {
                  loadAndRenderMentorUsers(e.target.value.trim());
             });
-             document.getElementById('mentor-deleted-users-btn').addEventListener('click', showDeletedUsers);
         }
 
         async function loadAndRenderMentorUsers(searchTerm = '', showDeleted = false) {
