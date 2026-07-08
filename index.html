@@ -16174,7 +16174,7 @@ Please check the admin panel to approve.
             
             const isSalaryActive = mentorData.salaryActive === true;
             const totalEarning = referralBonusTotal + salaryWalletTotal;
-            const serverUrl = cachedServerUrl ? cachedServerUrl.replace(/\/$/, '') : window.location.origin;
+            const serverUrl = (typeof cachedServerUrl !== 'undefined' && cachedServerUrl) ? cachedServerUrl.replace(/\/$/, '') : window.location.origin;
 
             container.innerHTML = `
                 <div class="mentor-premium-shell" style="background: #000; border: none; padding-bottom: 24px;">
