@@ -16653,6 +16653,7 @@ Please check the admin panel to approve.
                     await database.ref(`mentors/${user.uid}`).update({
                         partnerStatus: 'inactive',
                         salaryStatus: null
+                    });
                     showNotification(`Partner access was deactivated because the 10-day grace period ended before reaching ${requiredUsers} active members.`, 'loss');
                     return;
                 }
