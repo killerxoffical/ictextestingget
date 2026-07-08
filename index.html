@@ -16379,17 +16379,33 @@ Please check the admin panel to approve.
                 else if (activeUsers >= 200 && activeUsers <= 299) levelName = "Director";
                 else if (activeUsers >= 300) levelName = "VIP Director";
 
-                let statusMsg = '';
+                // Cycle Generation Logic
                 if (now >= nextSalaryDate) {
-                    statusMsg = `<div style="font-size: 1.1rem; font-weight: 800; color: var(--color-up); margin-top: 5px;">Eligible to receive Salary Now</div>
-                                 <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 3px;">Pending Admin Processing</div>`;
-                } else {
-                    const daysLeft = Math.ceil((nextSalaryDate - now) / (1000 * 60 * 60 * 24));
-                    statusMsg = `<div style="font-size: 1.4rem; font-weight: 800; color: white; margin-top: 5px;">${daysLeft} <span style="font-size: 0.9rem; color: #8d9ece; font-weight: 500;">Days Left</span></div>`;
+                    const cycleId = "CYC_" + lastDate;
+                    if (!mentorData.pendingSalaries || !mentorData.pendingSalaries[cycleId]) {
+                        const updates = {};
+                        updates[`mentors/${auth.currentUser.uid}/pendingSalaries/${cycleId}`] = {
+                            startDate: lastDate,
+                            endDate: nextSalaryDate,
+                            activeMembers: activeUsers,
+                            status: 'pending',
+                            timestamp: now
+                        };
+                        updates[`mentors/${auth.currentUser.uid}/lastSalaryDate`] = nextSalaryDate;
+                        database.ref().update(updates).catch(console.error);
+                    }
                 }
 
+                // Recalculate based on possibly updated nextSalaryDate
+                const displayLastDate = (now >= nextSalaryDate && (!mentorData.pendingSalaries || !mentorData.pendingSalaries["CYC_" + lastDate])) ? nextSalaryDate : lastDate;
+                const displayNextDate = displayLastDate + (30 * 24 * 60 * 60 * 1000);
+                
+                let statusMsg = '';
+                const daysLeft = Math.ceil((displayNextDate - now) / (1000 * 60 * 60 * 24));
+                statusMsg = `<div style="font-size: 1.4rem; font-weight: 800; color: white; margin-top: 5px;">${daysLeft} <span style="font-size: 0.9rem; color: #8d9ece; font-weight: 500;">Days Left</span></div>`;
+
                 const joinedDateStr = new Date(startDate).toLocaleDateString();
-                const nextDateStr = new Date(nextSalaryDate).toLocaleDateString();
+                const nextDateStr = new Date(displayNextDate).toLocaleDateString();
 
                 contentHTML = `
                     <div class="mentor-status-panel success" style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
@@ -16414,6 +16430,29 @@ Please check the admin panel to approve.
                             </div>
                         </div>
                     </div>`;
+                    
+                // Render Pending Salaries if any
+                if (mentorData.pendingSalaries) {
+                    const pendingList = Object.values(mentorData.pendingSalaries).filter(s => s.status === 'pending');
+                    if (pendingList.length > 0) {
+                        contentHTML += `<div style="margin-top: 24px;">
+                            <h4 style="margin-bottom: 12px; font-size: 1.1rem; font-weight: 700; color: var(--warning);"><i class="fa fa-clock" style="margin-right: 8px;"></i>Pending Salaries</h4>
+                        `;
+                        pendingList.sort((a,b) => b.startDate - a.startDate).forEach(p => {
+                            contentHTML += `
+                                <div style="background: rgba(255, 179, 0, 0.1); border: 1px solid rgba(255, 179, 0, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="font-size: 0.95rem; font-weight: 600; color: white;">Cycle: ${new Date(p.startDate).toLocaleDateString()} - ${new Date(p.endDate).toLocaleDateString()}</div>
+                                        <div style="background: rgba(255,255,255,0.1); color: var(--warning); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Pending Admin Approval</div>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 8px;">Active Members at end of cycle: <span style="color: white; font-weight: bold;">${p.activeMembers}</span></div>
+                                </div>
+                            `;
+                        });
+                        contentHTML += `</div>`;
+                    }
+                }
+
             } else {
                 const progress = Math.min(100, (activeUsers / 15) * 100);
                 contentHTML = `
