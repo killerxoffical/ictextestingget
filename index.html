@@ -16370,35 +16370,47 @@ Please check the admin panel to approve.
                 const startDate = mentorData.salaryStartDate || Date.now();
                 const lastDate = mentorData.lastSalaryDate || startDate;
                 const nextSalaryDate = lastDate + (30 * 24 * 60 * 60 * 1000);
-                const daysLeft = Math.max(0, Math.ceil((nextSalaryDate - Date.now()) / (1000 * 60 * 60 * 24)));
+                const now = Date.now();
+                const totalUsers = mentorData.studentCount?.total || 0;
                 
-                // Determine current pending salary proportional range
-                let projectedAmount = 0;
-                if (activeUsers >= 15 && activeUsers <= 49) {
-                    projectedAmount = 30 + ((activeUsers - 15) / (49 - 15)) * (60 - 30);
-                } else if (activeUsers >= 50 && activeUsers <= 99) {
-                    projectedAmount = 60 + ((activeUsers - 50) / (99 - 50)) * (120 - 60);
-                } else if (activeUsers >= 100 && activeUsers <= 199) {
-                    projectedAmount = 150 + ((activeUsers - 100) / (199 - 100)) * (300 - 150);
-                } else if (activeUsers >= 200 && activeUsers <= 299) {
-                    projectedAmount = 300 + ((activeUsers - 200) / (299 - 200)) * (500 - 300);
-                } else if (activeUsers >= 300) {
-                    projectedAmount = 750 + ((Math.min(activeUsers, 500) - 300) / 200) * (1500 - 750);
+                let levelName = "Partner";
+                if (activeUsers >= 50 && activeUsers <= 99) levelName = "Senior Partner";
+                else if (activeUsers >= 100 && activeUsers <= 199) levelName = "Manager";
+                else if (activeUsers >= 200 && activeUsers <= 299) levelName = "Director";
+                else if (activeUsers >= 300) levelName = "VIP Director";
+
+                let statusMsg = '';
+                if (now >= nextSalaryDate) {
+                    statusMsg = `<div style="font-size: 1.1rem; font-weight: 800; color: var(--color-up); margin-top: 5px;">Eligible to receive Salary Now</div>
+                                 <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 3px;">Pending Admin Processing</div>`;
+                } else {
+                    const daysLeft = Math.ceil((nextSalaryDate - now) / (1000 * 60 * 60 * 24));
+                    statusMsg = `<div style="font-size: 1.4rem; font-weight: 800; color: white; margin-top: 5px;">${daysLeft} <span style="font-size: 0.9rem; color: #8d9ece; font-weight: 500;">Days Left</span></div>`;
                 }
-                projectedAmount = Math.round(projectedAmount);
+
+                const joinedDateStr = new Date(startDate).toLocaleDateString();
+                const nextDateStr = new Date(nextSalaryDate).toLocaleDateString();
 
                 contentHTML = `
                     <div class="mentor-status-panel success" style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <h4 style="color: #81c784; font-size: 1.2rem;"><i class="fa fa-check-circle" style="margin-right: 8px;"></i>Salary Program: Active</h4>
-                        <p style="color: #e1e2e8;">You are officially enrolled in the ICTEX Monthly Salary Program. Maintain your active members to receive automated monthly payouts.</p>
-                        <div style="display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;">
-                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; flex: 1; min-width: 150px; text-align: center;">
-                                <div style="font-size: 0.9rem; color: #8d9ece; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Projected Next Payout</div>
-                                <div style="font-size: 2rem; font-weight: 800; color: var(--color-up);">$${projectedAmount}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="color: #81c784; font-size: 1.2rem; margin: 0;"><i class="fa fa-check-circle" style="margin-right: 8px;"></i>Salary Active</h4>
+                            <span style="background: var(--action-blue); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold;">Level: ${levelName}</span>
+                        </div>
+                        <p style="color: #e1e2e8; margin-top: 10px; font-size: 0.95rem;">You are enrolled in the ICTEX Monthly Salary Program. Maintain your active members to receive automated monthly payouts.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Joined Date</div>
+                                <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;">${joinedDateStr}</div>
                             </div>
-                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; flex: 1; min-width: 150px; text-align: center;">
-                                <div style="font-size: 0.9rem; color: #8d9ece; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Time until Check</div>
-                                <div style="font-size: 2rem; font-weight: 800; color: white;">${daysLeft} <span style="font-size: 1rem; color: #8d9ece; font-weight: 500;">Days</span></div>
+                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Members (Active / Total)</div>
+                                <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;"><span style="color: var(--color-up);">${activeUsers}</span> <span style="font-size: 0.9rem; color: #8d9ece;">/ ${totalUsers}</span></div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; grid-column: span 2; text-align: center;">
+                                <div style="font-size: 0.85rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Next Salary Date: ${nextDateStr}</div>
+                                ${statusMsg}
                             </div>
                         </div>
                     </div>`;
