@@ -16433,6 +16433,8 @@ Please check the admin panel to approve.
                 showNotification('Deposit bonus claim minimum is $10.', 'info');
                 return;
             }
+            const btn = document.getElementById('claim-referral-bonus-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
             try {
                 await database.ref(`mentors/${user.uid}/commissionWallet/balance`).set(0);
                 await updateBalances({ realChange: availableAmount });
@@ -16445,9 +16447,11 @@ Please check the admin panel to approve.
                     type: 'claim'
                 });
                 showNotification(`$${availableAmount.toFixed(2)} deposit bonus claimed to real balance.`, 'win');
+                if (btn) { btn.textContent = `Claim $0.00`; }
             } catch (e) {
                 console.error('Referral claim failed:', e);
                 showNotification('Referral claim failed.', 'loss');
+                if (btn) { btn.disabled = false; btn.textContent = `Claim $${availableAmount.toFixed(2)}`; }
             }
         }
 
@@ -16455,10 +16459,12 @@ Please check the admin panel to approve.
             const user = auth.currentUser;
             if (!user || !mentorData) return;
             const availableAmount = mentorData.salaryWallet?.balance || 0;
-            if (availableAmount < 1000) {
-                showNotification('Salary wallet claim minimum is $1000.', 'info');
+            if (availableAmount < 100) {
+                showNotification('Salary wallet claim minimum is $100.', 'info');
                 return;
             }
+            const btn = document.getElementById('claim-salary-wallet-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
             try {
                 await database.ref(`mentors/${user.uid}/salaryWallet/balance`).set(0);
                 await updateBalances({ realChange: availableAmount });
@@ -16471,9 +16477,11 @@ Please check the admin panel to approve.
                     type: 'claim'
                 });
                 showNotification(`$${availableAmount.toFixed(2)} salary claimed to real balance.`, 'win');
+                if (btn) { btn.textContent = `Claim $0.00`; }
             } catch (e) {
                 console.error('Salary wallet claim failed:', e);
                 showNotification('Salary wallet claim failed.', 'loss');
+                if (btn) { btn.disabled = false; btn.textContent = `Claim $${availableAmount.toFixed(2)}`; }
             }
         }
 
@@ -16596,8 +16604,17 @@ Please check the admin panel to approve.
             if (!userData) return false;
             
             const now = Date.now();
+
+            if (userData.bannedUntil && userData.bannedUntil > now) {
+                return false;
+            }
+
+            const realBalance = parseFloat(userData.realBalance || 0);
+            if (realBalance < 0.50) {
+                return false;
+            }
+
             const fortyEightHoursAgo = now - (48 * 60 * 60 * 1000); 
-            
             const lastTradeTime = userData.lastTradeTimestamp || 0;
             
             if (lastTradeTime < fortyEightHoursAgo) {
@@ -17627,14 +17644,24 @@ Please check the admin panel to approve.
                                 </div>
                                 <div style="margin-bottom: 20px;">
                                     <h4 style="color: var(--action-blue); margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-handshake-o" style="margin-right: 6px;"></i> 3. Partner / Salary Program</h4>
-                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Earn fixed monthly salaries based on your active members! Your specific target (required active members) and salary amount are determined dynamically.</p>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Earn fixed monthly salaries by reaching different active member levels (e.g., Level 1: 15-49, Level 2: 50+).</p>
                                     <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 0 16px; padding: 0;">
-                                        <li style="margin-bottom: 4px;">Pays a fixed salary per active member into your Salary Wallet every 30 days.</li>
-                                        <li style="margin-bottom: 4px;">Salary Wallet can be claimed once it reaches at least <strong>$1000</strong>.</li>
-                                        <li>If your active members drop below your target, a 10-day grace period begins. If not restored, Partner access becomes inactive.</li>
+                                        <li style="margin-bottom: 4px;">Every 30 days, the Admin reviews your Active Users and adds your earned salary directly to your Salary Wallet.</li>
+                                        <li style="margin-bottom: 4px;">You will receive Telegram notifications when you level up and when your monthly cycle is completed.</li>
+                                        <li style="margin-bottom: 4px;">Salary Wallet can be claimed to your real balance once it reaches at least <strong>$100</strong>.</li>
                                     </ul>
                                 </div>
                                 <div>
+                                    <h4 style="color: #FFB300; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-user-check" style="margin-right: 6px;"></i> 4. Active User Requirements</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">To be counted as an <strong>Active User</strong> for the Salary Program, a referred user must meet all of the following conditions:</p>
+                                    <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 12px 16px; padding: 0;">
+                                        <li style="margin-bottom: 4px;"><strong>Trading Activity:</strong> Must have placed at least one trade in the last <strong>48 hours (2 days)</strong>.</li>
+                                        <li style="margin-bottom: 4px;"><strong>Minimum Balance:</strong> Must maintain a real balance of at least <strong>$0.50</strong>.</li>
+                                        <li><strong>Account Status:</strong> The account must not be currently banned.</li>
+                                    </ul>
+                                    <div style="font-size: 0.85rem; color: #FFB300; background: rgba(255,179,0,0.1); padding: 8px; border-radius: 4px; margin-bottom: 20px;">
+                                        If a user fails to meet any of these criteria, they instantly become <strong>Inactive</strong>. They will become Active again once they meet the requirements.
+                                    </div>
                                     <h4 style="color: #b0bec5; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-info-circle" style="margin-right: 6px;"></i> General Rules</h4>
                                     <p style="color: #b0bec5; font-size: 0.9rem; margin: 0; line-height: 1.5;">Every new account becomes a Mentor automatically. Opening the site with a referral link fills the referral code automatically and opens the registration screen first.</p>
                                 </div>
