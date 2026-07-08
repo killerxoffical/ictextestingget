@@ -6242,7 +6242,7 @@
         background: rgba(255, 255, 255, 0.15);
     }
 </style>
-
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 <body>
 
@@ -16230,12 +16230,12 @@ Please check the admin panel to approve.
                         <!-- Links Section -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
                             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; overflow: hidden; position: relative;">
-                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Server Link</div>
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Website Link <i class="fa fa-copy" style="margin-left:4px; font-size:0.75rem;"></i></div>
                                 <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px;">${serverUrl}</div>
                                 <button id="copy-ref-link-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 8px;"><i class="fa fa-copy"></i></button>
                             </div>
                             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; overflow: hidden; position: relative;">
-                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Referral Code</div>
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Referral Code <i class="fa fa-copy" style="margin-left:4px; font-size:0.75rem;"></i></div>
                                 <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px;">${refCode}</div>
                                 <button id="copy-ref-code-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 8px;"><i class="fa fa-copy"></i></button>
                             </div>
@@ -16243,7 +16243,7 @@ Please check the admin panel to approve.
 
                         <!-- Message Template Button -->
                         <button id="copy-referral-template-btn" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.3s; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <i class="fa fa-copy" style="color: var(--action-blue);"></i> Message Copy Section
+                            <i class="fa fa-copy" style="color: var(--action-blue);"></i> Refer Template
                         </button>
 
                         <!-- Open User List Button -->
@@ -16259,20 +16259,25 @@ Please check the admin panel to approve.
                                         <span style="font-weight: 600; font-size: 1rem;">Deposit Bonus Wallet</span>
                                         <span style="font-size: 0.85rem; color: #8d9ece; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">Min $10</span>
                                     </div>
-                                    <button class="salary-apply-btn" id="claim-referral-bonus-btn" style="width: 100%;" ${!canClaimReferral ? 'disabled' : ''}>Claim $${referralBonusBalance.toFixed(2)}</button>
+                                    <button class="salary-apply-btn" id="claim-referral-bonus-btn" style="width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;" ${!canClaimReferral ? 'disabled' : ''}>Claim $${referralBonusBalance.toFixed(2)}</button>
                                 </div>
                                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                                         <span style="font-weight: 600; font-size: 1rem;">Salary Wallet</span>
                                         <span style="font-size: 0.85rem; color: #8d9ece; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">Min $100</span>
                                     </div>
-                                    <button class="salary-apply-btn" id="claim-salary-wallet-btn" style="width: 100%;" ${salaryWalletBalance < 100 ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
+                                    <button class="salary-apply-btn" id="claim-salary-wallet-btn" style="width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;" ${salaryWalletBalance < 100 ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="mentor-salary-section" style="padding: 0 16px; margin-top: 32px;">
+                    <!-- Referral Program Lottie Animation -->
+                    <div style="display: flex; justify-content: center; margin-top: 32px;">
+                        <lottie-player src="./animations/tmpux2e8glk.json" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></lottie-player>
+                    </div>
+
+                    <div id="mentor-salary-section" style="padding: 0 16px; margin-top: 16px;">
                     </div>
                 </div>
             `;
