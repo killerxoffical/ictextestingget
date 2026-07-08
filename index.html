@@ -8066,18 +8066,18 @@
                         <h2 style="color: #fff; font-weight: 800;">Redeem Code</h2>
                     </div>
                     <div class="page-content" style="padding-top: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%;">
-                        <div style="background: rgba(255, 179, 0, 0.1); width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 179, 0, 0.2);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor" style="color: #FFB300;"><path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zM11 15h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2z"/></svg>
+                        <div style="margin-bottom: 25px; display: flex; align-items: center; justify-content: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-up);"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.34 1-.98 1-1.72V9c0-.74-.41-1.38-1-1.72zM20 9v6h-2V9h2zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z"/><circle cx="16" cy="12" r="1.5"/></svg>
                         </div>
-                        <h3 style="margin-top: 0; color: #fff; font-size: 1.6rem; margin-bottom: 15px;">Claim Premium Code</h3>
-                        <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 40px; text-align: center; max-width: 300px;">Enter your premium code below to claim your bonus or main balance.</p>
+                        <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem; margin-bottom: 10px;">Enter your redeem code</h3>
+                        <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 40px; text-align: center; max-width: 300px;">Enter your redeem code below to claim your dollars.</p>
                         
                         <div style="width: 100%; max-width: 360px; text-align: left; margin-bottom: 30px;">
-                            <label style="display: block; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px; font-weight: 600;">ENTER CODE</label>
-                            <input type="text" id="redeem-code-input" class="form-input" placeholder="e.g. ICTEX-BONUS-50" style="text-align: center; font-size: 1.4rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; padding: 20px;">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 10px; font-weight: 600;">CODE</label>
+                            <input type="text" id="redeem-code-input" class="form-input" placeholder="e.g. ICTEX-BONUS-50" style="text-align: center; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 18px;">
                         </div>
                         
-                        <button id="submit-redeem-btn" style="background: linear-gradient(135deg, #FFB300, #FF6F00); color: #fff; font-weight: 800; font-size: 1.2rem; padding: 18px; width: 100%; max-width: 360px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 8px 25px rgba(255, 179, 0, 0.4); text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s;">
+                        <button id="submit-redeem-btn" class="btn-deposit-highlight" style="font-size: 1.1rem; padding: 16px; width: 100%; max-width: 360px; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s;">
                             Claim Now
                         </button>
                     </div>
@@ -8658,7 +8658,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .35.07.69.18 1H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm-5-2a1 1 0 0 1 1-1 1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1zM4 19V8h16v11z"/></svg>
                     <span>Transactions</span>
                 </button>
-                <button class="payments-btn" data-action="redeem" style="background: linear-gradient(135deg, #FFB300, #FF6F00); color: #fff; border: 1px solid rgba(255,179,0,0.3); font-weight: 700;">
+                <button class="payments-btn" data-action="redeem">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-2-1.46c-1.19.69-2 1.99-2 3.46s.81 2.77 2 3.46V18H4v-2.54c1.19-.69 2-1.99 2-3.46s-.81-2.77-2-3.46V6h16v2.54zM11 15h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2z"/></svg>
                     <span>Redeem</span>
                 </button>
