@@ -16227,19 +16227,19 @@ Please check the admin panel to approve.
                         </div>
 
                         <!-- Links Section -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
                             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;">
                                 <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 8px;">Website Link</div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px;">
-                                    <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${serverUrl}</div>
-                                    <button id="copy-ref-link-btn" style="background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 0;"><i class="fa fa-copy" style="font-size: 1.1rem;"></i></button>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="flex: 1; font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">${serverUrl}</div>
+                                    <button id="copy-ref-link-btn" style="background: rgba(30,136,229,0.15); border: 1px solid var(--action-blue); color: var(--action-blue); cursor: pointer; padding: 11px 16px; border-radius: 8px; font-weight: 600; font-family: 'Inter', sans-serif;"><i class="fa fa-copy" style="margin-right: 6px;"></i> Copy</button>
                                 </div>
                             </div>
                             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;">
                                 <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 8px;">Referral Code</div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px;">
-                                    <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${refCode}</div>
-                                    <button id="copy-ref-code-btn" style="background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 0;"><i class="fa fa-copy" style="font-size: 1.1rem;"></i></button>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="flex: 1; font-size: 1.1rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 8px; letter-spacing: 1px; font-weight: 700;">${refCode}</div>
+                                    <button id="copy-ref-code-btn" style="background: rgba(30,136,229,0.15); border: 1px solid var(--action-blue); color: var(--action-blue); cursor: pointer; padding: 11px 16px; border-radius: 8px; font-weight: 600; font-family: 'Inter', sans-serif;"><i class="fa fa-copy" style="margin-right: 6px;"></i> Copy</button>
                                 </div>
                             </div>
                         </div>
