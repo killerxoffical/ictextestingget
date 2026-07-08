@@ -16228,15 +16228,19 @@ Please check the admin panel to approve.
 
                         <!-- Links Section -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
-                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; overflow: hidden; position: relative;">
-                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Website Link <i class="fa fa-copy" style="margin-left:4px; font-size:0.75rem;"></i></div>
-                                <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px;">${serverUrl}</div>
-                                <button id="copy-ref-link-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 8px;"><i class="fa fa-copy"></i></button>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 8px;">Website Link</div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px;">
+                                    <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${serverUrl}</div>
+                                    <button id="copy-ref-link-btn" style="background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 0;"><i class="fa fa-copy" style="font-size: 1.1rem;"></i></button>
+                                </div>
                             </div>
-                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; overflow: hidden; position: relative;">
-                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 4px;">Referral Code <i class="fa fa-copy" style="margin-left:4px; font-size:0.75rem;"></i></div>
-                                <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px;">${refCode}</div>
-                                <button id="copy-ref-code-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 8px;"><i class="fa fa-copy"></i></button>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 8px;">Referral Code</div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px;">
+                                    <div style="font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${refCode}</div>
+                                    <button id="copy-ref-code-btn" style="background: transparent; border: none; color: var(--action-blue); cursor: pointer; padding: 0;"><i class="fa fa-copy" style="font-size: 1.1rem;"></i></button>
+                                </div>
                             </div>
                         </div>
 
@@ -16269,11 +16273,6 @@ Please check the admin panel to approve.
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Referral Program Animation -->
-                    <div style="display: flex; justify-content: center; margin-top: 32px;">
-                        <img src="./animations/animation-gif.gif" alt="Referral Animation" style="width: 250px; height: 250px; object-fit: contain;">
                     </div>
 
                     <div id="mentor-salary-section" style="padding: 0 16px; margin-top: 16px;">
@@ -16349,7 +16348,7 @@ Please check the admin panel to approve.
                     <div class="salary-tier-card premium" style="border: 1px solid var(--action-blue); background: linear-gradient(145deg, rgba(30,136,229,0.05), transparent);">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
                             <span style="color: var(--action-blue); font-size: 1.05rem; font-weight: 700; white-space: nowrap;">Unlock Monthly Salary</span>
-                            <span style="background: rgba(30,136,229,0.1); color: #64b5f6; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0;">Min 15 Users</span>
+                            <span style="background: rgba(76, 175, 80, 0.15); color: #81c784; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0;">Min 15 Users</span>
                         </div>
                         <div class="salary-tier-progress-info" style="margin-top: 16px;">
                             <span style="font-size: 1.1rem; font-weight: 600; color: white;">${activeUsers} / 15</span>
