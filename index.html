@@ -7987,6 +7987,16 @@
                     </div>
                     <div class="page-content" id="mentor-page-content"></div>
                 </div>
+                
+                <div id="view-salary-program" class="view">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showView('mentor')"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
+                        <h2>Salary Program</h2>
+                        <div></div>
+                    </div>
+                    <div class="page-content" id="salary-program-content" style="padding: 16px;"></div>
+                </div>
+
                 <div id="view-tournament" class="view">
                     <div class="page-content" style="padding: 0; overflow: hidden; height: 100%; position: relative;">
                         <div id="tournament-loader" style="position: absolute; inset: 0; background: #0B0E14; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -16310,9 +16320,14 @@ Please check the admin panel to approve.
                         </div>
 
                         <!-- Open User List Button -->
-                        <button id="mentor-user-list-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(30,136,229,0.1), rgba(30,136,229,0.2)); border: 1px solid rgba(30,136,229,0.3); border-radius: 12px; color: #fff; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <i class="fa fa-users"></i> Your Referral Users <i class="fa fa-arrow-right" style="margin-left: 4px; font-size: 0.9rem;"></i>
-                        </button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px;">
+                            <button id="mentor-user-list-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(30,136,229,0.1), rgba(30,136,229,0.2)); border: 1px solid rgba(30,136,229,0.3); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="fa fa-users" style="font-size: 1.2rem;"></i> Users List
+                            </button>
+                            <button id="mentor-salary-program-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(12,207,86,0.1), rgba(12,207,86,0.2)); border: 1px solid rgba(12,207,86,0.3); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="fa fa-money" style="font-size: 1.2rem;"></i> Salary Program
+                            </button>
+                        </div>
 
                         <div class="mentor-section-card premium" style="background: transparent; padding: 0; border: none;">
                             <h3 style="font-size: 1.2rem; margin-bottom: 16px; padding: 12px 16px; border-radius: 8px; background: linear-gradient(90deg, rgba(30,136,229,0.1), transparent); border-left: 4px solid var(--action-blue); color: #fff;">Claim Center</h3>
@@ -16334,12 +16349,14 @@ Please check the admin panel to approve.
                             </div>
                         </div>
                     </div>
-
-                    <div id="mentor-salary-section" style="padding: 0 16px; margin-top: 16px;">
-                    </div>
                 </div>
             `;
-            renderMentorSalarySection();
+            
+            document.getElementById('mentor-user-list-btn').addEventListener('click', () => showView('mentor-users'));
+            document.getElementById('mentor-salary-program-btn').addEventListener('click', () => {
+                showView('salary-program');
+                renderMentorSalarySection();
+            });
 
             document.getElementById('copy-ref-code-btn').addEventListener('click', () => {
                 navigator.clipboard.writeText(refCode).then(() => showNotification('Referral code copied.', 'info'));
@@ -16360,8 +16377,13 @@ Please check the admin panel to approve.
 
         
         function renderMentorSalarySection() {
-            const container = document.getElementById('mentor-salary-section');
-            const activeUsers = mentorData.studentCount?.active || 0;
+            const container = document.getElementById('salary-program-content');
+            if(!container) return; // Prevent error if view is not yet initialized
+            
+            const realActive = mentorData.studentCount?.active || 0;
+            const botActive = mentorData.studentCount?.botActive || 0;
+            const activeUsers = realActive + botActive; // Combined active users
+            const totalUsers = mentorData.studentCount?.total || 0;
             const isSalaryActive = mentorData.salaryActive === true;
 
             let contentHTML = '';
@@ -16375,7 +16397,6 @@ Please check the admin panel to approve.
                 const nextSalaryDate = new Date(ldObj.getFullYear(), ldObj.getMonth() + 1, 1).getTime();
                 
                 const now = Date.now();
-                const totalUsers = mentorData.studentCount?.total || 0;
                 
                 let levelName = "Partner";
                 if (activeUsers >= 50 && activeUsers <= 99) levelName = "Senior Partner";
@@ -16447,7 +16468,7 @@ Please check the admin panel to approve.
                         `;
                         pendingList.sort((a,b) => b.startDate - a.startDate).forEach(p => {
                             contentHTML += `
-                                <div style="background: rgba(255, 179, 0, 0.1); border: 1px solid rgba(255, 179, 0, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 10px;">
+                                <div style="background: rgba(255,193,7,0.05); border: 1px solid rgba(255,193,7,0.2); border-radius: 10px; padding: 16px; margin-bottom: 12px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <div style="font-size: 0.95rem; font-weight: 600; color: white;">Cycle: ${new Date(p.startDate).toLocaleDateString()} - ${new Date(p.endDate).toLocaleDateString()}</div>
                                         <div style="background: rgba(255,255,255,0.1); color: var(--warning); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Pending Admin Approval</div>
