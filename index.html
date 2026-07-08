@@ -16346,33 +16346,42 @@ Please check the admin panel to approve.
             }
 
             // Tiers List
-            contentHTML += `
-                <div style="margin-top: 32px;">
-                    <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Dynamic Salary Levels</h4>
-                    <div style="display: grid; gap: 16px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #64b5f6; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 1 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(15 - 49 Users)</span></span>
-                            <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$30 - $60 / Month</strong>
+                const getLevelHTML = (levelName, rangeText, rewardText, targetUsers, activeUsers, colorHex) => {
+                    const progress = Math.min(100, (activeUsers / targetUsers) * 100);
+                    const isUnlocked = activeUsers >= targetUsers;
+                    const progressColor = isUnlocked ? 'var(--color-up)' : colorHex;
+                    
+                    return `
+                        <div style="padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(${parseInt(colorHex.slice(1,3),16)}, ${parseInt(colorHex.slice(3,5),16)}, ${parseInt(colorHex.slice(5,7),16)}, 0.3); border-radius: 8px; margin-bottom: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: nowrap; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 1; min-width: 0;">
+                                    <span style="font-weight: 600; font-size: 0.95rem; color: #fff; white-space: nowrap;">${levelName}</span>
+                                    <span style="color: #8d9ece; font-size: 0.75rem; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${rangeText}</span>
+                                </div>
+                                <strong style="color: var(--color-up); font-size: 0.9rem; background: rgba(76,175,80,0.1); padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;">${rewardText}</strong>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                                    <div style="width: ${progress}%; height: 100%; background: ${progressColor}; box-shadow: 0 0 8px ${progressColor}; transition: width 1s ease;"></div>
+                                </div>
+                                <span style="font-size: 0.75rem; color: #8d9ece; white-space: nowrap; min-width: 45px; text-align: right;">${Math.min(activeUsers, targetUsers)} / ${targetUsers}</span>
+                            </div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #4fc3f7; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 2 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(50 - 99 Users)</span></span>
-                            <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$60 - $120 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #4dd0e1; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 3 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(100 - 199 Users)</span></span>
-                            <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$150 - $300 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #4db6ac; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Level 4 <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(200 - 299 Users)</span></span>
-                            <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$300 - $500 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #81c784; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                            <span style="font-weight: 500; font-size: 1.05rem; color: #e1e2e8;">Max Level <span style="color: #8d9ece; font-size: 0.9rem; margin-left: 8px;">(300+ Users)</span></span>
-                            <strong style="color: var(--color-up); font-size: 1.1rem; background: rgba(76,175,80,0.1); padding: 4px 12px; border-radius: 20px;">$750 - $1500 / Month</strong>
+                    `;
+                };
+
+                contentHTML += `
+                    <div style="margin-top: 32px;">
+                        <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Dynamic Salary Levels</h4>
+                        <div>
+                            ${getLevelHTML('Level 1', '15-49 Active', '$30-$60', 15, activeUsers, '#64b5f6')}
+                            ${getLevelHTML('Level 2', '50-99 Active', '$60-$120', 50, activeUsers, '#4fc3f7')}
+                            ${getLevelHTML('Level 3', '100-199 Active', '$150-$300', 100, activeUsers, '#4dd0e1')}
+                            ${getLevelHTML('Level 4', '200-299 Active', '$300-$500', 200, activeUsers, '#4db6ac')}
+                            ${getLevelHTML('Max Level', '300+ Active', '$750-$1500', 300, activeUsers, '#81c784')}
                         </div>
                     </div>
-                </div>
-            `;
+                `;
 
             container.innerHTML = `<h3>Referral Program Status</h3>${contentHTML}`;
         }
