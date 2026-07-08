@@ -16653,8 +16653,7 @@ Please check the admin panel to approve.
                     await database.ref(`mentors/${user.uid}`).update({
                         partnerStatus: 'inactive',
                         salaryStatus: null
-                    });
-                    showNotification('Partner access was deactivated because the 10-day grace period ended before reaching 100 active members.', 'loss');
+                    showNotification(`Partner access was deactivated because the 10-day grace period ended before reaching ${requiredUsers} active members.`, 'loss');
                     return;
                 }
 
@@ -17627,11 +17626,11 @@ Please check the admin panel to approve.
                                 </div>
                                 <div style="margin-bottom: 20px;">
                                     <h4 style="color: var(--action-blue); margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-handshake-o" style="margin-right: 6px;"></i> 3. Partner / Salary Program</h4>
-                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Unlock fixed monthly salaries based on your active members! Unlocks automatically at <strong>100 active members</strong>.</p>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Earn fixed monthly salaries based on your active members! Your specific target (required active members) and salary amount are determined dynamically.</p>
                                     <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 0 16px; padding: 0;">
-                                        <li style="margin-bottom: 4px;">Pays <strong>$3 per active member</strong> into the Salary Wallet every 30 days.</li>
+                                        <li style="margin-bottom: 4px;">Pays a fixed salary per active member into your Salary Wallet every 30 days.</li>
                                         <li style="margin-bottom: 4px;">Salary Wallet can be claimed once it reaches at least <strong>$1000</strong>.</li>
-                                        <li>If active members drop below 100, a 10-day grace period begins. If not restored, Partner access becomes inactive.</li>
+                                        <li>If your active members drop below your target, a 10-day grace period begins. If not restored, Partner access becomes inactive.</li>
                                     </ul>
                                 </div>
                                 <div>
