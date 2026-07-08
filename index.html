@@ -16369,7 +16369,11 @@ Please check the admin panel to approve.
             if (isSalaryActive) {
                 const startDate = mentorData.salaryStartDate || Date.now();
                 const lastDate = mentorData.lastSalaryDate || startDate;
-                const nextSalaryDate = lastDate + (30 * 24 * 60 * 60 * 1000);
+                
+                // Compute nextSalaryDate as the 1st of the next month AFTER lastDate
+                const ldObj = new Date(lastDate);
+                const nextSalaryDate = new Date(ldObj.getFullYear(), ldObj.getMonth() + 1, 1).getTime();
+                
                 const now = Date.now();
                 const totalUsers = mentorData.studentCount?.total || 0;
                 
@@ -16383,11 +16387,13 @@ Please check the admin panel to approve.
                 if (now >= nextSalaryDate) {
                     const cycleId = "CYC_" + lastDate;
                     if (!mentorData.pendingSalaries || !mentorData.pendingSalaries[cycleId]) {
+                        const workedDays = Math.max(1, Math.ceil((nextSalaryDate - lastDate) / (1000 * 60 * 60 * 24)));
                         const updates = {};
                         updates[`mentors/${auth.currentUser.uid}/pendingSalaries/${cycleId}`] = {
                             startDate: lastDate,
                             endDate: nextSalaryDate,
                             activeMembers: activeUsers,
+                            workedDays: workedDays,
                             status: 'pending',
                             timestamp: now
                         };
@@ -16398,7 +16404,8 @@ Please check the admin panel to approve.
 
                 // Recalculate based on possibly updated nextSalaryDate
                 const displayLastDate = (now >= nextSalaryDate && (!mentorData.pendingSalaries || !mentorData.pendingSalaries["CYC_" + lastDate])) ? nextSalaryDate : lastDate;
-                const displayNextDate = displayLastDate + (30 * 24 * 60 * 60 * 1000);
+                const dldObj = new Date(displayLastDate);
+                const displayNextDate = new Date(dldObj.getFullYear(), dldObj.getMonth() + 1, 1).getTime();
                 
                 let statusMsg = '';
                 const daysLeft = Math.ceil((displayNextDate - now) / (1000 * 60 * 60 * 24));
@@ -16445,7 +16452,7 @@ Please check the admin panel to approve.
                                         <div style="font-size: 0.95rem; font-weight: 600; color: white;">Cycle: ${new Date(p.startDate).toLocaleDateString()} - ${new Date(p.endDate).toLocaleDateString()}</div>
                                         <div style="background: rgba(255,255,255,0.1); color: var(--warning); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Pending Admin Approval</div>
                                     </div>
-                                    <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 8px;">Active Members at end of cycle: <span style="color: white; font-weight: bold;">${p.activeMembers}</span></div>
+                                    <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 8px;">Worked for <span style="color: white; font-weight: bold;">${p.workedDays || 30} Days</span> | Active Members: <span style="color: white; font-weight: bold;">${p.activeMembers}</span></div>
                                 </div>
                             `;
                         });
