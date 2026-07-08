@@ -8549,7 +8549,7 @@
             
              <div class="modal-overlay bottom-sheet" id="action-result-modal">
                 <div class="bottom-sheet-content">
-                    <button class="back-btn" style="position: absolute; top: 15px; right: 15px; z-index: 3; background-color: rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; padding: 4px;" id="action-result-close-btn">
+                    <button class="action-result-close-icon" style="position: absolute; top: 15px; right: 15px; z-index: 3; background-color: rgba(255,255,255,0.1); border: none; cursor: pointer; color: white; border-radius: 50%; width: 32px; height: 32px; padding: 4px;" id="action-result-close-btn">
                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/></svg>
                     </button>
                     <div class="action-result-icon-container">
@@ -16182,7 +16182,12 @@ Please check the admin panel to approve.
                     <!-- Total Earning Header -->
                     <div style="text-align: center; margin-bottom: 24px; padding: 24px 16px; background: radial-gradient(circle at top, rgba(30,136,229,0.15) 0%, transparent 70%); border-bottom: 1px solid rgba(255,255,255,0.05);">
                         <div style="color: #8d9ece; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Total Earnings</div>
-                        <div style="font-size: 2.5rem; font-weight: 800; color: #fff;">$${totalEarning.toFixed(2)}</div>
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 12px;">
+                            <div style="font-size: 2.5rem; font-weight: 800; color: #fff;">$${totalEarning.toFixed(2)}</div>
+                            <div style="display: flex; align-items: center; background: rgba(76, 175, 80, 0.15); padding: 4px 8px; border-radius: 8px; font-size: 0.85rem; color: #81c784; height: fit-content; border: 1px solid rgba(76, 175, 80, 0.2);">
+                                <i class="fa fa-line-chart" style="margin-right: 6px;"></i>+12.5%
+                            </div>
+                        </div>
                     </div>
 
                     <div style="padding: 0 16px;">
@@ -16214,7 +16219,7 @@ Please check the admin panel to approve.
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
                             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
                                 <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Account Status</div>
-                                <div style="font-size: 1.1rem; font-weight: 700; color: ${isSalaryActive ? 'var(--color-up)' : '#fff'};">${isSalaryActive ? 'Partner' : 'Normal User'}</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: ${isSalaryActive ? 'var(--color-up)' : '#fff'};">${isSalaryActive ? 'Partner' : 'Normal Trader'}</div>
                             </div>
                             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
                                 <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Commission</div>
@@ -16236,9 +16241,14 @@ Please check the admin panel to approve.
                             </div>
                         </div>
 
+                        <!-- Message Template Button -->
+                        <button id="copy-referral-template-btn" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.3s; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa fa-copy" style="color: var(--action-blue);"></i> Message Copy Section
+                        </button>
+
                         <!-- Open User List Button -->
                         <button id="mentor-user-list-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(30,136,229,0.1), rgba(30,136,229,0.2)); border: 1px solid rgba(30,136,229,0.3); border-radius: 12px; color: #fff; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <i class="fa fa-users"></i> Your Referral Users
+                            <i class="fa fa-users"></i> Your Referral Users <i class="fa fa-arrow-right" style="margin-left: 4px; font-size: 0.9rem;"></i>
                         </button>
 
                         <div class="mentor-section-card premium" style="background: transparent; padding: 0; border: none;">
@@ -16273,6 +16283,10 @@ Please check the admin panel to approve.
             });
             document.getElementById('copy-ref-link-btn').addEventListener('click', () => {
                 navigator.clipboard.writeText(serverUrl).then(() => showNotification('Server link copied.', 'info'));
+            });
+            document.getElementById('copy-referral-template-btn').addEventListener('click', () => {
+                const messageTemplate = `🚀 Join ICTEX today and start your trading journey!\n\n📈 ICTEX is the most advanced and secure trading platform. Don't miss out on the best trading experience.\n\n🌐 Website: ${serverUrl}\n🎁 Referral Code: ${refCode}\n🔗 Sign up here: ${serverUrl}?ref=${refCode}`;
+                navigator.clipboard.writeText(messageTemplate).then(() => showNotification('Message template copied.', 'info'));
             });
             document.getElementById('mentor-user-list-btn').addEventListener('click', () => showView('mentor-users'));
             const claimReferralBtn = document.getElementById('claim-referral-bonus-btn');
@@ -16329,9 +16343,9 @@ Please check the admin panel to approve.
                 const progress = Math.min(100, (activeUsers / 15) * 100);
                 contentHTML = `
                     <div class="salary-tier-card premium" style="border: 1px solid var(--action-blue); background: linear-gradient(145deg, rgba(30,136,229,0.05), transparent);">
-                        <div class="salary-tier-header">
-                            <span class="salary-tier-title" style="color: var(--action-blue); font-size: 1.2rem; font-weight: 700;">Unlock Monthly Salary</span>
-                            <span class="salary-tier-reward" style="background: rgba(30,136,229,0.1); color: #64b5f6; padding: 4px 12px; border-radius: 20px;">Min 15 Users</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
+                            <span style="color: var(--action-blue); font-size: 1.05rem; font-weight: 700; white-space: nowrap;">Unlock Monthly Salary</span>
+                            <span style="background: rgba(30,136,229,0.1); color: #64b5f6; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0;">Min 15 Users</span>
                         </div>
                         <div class="salary-tier-progress-info" style="margin-top: 16px;">
                             <span style="font-size: 1.1rem; font-weight: 600; color: white;">${activeUsers} / 15</span>
@@ -16372,7 +16386,7 @@ Please check the admin panel to approve.
 
                 contentHTML += `
                     <div style="margin-top: 32px;">
-                        <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Dynamic Salary Levels</h4>
+                        <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Partner Salary Levels</h4>
                         <div>
                             ${getLevelHTML('Level 1', '15-49 Active', '$30-$60', 15, activeUsers, '#64b5f6')}
                             ${getLevelHTML('Level 2', '50-99 Active', '$60-$120', 50, activeUsers, '#4fc3f7')}
