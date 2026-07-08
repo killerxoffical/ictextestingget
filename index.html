@@ -12026,6 +12026,16 @@ Timestamp: ${new Date().toISOString()}
                 const newTransaction = { id: withdrawRequest.id, timestamp: Date.now(), status: 'pending', amount: -amount, fee: 0, method: method.name, type: 'withdraw', bonusRemoved: bonusRemoved };
                 await database.ref(`users/${user.uid}/transactions/${newTransaction.id}`).set(newTransaction);
                 
+                // --- NEW: Cancel Referral Bonus Task on Withdrawal ---
+                try {
+                    const taskSnap = await database.ref(`users/${user.uid}/referralBonusTask`).once('value');
+                    const task = taskSnap.val();
+                    if (task && task.status === 'active') {
+                        await database.ref(`users/${user.uid}/referralBonusTask/status`).set('failed_withdraw');
+                        console.log("Bonus task failed due to withdrawal.");
+                    }
+                } catch(e) { console.error("Error checking bonus task:", e); }
+                
                 // Populate and display custom Withdrawal Success View
                 document.getElementById('success-amount-val').textContent = `$${amount.toFixed(2)}`;
                 document.getElementById('success-method-val').textContent = method.name;
@@ -16510,6 +16520,22 @@ Please check the admin panel to approve.
                 const statusClass = isActive ? 'active' : 'inactive';
                 const statusText = isActive ? 'Active' : 'Inactive';
                 
+                let bonusBadge = '';
+                if (!showDeleted) {
+                    if (userData.referralBonusTask) {
+                        const task = userData.referralBonusTask;
+                        if (task.status === 'completed') {
+                            bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #00E676; background: rgba(0,230,118,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">🏆 Bonus: $5 Earned!</div>`;
+                        } else if (task.status === 'active') {
+                            bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #FFB300; background: rgba(255,179,0,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">⏳ Bonus: ${task.currentTrades || 0}/10 Trades</div>`;
+                        } else if (task.status === 'failed_withdraw' || task.status === 'failed_balance' || task.status === 'failed_time') {
+                            bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #FF5252; background: rgba(255,82,82,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">❌ Bonus Failed</div>`;
+                        }
+                    } else {
+                        bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #9E9E9E; background: rgba(158,158,158,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">🕒 Bonus: Pending Deposit</div>`;
+                    }
+                }
+                
                 userListHTML += `
                     <div class="mentor-user-list-item">
                         <div class="mentor-user-top-row">
@@ -16517,6 +16543,7 @@ Please check the admin panel to approve.
                                 <div class="name">${userData.name}</div>
                                 <div class="uid">ID: ${userData.numericId}</div>
                                 ${!showDeleted ? `<div class="status ${statusClass}">${statusText}</div>` : ''}
+                                ${bonusBadge}
                             </div>
                             <div class="mentor-user-stats">
                                 <div class="stat">
