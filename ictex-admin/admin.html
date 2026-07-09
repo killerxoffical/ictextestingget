@@ -239,6 +239,7 @@
                             <th>Level</th>
                             <th>Joined Date</th>
                             <th>Next Salary Date</th>
+                            <th>Cycle Days</th>
                             <th>Active Members</th>
                             <th>Action</th>
                         </tr>
@@ -491,6 +492,8 @@
                             salaryStartDate: Date.now(),
                             lastSalaryDate: Date.now()
                         });
+                    } else if (newTotal < 15 && m.salaryActive) {
+                        await database.ref(`mentors/${uid}/salaryActive`).set(false);
                     }
                 } else if (botActive > 0) {
                     await database.ref(`mentors/${uid}/studentCount/botActive`).set(botActive);
@@ -584,6 +587,7 @@
                     const ldObj = new Date(lastDate);
                     const nextSalaryDate = new Date(ldObj.getFullYear(), ldObj.getMonth() + 1, 1).getTime();
                     const nextDateStr = new Date(nextSalaryDate).toLocaleDateString();
+                    const cycleDays = Math.max(1, Math.ceil((nextSalaryDate - lastDate) / (1000 * 60 * 60 * 24)));
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -594,6 +598,7 @@
                         <td><span style="background:var(--action-blue); padding:3px 8px; border-radius:4px; font-size:0.8rem;">${levelName}</span></td>
                         <td style="font-size:0.85rem;">${new Date(m.salaryStartDate || Date.now()).toLocaleDateString()}</td>
                         <td style="font-size:0.85rem; font-weight:600; color:var(--success);">${nextDateStr}</td>
+                        <td style="font-size:0.85rem; font-weight:bold; color:white;">${cycleDays} Days</td>
                         <td style="font-weight:600; color:var(--accent-color);">${activeUsers} <span style="font-size: 0.7rem; color: var(--text-secondary);">(${realActive}R + ${botActive}B)</span></td>
                         <td><button class="btn btn-small btn-outline" onclick="toggleSalaryAccordion('${uid}')">View Salaries</button></td>
                     `;
@@ -603,7 +608,7 @@
                     trAcc.id = `acc-${uid}`;
                     trAcc.style.display = 'none';
                     trAcc.innerHTML = `
-                        <td colspan="5" style="padding: 0; background: rgba(0,0,0,0.2);">
+                        <td colspan="7" style="padding: 0; background: rgba(0,0,0,0.2);">
                             <div style="padding: 20px; border-left: 3px solid var(--action-blue);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                                     <h4 style="margin:0; color:var(--warning);">Pending Salaries</h4>
@@ -616,7 +621,7 @@
                     tbodyOngoing.appendChild(trAcc);
                 });
 
-                if (!hasOngoing) tbodyOngoing.innerHTML = '<tr><td colspan="5" style="text-align:center;">No enrolled mentors found.</td></tr>';
+                if (!hasOngoing) tbodyOngoing.innerHTML = '<tr><td colspan="7" style="text-align:center;">No enrolled mentors found.</td></tr>';
 
                 // Trigger a re-render of users table to update badges
                 database.ref('users').once('value', s => { if(s.exists()) usersData = s.val(); document.getElementById('users-table-body').innerHTML = ''; Object.keys(usersData).forEach(uid => {
