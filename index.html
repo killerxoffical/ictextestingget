@@ -16389,11 +16389,11 @@ Please check the admin panel to approve.
                 
                 const now = Date.now();
                 
-                let levelName = "Partner";
-                if (activeUsers >= 50 && activeUsers <= 99) levelName = "Senior Partner";
-                else if (activeUsers >= 100 && activeUsers <= 199) levelName = "Manager";
-                else if (activeUsers >= 200 && activeUsers <= 299) levelName = "Director";
-                else if (activeUsers >= 300) levelName = "VIP Director";
+                let levelName = "Level 1";
+                if (activeUsers >= 50 && activeUsers <= 99) levelName = "Level 2";
+                else if (activeUsers >= 100 && activeUsers <= 199) levelName = "Level 3";
+                else if (activeUsers >= 200 && activeUsers <= 299) levelName = "Level 4";
+                else if (activeUsers >= 300) levelName = "Max Level";
 
                 // Cycle Generation Logic
                 if (now >= nextSalaryDate) {
