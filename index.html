@@ -8089,7 +8089,7 @@
                                         <div style="color: #6c7893; font-size: 0.75rem; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase;" id="promo-available-count">ACTIVATE YOUR CODES HERE</div>
                                     </div>
                                 </div>
-                                <div style="color: #5b6af0;">
+                                <div style="color: #5b6af0; cursor: pointer;" onclick="showRedeemPopup('How to Claim', 'To claim a promo code, click the Enter promo code button below. Type your unique code in the popup and click Yes, activate. The bonus amount will be added to your account instantly.', 'info')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                                 </div>
                             </div>
@@ -8119,12 +8119,8 @@
                             </div>
                             
                             <!-- Bottom Bar -->
-                            <div style="background: #161b24; margin: -20px; margin-top: 20px; padding: 20px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-                                <div style="display: flex; align-items: center; gap: 10px; color: white; font-size: 0.95rem; font-weight: 500; cursor: pointer;" onclick="showView('transactions')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    Show all history
-                                </div>
-                                <button onclick="document.getElementById('promo-modal').style.display='flex'" style="background: #00c853; color: white; border: none; border-radius: 6px; padding: 12px 20px; font-weight: 600; font-size: 0.95rem; cursor: pointer;">
+                            <div style="background: #161b24; margin: -20px; margin-top: 20px; padding: 20px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <button onclick="document.getElementById('promo-modal').style.display='flex'" style="width: 100%; background: #00c853; color: white; border: none; border-radius: 6px; padding: 14px 20px; font-weight: 600; font-size: 1rem; cursor: pointer;">
                                     Enter promo code
                                 </button>
                             </div>
@@ -12281,7 +12277,7 @@ Timestamp: ${new Date().toISOString()}
             const emptyState = document.getElementById('promo-empty-state');
             if (!promoListContainer || !emptyState) return;
             
-            const promoTx = (transactionHistory || []).filter(t => t.method && t.method.includes('Redeem Code'));
+            const promoTx = (transactionHistory || []).filter(t => t.method && t.method.includes('Redeem Code')).slice(0, 4);
             
             if (promoTx.length === 0) {
                 emptyState.style.display = 'flex';
@@ -18677,6 +18673,9 @@ Please check the admin panel to approve.
                     if (type === 'success') {
                         popup.style.borderColor = '#0CCF56';
                         icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0CCF56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+                    } else if (type === 'info') {
+                        popup.style.borderColor = '#5b6af0';
+                        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#5b6af0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
                     } else {
                         popup.style.borderColor = '#FF3B30';
                         icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
