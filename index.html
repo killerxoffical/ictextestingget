@@ -16400,28 +16400,10 @@ Please check the admin panel to approve.
                 else if (effectiveActiveUsers >= 200 && effectiveActiveUsers <= 299) levelName = "Level 4";
                 else if (effectiveActiveUsers >= 300) levelName = "Max Level";
 
-                // Cycle Generation Logic
-                if (now >= nextSalaryDate) {
-                    const cycleId = "CYC_" + lastDate;
-                    if (!mentorData.pendingSalaries || !mentorData.pendingSalaries[cycleId]) {
-                        const workedDays = Math.max(1, Math.ceil((nextSalaryDate - lastDate) / (1000 * 60 * 60 * 24)));
-                        const updates = {};
-                        updates[`mentors/${auth.currentUser.uid}/pendingSalaries/${cycleId}`] = {
-                            startDate: lastDate,
-                            endDate: nextSalaryDate,
-                            activeMembers: effectiveActiveUsers,
-                            workedDays: workedDays,
-                            status: 'pending',
-                            timestamp: now
-                        };
-                        updates[`mentors/${auth.currentUser.uid}/lastSalaryDate`] = nextSalaryDate;
-                        updates[`mentors/${auth.currentUser.uid}/cycleMinActive`] = activeUsers; // Reset for new cycle
-                        database.ref().update(updates).catch(console.error);
-                    }
-                }
+                // Cycle Generation is handled by the backend heartbeat engine
 
-                // Recalculate based on possibly updated nextSalaryDate
-                const displayLastDate = (now >= nextSalaryDate && (!mentorData.pendingSalaries || !mentorData.pendingSalaries["CYC_" + lastDate])) ? nextSalaryDate : lastDate;
+                // Determine display dates
+                const displayLastDate = lastDate;
                 const dldObj = new Date(displayLastDate);
                 const displayNextDate = new Date(dldObj.getFullYear(), dldObj.getMonth() + 1, 1).getTime();
                 
