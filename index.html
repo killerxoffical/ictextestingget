@@ -8070,33 +8070,110 @@
                 </div>
 
                 <!-- NEW REDEEM FULL SCREEN VIEW -->
-                <div id="view-redeem" class="view">
-                    <div class="page-header">
+                <div id="view-redeem" class="view" style="background: #1e2532;">
+                    <div class="page-header" style="border-bottom: none; padding-bottom: 0;">
                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2 style="color: #fff; font-weight: 800;">Redeem Code</h2>
+                        <h2 style="color: #fff; font-weight: 800;">Balance Bonus</h2>
                     </div>
-                    <div class="page-content" style="padding-top: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%;">
-                        <div style="margin-bottom: 25px; display: flex; align-items: center; justify-content: center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-up);"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.34 1-.98 1-1.72V9c0-.74-.41-1.38-1-1.72zM20 9v6h-2V9h2zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z"/><circle cx="16" cy="12" r="1.5"/></svg>
+                    
+                    <div class="page-content" style="padding: 20px;">
+                        <div style="background: #192031; border-radius: 12px; padding: 20px;">
+                            <!-- Header -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="background: #5b6af0; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h2 style="color: white; font-size: 1.4rem; margin: 0; font-weight: 700;">Balance Bonus</h2>
+                                        <div style="color: #6c7893; font-size: 0.75rem; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase;" id="promo-available-count">ACTIVATE YOUR CODES HERE</div>
+                                    </div>
+                                </div>
+                                <div style="color: #5b6af0;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Table Headers -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; color: #6c7893; font-size: 0.75rem; font-weight: 700; text-align: center; margin-bottom: 15px;">
+                                <div style="text-align: left;">PROMO CODE</div>
+                                <div>STATUS</div>
+                                <div style="text-align: right;">AMOUNT</div>
+                            </div>
+                            
+                            <!-- History / Empty state container -->
+                            <div style="background: #1e2638; border-radius: 12px; min-height: 200px; padding: 30px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.02);">
+                                <!-- Empty State -->
+                                <div id="promo-empty-state" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                                    <div style="background: rgba(255,255,255,0.05); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6c7893" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="2" y2="12"></line><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><line x1="6" y1="16" x2="6.01" y2="16"></line><line x1="10" y1="16" x2="10.01" y2="16"></line></svg>
+                                    </div>
+                                    <p style="color: #6c7893; font-size: 0.95rem; line-height: 1.5; margin: 0; max-width: 250px;">
+                                        You don't have a promo code history yet. You can add a promo code using the button below.
+                                    </p>
+                                </div>
+                                <!-- History List -->
+                                <div id="promo-history-list" style="display: none; width: 100%; height: 100%; flex-direction: column; gap: 15px; justify-content: flex-start;">
+                                    <!-- Items injected via JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom Bar -->
+                            <div style="background: #161b24; margin: -20px; margin-top: 20px; padding: 20px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 10px; color: white; font-size: 0.95rem; font-weight: 500; cursor: pointer;" onclick="showView('transactions')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Show all history
+                                </div>
+                                <button onclick="document.getElementById('promo-modal').style.display='flex'" style="background: #00c853; color: white; border: none; border-radius: 6px; padding: 12px 20px; font-weight: 600; font-size: 0.95rem; cursor: pointer;">
+                                    Enter promo code
+                                </button>
+                            </div>
                         </div>
-                        <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem; margin-bottom: 10px;">Enter your redeem code</h3>
-                        <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 40px; text-align: center; max-width: 300px;">Enter your redeem code below to claim your dollars.</p>
-                        
-                        <div style="width: 100%; max-width: 360px; text-align: left; margin-bottom: 30px;">
-                            <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 10px; font-weight: 600;">REDEEM CLAIM</label>
-                            <input type="text" id="redeem-code-input" class="form-input" placeholder="Enter your redeem code" style="text-align: center; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 18px;">
+                    </div>
+                    
+                    <!-- Modal -->
+                    <div id="promo-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10005; align-items: center; justify-content: center; backdrop-filter: blur(3px);">
+                        <div style="background: #192031; width: 90%; max-width: 400px; border-radius: 12px; padding: 40px 25px 30px; position: relative; text-align: center;">
+                            <button onclick="document.getElementById('promo-modal').style.display='none'" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: #6c7893; cursor: pointer;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                            
+                            <!-- Top icon overlay -->
+                            <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5b6af0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+                            </div>
+                            
+                            <h2 style="color: white; font-size: 1.5rem; font-weight: 700; margin: 0 0 10px;">Balance Bonus</h2>
+                            <p style="color: #a0aabf; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5;">
+                                Enter your promo code now and activate it. You can use it at any time.
+                            </p>
+                            
+                            <!-- Input container -->
+                            <div style="position: relative; margin-bottom: 25px; text-align: left;">
+                                <div style="position: absolute; top: -10px; left: 15px; background: #192031; padding: 0 5px; z-index: 2;">
+                                    <span style="background: white; color: #192031; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 0.75rem;">Promo code:</span>
+                                </div>
+                                <input type="text" id="redeem-code-input" placeholder="XXXXXXXXX" style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 18px 15px; color: white; font-size: 1.1rem; outline: none; letter-spacing: 1px; text-transform: uppercase;">
+                            </div>
+                            
+                            <!-- Buttons -->
+                            <div style="display: flex; gap: 10px;">
+                                <button id="submit-redeem-btn" style="flex: 1; background: #00c853; color: white; border: none; border-radius: 6px; padding: 14px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Yes, activate
+                                </button>
+                                <button onclick="document.getElementById('promo-modal').style.display='none'" style="flex: 1; background: #374151; color: white; border: none; border-radius: 6px; padding: 14px; font-weight: 600; font-size: 1rem; cursor: pointer;">
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
-                        
-                        <div id="redeem-premium-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #161b24; padding: 30px; border-radius: 16px; border: 1px solid var(--accent-color); text-align: center; z-index: 10006; box-shadow: 0 15px 35px rgba(0,0,0,0.8); width: 90%; max-width: 350px;">
-                            <div id="redeem-popup-icon" style="margin-bottom: 20px;"></div>
-                            <h3 id="redeem-popup-title" style="margin-top: 0; color: #fff; font-size: 1.4rem;"></h3>
-                            <p id="redeem-popup-msg" style="color: var(--text-secondary); font-size: 1rem;"></p>
-                            <button onclick="document.getElementById('redeem-premium-popup').style.display='none'" style="margin-top: 20px; background: rgba(255,255,255,0.1); color: #fff; padding: 10px 25px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;">Close</button>
-                        </div>
-                        
-                        <button id="submit-redeem-btn" class="btn-deposit-highlight" style="font-size: 1.1rem; padding: 16px; width: 100%; max-width: 360px; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s;">
-                            Claim Now
-                        </button>
+                    </div>
+                    
+                    <div id="redeem-premium-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #161b24; padding: 30px; border-radius: 16px; border: 1px solid var(--accent-color); text-align: center; z-index: 10006; box-shadow: 0 15px 35px rgba(0,0,0,0.8); width: 90%; max-width: 350px;">
+                        <div id="redeem-popup-icon" style="margin-bottom: 20px;"></div>
+                        <h3 id="redeem-popup-title" style="margin-top: 0; color: #fff; font-size: 1.4rem;"></h3>
+                        <p id="redeem-popup-msg" style="color: var(--text-secondary); font-size: 1rem;"></p>
+                        <button onclick="document.getElementById('redeem-premium-popup').style.display='none'" style="margin-top: 20px; background: rgba(255,255,255,0.1); color: #fff; padding: 10px 25px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;">Close</button>
                     </div>
                 </div>
 
@@ -11327,7 +11404,7 @@
 
             const viewsWithHeader = ['chart'];
         const profileViews = ['profile', 'kyc'];
-        const settingsViews = ['settings', 'withdraw', 'withdraw-success', 'analysis', 'transactions', 'deposit-new', 'deposit-methods', 'payment-details', 'rewards', 'miner', 'miner-history', 'terms', 'leaderboard', 'notifications', 'ai-payment-methods', 'ai-payment-details', 'biometric-setup']; 
+        const settingsViews = ['settings', 'withdraw', 'withdraw-success', 'analysis', 'transactions', 'deposit-new', 'deposit-methods', 'payment-details', 'rewards', 'miner', 'miner-history', 'terms', 'leaderboard', 'notifications', 'ai-payment-methods', 'ai-payment-details', 'biometric-setup', 'redeem']; 
         const adminViews = ['admin-panel', 'admin-mentors', 'admin-users'];
 
         if (profileViews.includes(viewId)) {
@@ -11350,6 +11427,7 @@
             }
         }
         if (viewId === 'notifications') { localStorage.setItem(`lastSeenNotification_${auth.currentUser.uid}`, Date.now()); updateUnreadCount(); }
+        if (viewId === 'redeem') { renderPromoHistory(); }
 
         const oldView = document.querySelector('.view.active'), newView = document.getElementById(`view-${viewId}`);
         if (oldView) oldView.classList.remove('active');
@@ -12198,6 +12276,43 @@ Timestamp: ${new Date().toISOString()}
         });
         
         // Remove passwordConfirmForm listener
+        function renderPromoHistory() {
+            const promoListContainer = document.getElementById('promo-history-list');
+            const emptyState = document.getElementById('promo-empty-state');
+            if (!promoListContainer || !emptyState) return;
+            
+            const promoTx = (transactionHistory || []).filter(t => t.method && t.method.includes('Redeem Code'));
+            
+            if (promoTx.length === 0) {
+                emptyState.style.display = 'flex';
+                promoListContainer.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            promoListContainer.style.display = 'flex';
+            
+            promoListContainer.innerHTML = promoTx.map(t => {
+                const date = new Date(t.timestamp);
+                const codeMatch = t.method.match(/\(([^)]+)\)/);
+                const code = codeMatch ? codeMatch[1] : 'UNKNOWN';
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                
+                return `
+                <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 12px 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; border-left: 3px solid #00c853;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="color: white; font-weight: 700; font-size: 0.9rem;">${code}</span>
+                        <span style="color: #6c7893; font-size: 0.75rem;">${formattedDate}</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="background: rgba(0, 200, 83, 0.15); color: #00c853; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">ACTIVATED</span>
+                    </div>
+                    <div style="text-align: right; color: #00c853; font-weight: 700; font-size: 0.95rem;">
+                        +$${Math.abs(t.amount).toFixed(2)}
+                    </div>
+                </div>`;
+            }).join('');
+        }
         
         function renderTransactionHistory() {
             if (transactionHistory.length === 0) { 
@@ -17314,9 +17429,11 @@ Please check the admin panel to approve.
                     // ----------------------------------
 
                     if(currentView === 'transactions') renderTransactionHistory();
+                    if(currentView === 'redeem') renderPromoHistory();
                 } else {
                     transactionHistory = [];
                     if(currentView === 'transactions') renderTransactionHistory();
+                    if(currentView === 'redeem') renderPromoHistory();
                 }
             });
             listenForTransactionUpdates(uid);
