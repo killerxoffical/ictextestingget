@@ -7980,7 +7980,7 @@
                 <div id="view-mentor" class="view">
                     <div class="page-header">
                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2>Mentor Program</h2>
+                        <h2>Refer Program</h2>
                         <button id="mentor-rules-btn" class="header-icon-btn" title="Referral Rules">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
                         </button>
@@ -16132,7 +16132,7 @@ Please check the admin panel to approve.
                         <div class="mentor-join-icon">
                             <img src="logo/logo.png" alt="Mentor" style="width:100%;height:100%;object-fit:contain;border-radius:22px;padding:8px;background:linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));">
                         </div>
-                        <h2>Mentor Program Activated</h2>
+                        <h2>Refer Program Activated</h2>
                         <p>Your account is being enabled as a mentor automatically. No task, deposit, trade, or KYC is required to become a mentor.</p>
                     </div>
                     <div class="mentor-premium-task-list">
@@ -16440,8 +16440,8 @@ Please check the admin panel to approve.
                                 <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;">${joinedDateStr}</div>
                             </div>
                             <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
-                                <div style="font-size: 0.8rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Members (Active / Total)</div>
-                                <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;"><span style="color: var(--color-up);">${activeUsers}</span> <span style="font-size: 0.9rem; color: #8d9ece;">/ ${totalUsers}</span></div>
+                                <div style="font-size: 0.8rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Total Active Members</div>
+                                <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;"><span style="color: var(--color-up);">${activeUsers}</span></div>
                             </div>
                             <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; grid-column: span 2; text-align: center;">
                                 <div style="font-size: 0.85rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Next Salary Date: ${nextDateStr}</div>
@@ -16452,17 +16452,23 @@ Please check the admin panel to approve.
                     
                 // Render Pending Salaries if any
                 if (mentorData.pendingSalaries) {
-                    const pendingList = Object.values(mentorData.pendingSalaries).filter(s => s.status === 'pending');
+                    const pendingList = Object.values(mentorData.pendingSalaries);
                     if (pendingList.length > 0) {
                         contentHTML += `<div style="margin-top: 24px;">
-                            <h4 style="margin-bottom: 12px; font-size: 1.1rem; font-weight: 700; color: var(--warning);"><i class="fa fa-clock" style="margin-right: 8px;"></i>Pending Salaries</h4>
+                            <h4 style="margin-bottom: 12px; font-size: 1.1rem; font-weight: 700; color: white;"><i class="fa fa-history" style="margin-right: 8px;"></i>Salary History</h4>
                         `;
                         pendingList.sort((a,b) => b.startDate - a.startDate).forEach(p => {
+                            const isPending = p.status === 'pending';
+                            const cardColor = isPending ? 'rgba(255,193,7,0.05)' : 'rgba(76,175,80,0.05)';
+                            const borderColor = isPending ? 'rgba(255,193,7,0.2)' : 'rgba(76,175,80,0.2)';
+                            const textColor = isPending ? 'var(--warning)' : 'var(--color-up)';
+                            const statusText = isPending ? 'Pending Admin Approval' : 'Paid';
+                            
                             contentHTML += `
-                                <div style="background: rgba(255,193,7,0.05); border: 1px solid rgba(255,193,7,0.2); border-radius: 10px; padding: 16px; margin-bottom: 12px;">
+                                <div style="background: ${cardColor}; border: 1px solid ${borderColor}; border-radius: 10px; padding: 16px; margin-bottom: 12px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <div style="font-size: 0.95rem; font-weight: 600; color: white;">Cycle: ${new Date(p.startDate).toLocaleDateString()} - ${new Date(p.endDate).toLocaleDateString()}</div>
-                                        <div style="background: rgba(255,255,255,0.1); color: var(--warning); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Pending Admin Approval</div>
+                                        <div style="background: rgba(255,255,255,0.1); color: ${textColor}; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">${statusText}</div>
                                     </div>
                                     <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 8px;">Worked for <span style="color: white; font-weight: bold;">${p.workedDays || 30} Days</span> | Active Members: <span style="color: white; font-weight: bold;">${p.activeMembers}</span></div>
                                 </div>
@@ -16474,6 +16480,10 @@ Please check the admin panel to approve.
 
             } else {
                 const progress = Math.min(100, (activeUsers / 15) * 100);
+                let progColor = 'var(--danger)';
+                if (progress >= 100) progColor = 'var(--success)';
+                else if (progress >= 33) progColor = 'var(--warning)';
+
                 contentHTML = `
                     <div class="salary-tier-card premium" style="border: 1px solid var(--action-blue); background: linear-gradient(145deg, rgba(30,136,229,0.05), transparent);">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
@@ -16485,7 +16495,7 @@ Please check the admin panel to approve.
                             <span style="color: #8d9ece;">Active Members</span>
                         </div>
                         <div class="salary-progress-bar" style="height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 12px 0;">
-                            <div class="salary-progress-bar-inner" style="width: ${progress}%; background: var(--action-blue); height: 100%; border-radius: 5px; box-shadow: 0 0 10px var(--action-blue);"></div>
+                            <div class="salary-progress-bar-inner" style="width: ${progress}%; background: ${progColor}; height: 100%; border-radius: 5px; box-shadow: 0 0 10px ${progColor}; transition: background 0.3s ease;"></div>
                         </div>
                         <p class="mentor-card-copy" style="color: #a0aabf; font-size: 0.95rem;">Get at least 15 active members to automatically enter the salary program. Once active, your monthly salary will be calculated automatically based on the tiers below.</p>
                     </div>
