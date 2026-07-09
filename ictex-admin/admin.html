@@ -490,10 +490,15 @@
                         await database.ref(`mentors/${uid}`).update({
                             salaryActive: true,
                             salaryStartDate: Date.now(),
-                            lastSalaryDate: Date.now()
+                            lastSalaryDate: Date.now(),
+                            cycleMinActive: newTotal
                         });
                     } else if (newTotal < 15 && m.salaryActive) {
                         await database.ref(`mentors/${uid}/salaryActive`).set(false);
+                    } else if (newTotal >= 15 && m.salaryActive) {
+                        if (m.cycleMinActive === undefined || newTotal < m.cycleMinActive) {
+                            await database.ref(`mentors/${uid}/cycleMinActive`).set(newTotal);
+                        }
                     }
                 } else if (botActive > 0) {
                     await database.ref(`mentors/${uid}/studentCount/botActive`).set(botActive);
@@ -501,7 +506,8 @@
                         await database.ref(`mentors/${uid}`).update({
                             salaryActive: true,
                             salaryStartDate: Date.now(),
-                            lastSalaryDate: Date.now()
+                            lastSalaryDate: Date.now(),
+                            cycleMinActive: botActive
                         });
                     }
                 }

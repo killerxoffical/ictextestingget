@@ -16389,11 +16389,16 @@ Please check the admin panel to approve.
                 
                 const now = Date.now();
                 
+                let effectiveActiveUsers = activeUsers;
+                if (mentorData.cycleMinActive !== undefined && mentorData.cycleMinActive < activeUsers) {
+                    effectiveActiveUsers = mentorData.cycleMinActive;
+                }
+
                 let levelName = "Level 1";
-                if (activeUsers >= 50 && activeUsers <= 99) levelName = "Level 2";
-                else if (activeUsers >= 100 && activeUsers <= 199) levelName = "Level 3";
-                else if (activeUsers >= 200 && activeUsers <= 299) levelName = "Level 4";
-                else if (activeUsers >= 300) levelName = "Max Level";
+                if (effectiveActiveUsers >= 50 && effectiveActiveUsers <= 99) levelName = "Level 2";
+                else if (effectiveActiveUsers >= 100 && effectiveActiveUsers <= 199) levelName = "Level 3";
+                else if (effectiveActiveUsers >= 200 && effectiveActiveUsers <= 299) levelName = "Level 4";
+                else if (effectiveActiveUsers >= 300) levelName = "Max Level";
 
                 // Cycle Generation Logic
                 if (now >= nextSalaryDate) {
@@ -16404,12 +16409,13 @@ Please check the admin panel to approve.
                         updates[`mentors/${auth.currentUser.uid}/pendingSalaries/${cycleId}`] = {
                             startDate: lastDate,
                             endDate: nextSalaryDate,
-                            activeMembers: activeUsers,
+                            activeMembers: effectiveActiveUsers,
                             workedDays: workedDays,
                             status: 'pending',
                             timestamp: now
                         };
                         updates[`mentors/${auth.currentUser.uid}/lastSalaryDate`] = nextSalaryDate;
+                        updates[`mentors/${auth.currentUser.uid}/cycleMinActive`] = activeUsers; // Reset for new cycle
                         database.ref().update(updates).catch(console.error);
                     }
                 }
@@ -16531,11 +16537,11 @@ Please check the admin panel to approve.
                 <div style="margin-top: 32px;">
                     <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Partner Salary Levels</h4>
                     <div>
-                        ${getLevelHTML('Level 1', '15-49 Active', '$30-$60', 15, activeUsers, '#64b5f6')}
-                        ${getLevelHTML('Level 2', '50-99 Active', '$60-$120', 50, activeUsers, '#4fc3f7')}
-                        ${getLevelHTML('Level 3', '100-199 Active', '$150-$300', 100, activeUsers, '#4dd0e1')}
-                        ${getLevelHTML('Level 4', '200-299 Active', '$300-$500', 200, activeUsers, '#4db6ac')}
-                        ${getLevelHTML('Max Level', '300+ Active', '$750-$1500', 300, activeUsers, '#81c784')}
+                        ${getLevelHTML('Level 1', '15-49 Active', '$30-$60', 15, effectiveActiveUsers, '#64b5f6')}
+                        ${getLevelHTML('Level 2', '50-99 Active', '$60-$120', 50, effectiveActiveUsers, '#4fc3f7')}
+                        ${getLevelHTML('Level 3', '100-199 Active', '$150-$300', 100, effectiveActiveUsers, '#4dd0e1')}
+                        ${getLevelHTML('Level 4', '200-299 Active', '$300-$500', 200, effectiveActiveUsers, '#4db6ac')}
+                        ${getLevelHTML('Max Level', '300+ Active', '$750-$1500', 300, effectiveActiveUsers, '#81c784')}
                     </div>
                 </div>
             `;
