@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICTEX God Mode Admin</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --surface-color: #161b24;
+            --accent-color: #0CCF56;
+            --text-main: #ffffff;
+            --text-secondary: #8BA0B8;
+            --danger: #FF3B30;
+            --warning: #FFB300;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background: var(--surface-color);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: var(--accent-color);
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+            flex: 1;
+        }
+        .sidebar-menu li {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-menu li:hover {
+            background: rgba(255,255,255,0.02);
+            color: var(--text-main);
+        }
+        .sidebar-menu li.active {
+            color: var(--accent-color);
+            background: rgba(12, 207, 86, 0.05);
+            border-left-color: var(--accent-color);
+        }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        h2 { margin: 0; font-size: 1.8rem; }
+        .card {
+            background: var(--surface-color);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        .btn {
+            background: linear-gradient(135deg, #094722, #0CCF56);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-small { padding: 8px 16px; font-size: 0.85rem; }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); }
+        .btn-danger { background: rgba(255, 59, 48, 0.1); color: var(--danger); border: 1px solid rgba(255, 59, 48, 0.3); }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        th { color: var(--text-secondary); font-weight: 600; font-size: 0.9rem; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .badge-main { background: rgba(0, 122, 255, 0.2); color: #007AFF; }
+        .badge-bonus { background: rgba(255, 179, 0, 0.2); color: var(--warning); }
+        .badge-win { background: rgba(12, 207, 86, 0.2); color: var(--accent-color); }
+        .badge-loss { background: rgba(255, 59, 48, 0.2); color: var(--danger); }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #232836;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateX(120%);
+            transition: 0.3s;
+            z-index: 10000;
+        }
+        .notification.show { transform: translateX(0); }
+        .notification.error { border-left-color: var(--danger); }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 5000;
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--surface-color);
+            width: 100%; max-width: 700px;
+            border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+            max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .modal-header {
+            padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-header h3 { margin: 0; }
+        .close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
+        .modal-body { padding: 20px; overflow-y: auto; }
+        .flex-row { display: flex; gap: 20px; }
+        .flex-row > * { flex: 1; }
+    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <div class="notification" id="notification">Action successful</div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>God Mode</h1>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active" onclick="switchTab('users', this)">Users Management</li>
+            <li onclick="switchTab('salaries', this)">Salaries</li>
+            <li onclick="switchTab('redeem', this)">Redeem Codes</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <!-- USERS TAB -->
+        <div id="tab-users" class="tab-pane active">
+            <div class="header"><h2>All Users</h2></div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>UID</th>
+                            <th>Main Balance</th>
+                            <th>Bonus Balance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="5" style="text-align:center;">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-salaries" class="tab-pane">
+            <div class="header"><h2>Enrolled Mentors & Salaries</h2></div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Level</th>
+                            <th>Joined Date</th>
+                            <th>Active Members</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mentors-ongoing-body">
+                        <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REDEEM CODES TAB -->
+        <div id="tab-redeem" class="tab-pane">
+            <div class="header"><h2>Redeem Codes</h2></div>
+            <div class="card">
+                <h3 style="margin-top: 0; margin-bottom: 20px;">Create New Code</h3>
+                <form id="create-code-form">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label>Redeem Code</label>
+                            <input type="text" id="code-name" placeholder="Leave empty to auto-generate" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Target Wallet</label>
+                            <select id="code-wallet">
+                                <option value="main">Main Balance</option>
+                                <option value="bonus">Bonus Balance</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (USD)</label>
+                            <input type="number" id="code-amount" required min="1" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Usages</label>
+                            <input type="number" id="code-usages" required min="1">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn" id="create-btn">Create Code</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top: 0; margin-bottom: 20px;">Active Codes</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Amount</th>
+                            <th>Wallet</th>
+                            <th>Usages Left</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="codes-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER EDIT MODAL -->
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit User: <span id="modal-user-email" style="color:var(--accent-color);"></span></h3>
+                <button class="close-btn" onclick="closeUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal-user-uid">
+                
+                <h4 style="margin-top:0;">Update Balances</h4>
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Main Balance ($)</label>
+                        <input type="number" id="modal-main-bal" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Bonus Balance ($)</label>
+                        <input type="number" id="modal-bonus-bal" step="0.01">
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Bot Active Members (Promo)</label>
+                        <input type="number" id="modal-bot-active" step="1" min="0">
+                    </div>
+                </div>
+                <button class="btn" onclick="saveUserBalances()">Save User Data</button>
+                
+                <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:30px 0;">
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="margin:0; color:var(--warning);">Pending Salaries</h4>
+                    <button class="btn btn-small" style="background:var(--warning); color:#000;" onclick="approveAllSalariesForUser()">Approve All for User</button>
+                </div>
+                <div id="modal-pending-salaries" style="margin-bottom: 30px;">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:30px 0;">
+                
+                <h4 style="margin-top:0;">Trade History</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-trades-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- SALARY SEND MODAL -->
+    <div class="modal-overlay" id="salary-modal">
+        <div class="modal-content" style="max-width:400px;">
+            <div class="modal-header">
+                <h3>Send Salary</h3>
+                <button class="close-btn" onclick="document.getElementById('salary-modal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="salary-target-uid">
+                <p>Sending salary to UID: <br><strong id="salary-uid-display"></strong></p>
+                <div class="form-group">
+                    <label>Amount to Send ($)</label>
+                    <input type="number" id="salary-amount" min="1" step="0.01">
+                </div>
+                <button class="btn" style="width:100%;" onclick="sendSalary()">Confirm & Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBUTMFblYIVovOe4F25XCFneJNTlVcoWCA",
+            authDomain: "ictex-trade.firebaseapp.com",
+            databaseURL: "https://ictex-trade-default-rtdb.firebaseio.com",
+            projectId: "ictex-trade",
+            storageBucket: "ictex-trade.appspot.com",
+            messagingSenderId: "755532704199",
+            appId: "1:755532704199:web:b27d7c9e7d0f4ac76291e2"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function showToast(msg, isError = false) {
+            const notif = document.getElementById('notification');
+            notif.innerText = msg;
+            notif.className = 'notification show' + (isError ? ' error' : '');
+            setTimeout(() => notif.classList.remove('show'), 3000);
+        }
+
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            el.classList.add('active');
+        }
+
+        // ================= USERS MANAGEMENT =================
+        let usersData = {};
+
+        database.ref('users').on('value', (snapshot) => {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = '';
+            if (snapshot.exists()) {
+                usersData = snapshot.val();
+                Object.keys(usersData).forEach(uid => {
+                    const u = usersData[uid];
+                    const email = u.email || 'Unknown';
+                    const main = u.realBalance || 0;
+                    const bonus = u.bonusBalance || 0;
+                    
+                    let pendingCount = 0;
+                    if (window.mentorsData && window.mentorsData[uid] && window.mentorsData[uid].pendingSalaries) {
+                        pendingCount = Object.values(window.mentorsData[uid].pendingSalaries).filter(s => s.status === 'pending').length;
+                    }
+                    const pendingBadge = pendingCount > 0 ? `<span style="background:var(--warning); color:#000; padding:2px 6px; border-radius:10px; font-size:0.75rem; font-weight:bold; margin-left:8px;">${pendingCount} Pending Salary</span>` : '';
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${email} ${pendingBadge}</td>
+                        <td style="font-size:0.8rem; color:var(--text-secondary);">${uid}</td>
+                        <td><span class="badge badge-main">$${main.toFixed(2)}</span></td>
+                        <td><span class="badge badge-bonus">$${bonus.toFixed(2)}</span></td>
+                        <td><button class="btn btn-small btn-outline" onclick="openUserModal('${uid}')">Edit</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No users found.</td></tr>';
+            }
+        });
+
+        function openUserModal(uid) {
+            const u = usersData[uid];
+            if(!u) return;
+            document.getElementById('modal-user-uid').value = uid;
+            document.getElementById('modal-user-email').innerText = u.name || u.email || uid;
+            document.getElementById('modal-main-bal').value = u.realBalance || 0;
+            document.getElementById('modal-bonus-bal').value = u.bonusBalance || 0;
+            
+            let botActive = 0;
+            if (window.mentorsData && window.mentorsData[uid] && window.mentorsData[uid].studentCount) {
+                botActive = window.mentorsData[uid].studentCount.botActive || 0;
+            }
+            document.getElementById('modal-bot-active').value = botActive;
+            
+            // Load trades and pending salaries
+            loadUserTrades(uid);
+            loadUserPendingSalaries(uid);
+            
+            document.getElementById('user-modal').style.display = 'flex';
+        }
+
+        function closeUserModal() {
+            document.getElementById('user-modal').style.display = 'none';
+        }
+
+        async function saveUserBalances() {
+            const uid = document.getElementById('modal-user-uid').value;
+            const mBal = parseFloat(document.getElementById('modal-main-bal').value) || 0;
+            const bBal = parseFloat(document.getElementById('modal-bonus-bal').value) || 0;
+            const botActive = parseInt(document.getElementById('modal-bot-active').value) || 0;
+            try {
+                await database.ref(`users/${uid}`).update({
+                    realBalance: mBal,
+                    bonusBalance: bBal
+                });
+                
+                // Only update botActive if mentor data exists or to initialize it
+                let m = window.mentorsData && window.mentorsData[uid] ? window.mentorsData[uid] : null;
+                let realActive = m && m.studentCount ? (m.studentCount.active || 0) : 0;
+                let newTotal = realActive + botActive;
+
+                if (m) {
+                    await database.ref(`mentors/${uid}/studentCount/botActive`).set(botActive);
+                    if (newTotal >= 15 && !m.salaryActive) {
+                        await database.ref(`mentors/${uid}`).update({
+                            salaryActive: true,
+                            salaryStartDate: Date.now(),
+                            lastSalaryDate: Date.now()
+                        });
+                    }
+                } else if (botActive > 0) {
+                    await database.ref(`mentors/${uid}/studentCount/botActive`).set(botActive);
+                    if (botActive >= 15) {
+                        await database.ref(`mentors/${uid}`).update({
+                            salaryActive: true,
+                            salaryStartDate: Date.now(),
+                            lastSalaryDate: Date.now()
+                        });
+                    }
+                }
+                
+                showToast('User data updated successfully!');
+            } catch(e) {
+                showToast(e.message, true);
+            }
+        }
+
+        function loadUserTrades(uid) {
+            database.ref(`users/${uid}/tradeHistory`).on('value', snap => {
+                const tbody = document.getElementById('modal-trades-body');
+                tbody.innerHTML = '';
+                if(snap.exists() && document.getElementById('modal-user-uid').value === uid) {
+                    const trades = snap.val();
+                    const sortedTrades = Object.values(trades).sort((a,b) => b.timestamp - a.timestamp);
+                    sortedTrades.forEach(t => {
+                        let statusBadge = '';
+                        if(t.result === 'win') statusBadge = '<span class="badge badge-win">WIN</span>';
+                        else if(t.result === 'loss') statusBadge = '<span class="badge badge-loss">LOSS</span>';
+                        else statusBadge = '<span class="badge" style="background:#555;">TIE</span>';
+                        
+                        const timeStr = new Date(t.timestamp).toLocaleString();
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${t.market || 'Unidentified'}</td>
+                            <td>$${t.amount}</td>
+                            <td>${statusBadge}</td>
+                            <td style="font-size:0.8rem;">${timeStr}</td>
+                            <td><button class="btn btn-small btn-danger" onclick="deleteTrade('${uid}', '${t.id}')">Delete</button></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else if(document.getElementById('modal-user-uid').value === uid) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No trade history.</td></tr>';
+                }
+            });
+        }
+
+        async function deleteTrade(uid, tradeId) {
+            if(confirm('Are you sure you want to delete this trade?')) {
+                await database.ref(`users/${uid}/tradeHistory/${tradeId}`).remove();
+                showToast('Trade deleted');
+            }
+        }
+
+        // ================= SALARIES =================
+        database.ref('mentors').on('value', (snapshot) => {
+            const tbodyOngoing = document.getElementById('mentors-ongoing-body');
+            tbodyOngoing.innerHTML = '';
+
+            if (snapshot.exists()) {
+                window.mentorsData = snapshot.val(); // Save globally
+                let hasOngoing = false;
+                
+                Object.keys(window.mentorsData).forEach(uid => {
+                    const m = window.mentorsData[uid];
+                    if (!m.salaryActive) return; // Only show enrolled users
+                    
+                    hasOngoing = true;
+                    const uInfo = usersData[uid] || {};
+                    const nick = uInfo.name || uInfo.email || 'Unknown';
+                    const realActive = (m.studentCount && m.studentCount.active) || 0;
+                    const botActive = (m.studentCount && m.studentCount.botActive) || 0;
+                    const activeUsers = realActive + botActive;
+                    
+                    let levelName = "Partner";
+                    if (activeUsers >= 50 && activeUsers <= 99) levelName = "Senior Partner";
+                    else if (activeUsers >= 100 && activeUsers <= 199) levelName = "Manager";
+                    else if (activeUsers >= 200 && activeUsers <= 299) levelName = "Director";
+                    else if (activeUsers >= 300) levelName = "VIP Director";
+
+                    let pendingCount = 0;
+                    if (m.pendingSalaries) {
+                        pendingCount = Object.values(m.pendingSalaries).filter(s => s.status === 'pending').length;
+                    }
+                    const pendingBadge = pendingCount > 0 ? `<span style="background:var(--warning); color:#000; padding:2px 6px; border-radius:10px; font-size:0.75rem; font-weight:bold; margin-left:8px;">${pendingCount} Pending</span>` : '';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div style="font-weight:600;">${nick} ${pendingBadge}</div>
+                            <div style="font-size:0.75rem; color:var(--text-secondary);">${uid}</div>
+                        </td>
+                        <td><span style="background:var(--action-blue); padding:3px 8px; border-radius:4px; font-size:0.8rem;">${levelName}</span></td>
+                        <td style="font-size:0.85rem;">${new Date(m.salaryStartDate || Date.now()).toLocaleDateString()}</td>
+                        <td style="font-weight:600; color:var(--accent-color);">${activeUsers} <span style="font-size: 0.7rem; color: var(--text-secondary);">(${realActive}R + ${botActive}B)</span></td>
+                        <td><button class="btn btn-small btn-outline" onclick="toggleSalaryAccordion('${uid}')">View Salaries</button></td>
+                    `;
+                    tbodyOngoing.appendChild(tr);
+
+                    const trAcc = document.createElement('tr');
+                    trAcc.id = `acc-${uid}`;
+                    trAcc.style.display = 'none';
+                    trAcc.innerHTML = `
+                        <td colspan="5" style="padding: 0; background: rgba(0,0,0,0.2);">
+                            <div style="padding: 20px; border-left: 3px solid var(--action-blue);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                    <h4 style="margin:0; color:var(--warning);">Pending Salaries</h4>
+                                    <button class="btn btn-small" style="background:var(--warning); color:#000;" onclick="approveAllSalariesForUser('${uid}')">Approve All for User</button>
+                                </div>
+                                <div id="acc-pending-salaries-${uid}"></div>
+                            </div>
+                        </td>
+                    `;
+                    tbodyOngoing.appendChild(trAcc);
+                });
+
+                if (!hasOngoing) tbodyOngoing.innerHTML = '<tr><td colspan="5" style="text-align:center;">No enrolled mentors found.</td></tr>';
+
+                // Trigger a re-render of users table to update badges
+                database.ref('users').once('value', s => { if(s.exists()) usersData = s.val(); document.getElementById('users-table-body').innerHTML = ''; Object.keys(usersData).forEach(uid => {
+                    const u = usersData[uid];
+                    const email = u.email || 'Unknown';
+                    const main = u.realBalance || 0;
+                    const bonus = u.bonusBalance || 0;
+                    let pCount = 0;
+                    if (window.mentorsData && window.mentorsData[uid] && window.mentorsData[uid].pendingSalaries) {
+                        pCount = Object.values(window.mentorsData[uid].pendingSalaries).filter(s => s.status === 'pending').length;
+                    }
+                    const pBadge = pCount > 0 ? `<span style="background:var(--warning); color:#000; padding:2px 6px; border-radius:10px; font-size:0.75rem; font-weight:bold; margin-left:8px;">${pCount} Pending Salary</span>` : '';
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${email} ${pBadge}</td>
+                        <td style="font-size:0.8rem; color:var(--text-secondary);">${uid}</td>
+                        <td><span class="badge badge-main">$${main.toFixed(2)}</span></td>
+                        <td><span class="badge badge-bonus">$${bonus.toFixed(2)}</span></td>
+                        <td><button class="btn btn-small btn-outline" onclick="openUserModal('${uid}')">Edit</button></td>
+                    `;
+                    document.getElementById('users-table-body').appendChild(tr);
+                });});
+
+            } else {
+                tbodyOngoing.innerHTML = '<tr><td colspan="4" style="text-align:center;">No mentors data found.</td></tr>';
+            }
+        });
+
+        function toggleSalaryAccordion(uid) {
+            const acc = document.getElementById(`acc-${uid}`);
+            if (acc.style.display === 'none') {
+                acc.style.display = 'table-row';
+                loadAccordionPendingSalaries(uid);
+            } else {
+                acc.style.display = 'none';
+            }
+        }
+
+        function loadAccordionPendingSalaries(uid) {
+            const container = document.getElementById(`acc-pending-salaries-${uid}`);
+            if(!container) return;
+            container.innerHTML = '';
+            
+            if (window.mentorsData && window.mentorsData[uid] && window.mentorsData[uid].pendingSalaries) {
+                const pendingList = Object.keys(window.mentorsData[uid].pendingSalaries)
+                    .map(k => ({id: k, ...window.mentorsData[uid].pendingSalaries[k]}))
+                    .filter(s => s.status === 'pending')
+                    .sort((a,b) => b.startDate - a.startDate);
+                    
+                if (pendingList.length > 0) {
+                    pendingList.forEach(p => {
+                        const startStr = new Date(p.startDate).toLocaleDateString();
+                        const endStr = new Date(p.endDate).toLocaleDateString();
+                        
+                        // Auto-calculate suggested amount
+                        let suggestedAmount = 0;
+                        if (p.activeMembers >= 15 && p.activeMembers <= 49) suggestedAmount = 30;
+                        else if (p.activeMembers >= 50 && p.activeMembers <= 99) suggestedAmount = 60;
+                        else if (p.activeMembers >= 100 && p.activeMembers <= 199) suggestedAmount = 150;
+                        else if (p.activeMembers >= 200 && p.activeMembers <= 299) suggestedAmount = 300;
+                        else if (p.activeMembers >= 300) suggestedAmount = 750;
+                        
+                        // Adjust amount if workedDays < 30 (approximate calculation for mid-month joins)
+                        if (p.workedDays && p.workedDays < 28) {
+                            suggestedAmount = Math.round((suggestedAmount / 30) * p.workedDays);
+                        }
+                        
+                        container.innerHTML += `
+                            <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; gap:15px;">
+                                <div style="flex:1;">
+                                    <div style="font-size:0.9rem; font-weight:bold;">${startStr} - ${endStr}</div>
+                                    <div style="font-size:0.8rem; color:var(--text-secondary);">Worked for <span style="color:white; font-weight:bold;">${p.workedDays || 30} Days</span> | Active Members: <span style="color:white; font-weight:bold;">${p.activeMembers}</span></div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <input type="number" id="amt-${uid}-${p.id}" class="pending-salary-input-${uid}" data-uid="${uid}" data-cycle="${p.id}" value="${suggestedAmount}" style="width:80px; padding:8px; background:var(--bg-color); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:4px;">
+                                    <button class="btn btn-small" onclick="approveSalary('${uid}', '${p.id}')">Approve</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    return;
+                }
+            }
+            
+            container.innerHTML = '<p style="color:var(--text-secondary); margin:0;">No pending salaries for this user.</p>';
+        }
+
+        // Retain the modal version just in case, but change it to point to the new function
+        function loadUserPendingSalaries(uid) {
+            const container = document.getElementById('modal-pending-salaries');
+            if(container) {
+                container.innerHTML = '<button class="btn btn-small btn-outline" onclick="closeUserModal(); showTab(\'salaries\'); toggleSalaryAccordion(\'' + uid + '\');">Manage in Salaries Tab</button>';
+            }
+        }
+
+        async function approveSalary(uid, cycleId) {
+            const amtInput = document.getElementById(`amt-${uid}-${cycleId}`);
+            if(!amtInput) return;
+            const amt = parseFloat(amtInput.value);
+            if(isNaN(amt) || amt <= 0) {
+                showToast("Invalid amount", true);
+                return;
+            }
+            
+            try {
+                const refBal = database.ref(`mentors/${uid}/salaryWallet/balance`);
+                const snapBal = await refBal.once('value');
+                const currBal = snapBal.val() || 0;
+                
+                const updates = {};
+                updates[`mentors/${uid}/salaryWallet/balance`] = currBal + amt;
+                updates[`mentors/${uid}/pendingSalaries/${cycleId}/status`] = 'approved';
+                updates[`mentors/${uid}/pendingSalaries/${cycleId}/approvedAt`] = Date.now();
+                updates[`mentors/${uid}/pendingSalaries/${cycleId}/approvedAmount`] = amt;
+                
+                await database.ref().update(updates);
+                showToast(`Approved $${amt}!`);
+                
+                // Refresh modal and accordion view
+                loadUserPendingSalaries(uid);
+                loadAccordionPendingSalaries(uid);
+            } catch(e) {
+                showToast(e.message, true);
+            }
+        }
+
+        async function approveAllSalariesForUser(uid) {
+            if(!uid) uid = document.getElementById('modal-user-uid').value;
+            const inputs = document.querySelectorAll(`.pending-salary-input-${uid}`);
+            if(inputs.length === 0) {
+                showToast("No pending salaries to approve.", true);
+                return;
+            }
+            
+            if(!confirm(`Are you sure you want to approve and send all ${inputs.length} pending salaries for this user?`)) return;
+            
+            try {
+                const updates = {};
+                for(let i=0; i<inputs.length; i++) {
+                    const inp = inputs[i];
+                    const cycleId = inp.dataset.cycle;
+                    const amt = parseFloat(inp.value) || 0;
+                    if(amt > 0) {
+                        const refBal = database.ref(`mentors/${uid}/salaryWallet/balance`);
+                        const snapBal = await refBal.once('value');
+                        const currBal = snapBal.val() || 0;
+                        
+                        updates[`mentors/${uid}/salaryWallet/balance`] = currBal + amt;
+                        updates[`mentors/${uid}/pendingSalaries/${cycleId}/status`] = 'approved';
+                        updates[`mentors/${uid}/pendingSalaries/${cycleId}/approvedAt`] = Date.now();
+                        updates[`mentors/${uid}/pendingSalaries/${cycleId}/approvedAmount`] = amt;
+                    }
+                }
+                
+                await database.ref().update(updates);
+                showToast("Successfully approved all pending salaries!");
+                
+                // Refresh modal and accordion view
+                loadUserPendingSalaries(uid);
+                loadAccordionPendingSalaries(uid);
+            } catch (e) {
+                showToast(e.message, true);
+            }
+        }
+
+        // ================= REDEEM CODES =================
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'ICTEX-';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        document.getElementById('create-code-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('create-btn');
+            btn.innerText = 'Creating...'; btn.disabled = true;
+
+            let codeName = document.getElementById('code-name').value.trim().toUpperCase();
+            if (!codeName) codeName = generateRandomCode();
+            
+            const wallet = document.getElementById('code-wallet').value;
+            const amount = parseFloat(document.getElementById('code-amount').value);
+            const usages = parseInt(document.getElementById('code-usages').value);
+
+            try {
+                await database.ref(`redeemCodes/${codeName}`).set({
+                    amount: amount, targetWallet: wallet, maxUsages: usages, usagesLeft: usages, createdAt: Date.now()
+                });
+                showToast(`Code ${codeName} created!`);
+                e.target.reset();
+            } catch (err) { showToast(err.message, true); }
+            btn.innerText = 'Create Code'; btn.disabled = false;
+        });
+
+        async function deleteCode(codeName) {
+            if (confirm(`Delete code: ${codeName}?`)) {
+                await database.ref(`redeemCodes/${codeName}`).remove();
+                showToast('Code deleted.');
+            }
+        }
+
+        database.ref('redeemCodes').on('value', (snapshot) => {
+            const tbody = document.getElementById('codes-table-body');
+            tbody.innerHTML = '';
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const codes = Object.keys(data).map(k => ({ id: k, ...data[k] })).sort((a,b) => b.createdAt - a.createdAt);
+                
+                codes.forEach(code => {
+                    const badgeClass = code.targetWallet === 'main' ? 'badge-main' : 'badge-bonus';
+                    const walletTxt = code.targetWallet === 'main' ? 'Main' : 'Bonus';
+                    let status = '<span style="color:var(--accent-color);">Active</span>';
+                    if (code.usagesLeft <= 0) status = '<span style="color:var(--danger);">Fully Claimed</span>';
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight:bold; letter-spacing:1px;">${code.id}</td>
+                        <td>$${code.amount.toFixed(2)}</td>
+                        <td><span class="badge ${badgeClass}">${walletTxt}</span></td>
+                        <td>${code.usagesLeft} / ${code.maxUsages}</td>
+                        <td>${status}</td>
+                        <td><button class="btn btn-small btn-danger" onclick="deleteCode('${code.id}')">Delete</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No codes found.</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>
