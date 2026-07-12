@@ -4770,11 +4770,13 @@
             opacity: 0.8;
         }
         .btn-deposit-highlight {
-            background: linear-gradient(100deg, #10E9A9, var(--color-up));
-            color: var(--bg-color);
+            background: linear-gradient(135deg, #094722, #0CCF56);
+            color: #ffffff;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(12, 207, 86, 0.3);
         }
         .btn-deposit-highlight svg {
-            color: var(--bg-color);
+            color: #ffffff;
             opacity: 1;
         }
 
@@ -6242,7 +6244,6 @@
         background: rgba(255, 255, 255, 0.15);
     }
 </style>
-
 </head>
 <body>
 
@@ -7979,13 +7980,23 @@
                 <div id="view-mentor" class="view">
                     <div class="page-header">
                         <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
-                        <h2>Mentor Program</h2>
+                        <h2>Refer Program</h2>
                         <button id="mentor-rules-btn" class="header-icon-btn" title="Referral Rules">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
                         </button>
                     </div>
                     <div class="page-content" id="mentor-page-content"></div>
                 </div>
+                
+                <div id="view-salary-program" class="view">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showView('mentor')"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
+                        <h2>Salary Program</h2>
+                        <div></div>
+                    </div>
+                    <div class="page-content" id="salary-program-content" style="padding: 16px;"></div>
+                </div>
+
                 <div id="view-tournament" class="view">
                     <div class="page-content" style="padding: 0; overflow: hidden; height: 100%; position: relative;">
                         <div id="tournament-loader" style="position: absolute; inset: 0; background: #0B0E14; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -8055,6 +8066,37 @@
 
                         <h4>8. Governing Law and Dispute Resolution</h4>
                         <p>This Agreement shall be governed by and construed in accordance with the applicable laws of our operating jurisdiction. Any disputes arising from this Agreement shall be resolved through binding arbitration or in the competent courts of our jurisdiction, as determined by ICTEX Trade.</p>
+                    </div>
+                </div>
+
+                <!-- NEW REDEEM FULL SCREEN VIEW -->
+                <div id="view-redeem" class="view">
+                    <div class="page-header">
+                        <button class="back-btn" data-view="chart"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg> </button>
+                        <h2 style="color: #fff; font-weight: 800;">Redeem Code</h2>
+                    </div>
+                    <div class="page-content" style="padding-top: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%;">
+                        <div style="margin-bottom: 25px; display: flex; align-items: center; justify-content: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-up);"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.34 1-.98 1-1.72V9c0-.74-.41-1.38-1-1.72zM20 9v6h-2V9h2zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z"/><circle cx="16" cy="12" r="1.5"/></svg>
+                        </div>
+                        <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem; margin-bottom: 10px;">Enter your redeem code</h3>
+                        <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 40px; text-align: center; max-width: 300px;">Enter your redeem code below to claim your dollars.</p>
+                        
+                        <div style="width: 100%; max-width: 360px; text-align: left; margin-bottom: 30px;">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 10px; font-weight: 600;">REDEEM CLAIM</label>
+                            <input type="text" id="redeem-code-input" class="form-input" placeholder="Enter your redeem code" style="text-align: center; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 18px;">
+                        </div>
+                        
+                        <div id="redeem-premium-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #161b24; padding: 30px; border-radius: 16px; border: 1px solid var(--accent-color); text-align: center; z-index: 10006; box-shadow: 0 15px 35px rgba(0,0,0,0.8); width: 90%; max-width: 350px;">
+                            <div id="redeem-popup-icon" style="margin-bottom: 20px;"></div>
+                            <h3 id="redeem-popup-title" style="margin-top: 0; color: #fff; font-size: 1.4rem;"></h3>
+                            <p id="redeem-popup-msg" style="color: var(--text-secondary); font-size: 1rem;"></p>
+                            <button onclick="document.getElementById('redeem-premium-popup').style.display='none'" style="margin-top: 20px; background: rgba(255,255,255,0.1); color: #fff; padding: 10px 25px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;">Close</button>
+                        </div>
+                        
+                        <button id="submit-redeem-btn" class="btn-deposit-highlight" style="font-size: 1.1rem; padding: 16px; width: 100%; max-width: 360px; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s;">
+                            Claim Now
+                        </button>
                     </div>
                 </div>
 
@@ -8549,7 +8591,7 @@
             
              <div class="modal-overlay bottom-sheet" id="action-result-modal">
                 <div class="bottom-sheet-content">
-                    <button class="back-btn" style="position: absolute; top: 15px; right: 15px; z-index: 3; background-color: rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; padding: 4px;" id="action-result-close-btn">
+                    <button class="action-result-close-icon" style="position: absolute; top: 15px; right: 15px; z-index: 3; background-color: rgba(255,255,255,0.1); border: none; cursor: pointer; color: white; border-radius: 50%; width: 32px; height: 32px; padding: 4px;" id="action-result-close-btn">
                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/></svg>
                     </button>
                     <div class="action-result-icon-container">
@@ -8633,9 +8675,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .35.07.69.18 1H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm-5-2a1 1 0 0 1 1-1 1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1zM4 19V8h16v11z"/></svg>
                     <span>Transactions</span>
                 </button>
+                <button class="payments-btn" data-action="redeem">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-2-1.46c-1.19.69-2 1.99-2 3.46s.81 2.77 2 3.46V18H4v-2.54c1.19-.69 2-1.99 2-3.46s-.81-2.77-2-3.46V6h16v2.54zM11 15h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2z"/></svg>
+                    <span>Redeem</span>
+                </button>
             </div>
         </div>
     </div>
+
     <div class="modal-overlay bottom-sheet" id="trade-options-modal">
         <div class="trade-options-content">
             <div class="trade-options-tabs-container">
@@ -12026,6 +12073,16 @@ Timestamp: ${new Date().toISOString()}
                 await newRequestRef.set(withdrawRequest);
                 const newTransaction = { id: withdrawRequest.id, timestamp: Date.now(), status: 'pending', amount: -amount, fee: 0, method: method.name, type: 'withdraw', bonusRemoved: bonusRemoved };
                 await database.ref(`users/${user.uid}/transactions/${newTransaction.id}`).set(newTransaction);
+                
+                // --- NEW: Cancel Referral Bonus Task on Withdrawal ---
+                try {
+                    const taskSnap = await database.ref(`users/${user.uid}/referralBonusTask`).once('value');
+                    const task = taskSnap.val();
+                    if (task && task.status === 'active') {
+                        await database.ref(`users/${user.uid}/referralBonusTask/status`).set('failed_withdraw');
+                        console.log("Bonus task failed due to withdrawal.");
+                    }
+                } catch(e) { console.error("Error checking bonus task:", e); }
                 
                 // Populate and display custom Withdrawal Success View
                 document.getElementById('success-amount-val').textContent = `$${amount.toFixed(2)}`;
@@ -16075,7 +16132,7 @@ Please check the admin panel to approve.
                         <div class="mentor-join-icon">
                             <img src="logo/logo.png" alt="Mentor" style="width:100%;height:100%;object-fit:contain;border-radius:22px;padding:8px;background:linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));">
                         </div>
-                        <h2>Mentor Program Activated</h2>
+                        <h2>Refer Program Activated</h2>
                         <p>Your account is being enabled as a mentor automatically. No task, deposit, trade, or KYC is required to become a mentor.</p>
                     </div>
                     <div class="mentor-premium-task-list">
@@ -16154,137 +16211,153 @@ Please check the admin panel to approve.
             const referralBonusTotal = mentorData.commissionWallet?.totalEarned || 0;
             const salaryWalletBalance = mentorData.salaryWallet?.balance || 0;
             const salaryWalletTotal = mentorData.salaryWallet?.totalEarned || 0;
-            const totalUsers = mentorData.studentCount?.all || 0;
-            const activeUsers = mentorData.studentCount?.active || 0;
+            const realActive = mentorData.studentCount?.active || 0;
+            const botActive = mentorData.studentCount?.botActive || 0;
+            const activeUsers = realActive + botActive;
+            const totalUsers = (mentorData.studentCount?.all || 0) + botActive;
             const refCode = mentorData.mentorId || '';
             const refUrl = `${window.location.origin}${window.location.pathname}?ref=${refCode}`;
             const canClaimReferral = referralBonusBalance >= 10;
             const canClaimSalary = salaryWalletBalance >= 1000;
             const partnerActive = mentorData.partnerStatus === 'active';
-            // Calculate Current Tier
-            let currentTierName = "None";
-            let nextTierName = "Tier 1 ($60/mo)";
-            let usersNeeded = 15 - activeUsers;
-            
-            if (activeUsers >= 15 && activeUsers <= 49) { currentTierName = "Tier 1 ($60/mo)"; nextTierName = "Tier 2 ($120/mo)"; usersNeeded = 50 - activeUsers; }
-            else if (activeUsers >= 50 && activeUsers <= 99) { currentTierName = "Tier 2 ($120/mo)"; nextTierName = "Tier 3 ($300/mo)"; usersNeeded = 100 - activeUsers; }
-            else if (activeUsers >= 100 && activeUsers <= 199) { currentTierName = "Tier 3 ($300/mo)"; nextTierName = "Tier 4 ($500/mo)"; usersNeeded = 200 - activeUsers; }
-            else if (activeUsers >= 200 && activeUsers <= 299) { currentTierName = "Tier 4 ($500/mo)"; nextTierName = "Max Tier ($1500/mo)"; usersNeeded = 300 - activeUsers; }
-            else if (activeUsers >= 300) { currentTierName = "Max Tier ($1500/mo)"; nextTierName = "Max Reached"; usersNeeded = 0; }
-            
-            const isSalaryActive = mentorData.salaryActive === true;
+            const isSalaryActive = mentorData.salaryActive === true || activeUsers >= 15; // Auto unlock if met
+            const totalEarning = referralBonusTotal + salaryWalletTotal;
+            const serverUrl = (typeof cachedServerUrl !== 'undefined' && cachedServerUrl) ? cachedServerUrl.replace(/\/$/, '') : window.location.origin;
 
             container.innerHTML = `
-                <div class="mentor-premium-shell">
-                    <div class="mentor-premium-top">
-                        <div class="mentor-premium-hero">
-                            <div class="mentor-premium-badge-row">
-                                <span class="mentor-premium-badge">Auto Mentor</span>
-                                <span class="mentor-premium-badge ${isSalaryActive ? 'success' : ''}">${isSalaryActive ? 'Salary Program: Active' : 'Salary Program: Locked'}</span>
-                            </div>
-                            <div class="mentor-premium-title-row">
-                                <div class="mentor-premium-title-wrap">
-                                    <h3>Premium Mentor Dashboard</h3>
-                                    <p>Receive a 5% deposit bonus whenever a referred user makes a deposit. Unlock monthly salaries based on your active members count.</p>
-                                </div>
-                                <div class="mentor-program-pill">
-                                    <span class="small-label">Next Milestone</span>
-                                    <span class="big-value">${usersNeeded > 0 ? usersNeeded + ' More Active' : 'Maxed Out!'}</span>
-                                </div>
-                            </div>
-                            <div class="mentor-hero-balance-grid">
-                                <div class="mentor-hero-balance-card">
-                                    <div class="label">Deposit Bonus Wallet</div>
-                                    <div class="value">$${referralBonusBalance.toFixed(2)}</div>
-                                    <div class="sub-value">Total earned: $${referralBonusTotal.toFixed(2)}<br>Claimable from $10</div>
-                                </div>
-                                <div class="mentor-hero-balance-card">
-                                    <div class="label">Salary Wallet</div>
-                                    <div class="value">$${salaryWalletBalance.toFixed(2)}</div>
-                                    <div class="sub-value">Total earned: $${salaryWalletTotal.toFixed(2)}<br>Automatic claiming from $1000</div>
-                                </div>
+                <div class="mentor-premium-shell" style="background: #000; border: none; padding-bottom: 24px;">
+                    
+                    <!-- Total Earning Header -->
+                    <div style="text-align: center; margin-bottom: 24px; padding: 24px 16px; background: radial-gradient(circle at top, rgba(30,136,229,0.15) 0%, transparent 70%); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <div style="color: #8d9ece; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Total Earnings</div>
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 12px;">
+                            <div style="font-size: 2.5rem; font-weight: 800; color: #fff;">$${totalEarning.toFixed(2)}</div>
+                            <div style="display: flex; align-items: center; background: rgba(76, 175, 80, 0.15); padding: 4px 8px; border-radius: 8px; font-size: 0.85rem; color: #81c784; height: fit-content; border: 1px solid rgba(76, 175, 80, 0.2);">
+                                <i class="fa fa-line-chart" style="margin-right: 6px;"></i>+12.5%
                             </div>
                         </div>
                     </div>
 
-                    <div class="mentor-dashboard-grid premium">
-                        <div class="mentor-stat-card premium">
-                            <div class="label">Total Referrals</div>
-                            <div class="value">${totalUsers}</div>
-                        </div>
-                        <div class="mentor-stat-card premium">
-                            <div class="label">Active Members</div>
-                            <div class="value">${activeUsers}</div>
-                        </div>
-                        <div class="mentor-stat-card premium">
-                            <div class="label">Deposit Bonus Rate</div>
-                            <div class="value">5%</div>
-                        </div>
-                        <div class="mentor-stat-card premium">
-                            <div class="label">Current Salary Tier</div>
-                            <div class="value" style="font-size: 1.1rem;">${currentTierName}</div>
-                        </div>
-                    </div>
-
-                    <div class="mentor-link-grid">
-                        <div class="mentor-id-card premium">
-                            <div style="overflow: hidden; min-width: 0;">
-                                <div class="label">Referral Code</div>
-                                <div class="id-code">${refCode}</div>
+                    <div style="padding: 0 16px;">
+                        <!-- Small Balances -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Earned from Deposit</div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-up);">$${referralBonusTotal.toFixed(2)}</div>
                             </div>
-                            <button class="copy-btn premium" id="copy-ref-code-btn">Copy</button>
-                        </div>
-
-                        <div class="mentor-id-card premium">
-                            <div style="overflow: hidden; min-width: 0;">
-                                <div class="label">Referral Link</div>
-                                <div class="id-code id-link">${refUrl}</div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Earned from Salary</div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-up);">$${salaryWalletTotal.toFixed(2)}</div>
                             </div>
-                            <button class="copy-btn premium" id="copy-ref-link-btn">Copy</button>
                         </div>
-                    </div>
 
-                    <div class="mentor-action-buttons-container" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                        <button class="mentor-action-btn premium" id="mentor-user-list-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05c1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
-                            <span>Open Referral Users</span>
+                        <!-- User Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px;">${totalUsers}</div>
+                                <div style="font-size: 0.8rem; color: #8d9ece;">Total Members</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px;">${activeUsers}</div>
+                                <div style="font-size: 0.8rem; color: #8d9ece;">Active Members</div>
+                            </div>
+                        </div>
+
+                        <!-- Status & Commission -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Account Status</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: ${isSalaryActive ? 'var(--color-up)' : '#fff'};">${isSalaryActive ? 'Partner' : 'Normal Trader'}</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 6px;">Commission</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">5%</div>
+                            </div>
+                        </div>
+
+                        <!-- Links Section -->
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 8px;">Website Link</div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="flex: 1; font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">${serverUrl}</div>
+                                    <button id="copy-ref-link-btn" style="background: rgba(30,136,229,0.15); border: 1px solid var(--action-blue); color: var(--action-blue); cursor: pointer; padding: 11px 16px; border-radius: 8px; font-weight: 600; font-family: 'Inter', sans-serif;"><i class="fa fa-copy" style="margin-right: 6px;"></i> Copy</button>
+                                </div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; margin-bottom: 8px;">Referral Code</div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="flex: 1; font-size: 1.1rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 8px; letter-spacing: 1px; font-weight: 700;">${refCode}</div>
+                                    <button id="copy-ref-code-btn" style="background: rgba(30,136,229,0.15); border: 1px solid var(--action-blue); color: var(--action-blue); cursor: pointer; padding: 11px 16px; border-radius: 8px; font-weight: 600; font-family: 'Inter', sans-serif;"><i class="fa fa-copy" style="margin-right: 6px;"></i> Copy</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Message Template Button -->
+                        <button id="copy-referral-template-btn" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.3s; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa fa-copy" style="color: var(--action-blue);"></i> Refer Template
                         </button>
-                    </div>
 
-                    <div class="mentor-section-card premium">
-                        <h3>Claim Center</h3>
-                        <div class="mentor-claim-grid">
-                            <div class="salary-tier-card premium">
-                                <div class="salary-tier-header">
-                                    <span class="salary-tier-title">Deposit Bonus Wallet → Real Balance</span>
-                                    <span class="salary-tier-reward">Min $10</span>
-                                </div>
-                                <p class="mentor-card-copy">You receive a 5% deposit bonus whenever a referred user completes a deposit. When the Deposit Bonus Wallet reaches at least $10, you can claim the full amount to your real balance.</p>
-                                <button class="salary-apply-btn" id="claim-referral-bonus-btn" ${!canClaimReferral ? 'disabled' : ''}>Claim $${referralBonusBalance.toFixed(2)}</button>
+                        <!-- Referral Bonus Banner -->
+                        <div style="background: linear-gradient(135deg, rgba(30,136,229,0.1), rgba(0,230,118,0.1)); border: 1px solid rgba(0,230,118,0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;"><i class="fa fa-gift"></i></div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i class="fa fa-gift" style="color: #00E676; font-size: 1.2rem;"></i>
+                                <span style="font-size: 1.1rem; font-weight: 700; color: #fff;">$5 Extra Referral Bonus!</span>
                             </div>
-                            <div class="salary-tier-card premium">
-                                <div class="salary-tier-header">
-                                    <span class="salary-tier-title">Salary Wallet → Real Balance</span>
-                                    <span class="salary-tier-reward">Min $1000</span>
+                            <p style="font-size: 0.9rem; color: #b0bec5; margin: 0; line-height: 1.5;">
+                                When your referred user makes their first deposit within <strong style="color: #fff;">24 hours</strong> of registration and completes <strong style="color: #fff;">10 trades</strong>, you earn an instant <strong style="color: #00E676;">$5 Bonus</strong>!
+                            </p>
+                        </div>
+
+                        <!-- Open User List Button -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px;">
+                            <button id="mentor-user-list-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(30,136,229,0.1), rgba(30,136,229,0.2)); border: 1px solid rgba(30,136,229,0.3); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="fa fa-users" style="font-size: 1.2rem;"></i> Users List
+                            </button>
+                            <button id="mentor-salary-program-btn" style="width: 100%; padding: 16px; background: linear-gradient(90deg, rgba(12,207,86,0.1), rgba(12,207,86,0.2)); border: 1px solid rgba(12,207,86,0.3); border-radius: 12px; color: #fff; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="fa fa-money" style="font-size: 1.2rem;"></i> Salary Program
+                            </button>
+                        </div>
+
+                        <div class="mentor-section-card premium" style="background: transparent; padding: 0; border: none;">
+                            <h3 style="font-size: 1.2rem; margin-bottom: 16px; padding: 12px 16px; border-radius: 8px; background: linear-gradient(90deg, rgba(30,136,229,0.1), transparent); border-left: 4px solid var(--action-blue); color: #fff;">Claim Center</h3>
+                            <div style="display: grid; gap: 16px;">
+                                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <span style="font-weight: 600; font-size: 1rem;">Deposit Bonus Wallet</span>
+                                        <span style="font-size: 0.85rem; color: #8d9ece; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">Min $10</span>
+                                    </div>
+                                    <button class="salary-apply-btn" id="claim-referral-bonus-btn" style="width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;" ${!canClaimReferral ? 'disabled' : ''}>Claim $${referralBonusBalance.toFixed(2)}</button>
                                 </div>
-                                <p class="mentor-card-copy">Monthly salaries are processed automatically based on your active members. Once your Salary Wallet reaches $1000 or more, you can claim it directly to your real balance.</p>
-                                <button class="salary-apply-btn" id="claim-salary-wallet-btn" ${!canClaimSalary ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
+                                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <span style="font-weight: 600; font-size: 1rem;">Salary Wallet</span>
+                                        <span style="font-size: 0.85rem; color: #8d9ece; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">Min $100</span>
+                                    </div>
+                                    <button class="salary-apply-btn" id="claim-salary-wallet-btn" style="width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;" ${salaryWalletBalance < 100 ? 'disabled' : ''}>Claim $${salaryWalletBalance.toFixed(2)}</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="mentor-section-card premium" id="mentor-salary-section">
-                        <h3>Partner Program</h3>
                     </div>
                 </div>
             `;
-            renderMentorSalarySection();
+            
+            document.getElementById('mentor-user-list-btn').addEventListener('click', () => showView('mentor-users'));
+            document.getElementById('mentor-salary-program-btn').addEventListener('click', () => {
+                showView('salary-program');
+                renderMentorSalarySection();
+            });
 
             document.getElementById('copy-ref-code-btn').addEventListener('click', () => {
                 navigator.clipboard.writeText(refCode).then(() => showNotification('Referral code copied.', 'info'));
             });
             document.getElementById('copy-ref-link-btn').addEventListener('click', () => {
-                navigator.clipboard.writeText(refUrl).then(() => showNotification('Referral link copied.', 'info'));
+                navigator.clipboard.writeText(serverUrl).then(() => showNotification('Server link copied.', 'info'));
+            });
+            document.getElementById('copy-referral-template-btn').addEventListener('click', () => {
+                const messageTemplate = `🚀 Join ICTEX today and start your trading journey!\n\n📈 ICTEX is the most advanced and secure trading platform. Don't miss out on the best trading experience.\n\n🌐 Website: ${serverUrl}\n🎁 Referral Code: ${refCode}\n🔗 Sign up here: ${serverUrl}?ref=${refCode}`;
+                navigator.clipboard.writeText(messageTemplate).then(() => showNotification('Message template copied.', 'info'));
             });
             document.getElementById('mentor-user-list-btn').addEventListener('click', () => showView('mentor-users'));
             const claimReferralBtn = document.getElementById('claim-referral-bonus-btn');
@@ -16295,92 +16368,185 @@ Please check the admin panel to approve.
 
         
         function renderMentorSalarySection() {
-            const container = document.getElementById('mentor-salary-section');
-            const activeUsers = mentorData.studentCount?.active || 0;
-            const isSalaryActive = mentorData.salaryActive === true;
+            const container = document.getElementById('salary-program-content');
+            if(!container) return; // Prevent error if view is not yet initialized
+            
+            const realActive = mentorData.studentCount?.active || 0;
+            const botActive = mentorData.studentCount?.botActive || 0;
+            const activeUsers = realActive + botActive; // Combined active users
+            const totalUsers = mentorData.studentCount?.total || 0;
+            const isSalaryActive = mentorData.salaryActive === true || activeUsers >= 15;
+
+            let effectiveActiveUsers = activeUsers;
+            if (mentorData.cycleMinActive !== undefined && mentorData.cycleMinActive < activeUsers) {
+                effectiveActiveUsers = mentorData.cycleMinActive;
+            }
 
             let contentHTML = '';
 
             if (isSalaryActive) {
                 const startDate = mentorData.salaryStartDate || Date.now();
                 const lastDate = mentorData.lastSalaryDate || startDate;
-                const nextSalaryDate = lastDate + (30 * 24 * 60 * 60 * 1000);
-                const daysLeft = Math.max(0, Math.ceil((nextSalaryDate - Date.now()) / (1000 * 60 * 60 * 24)));
                 
-                // Determine current pending salary if any
-                // Backend will create salary_requests, but for UI simplicity we show the projected
-                let projectedAmount = 0;
-                if (activeUsers >= 15 && activeUsers <= 49) projectedAmount = 60;
-                else if (activeUsers >= 50 && activeUsers <= 99) projectedAmount = 120;
-                else if (activeUsers >= 100 && activeUsers <= 199) projectedAmount = 300;
-                else if (activeUsers >= 200 && activeUsers <= 299) projectedAmount = 500;
-                else if (activeUsers >= 300) projectedAmount = 1500;
+                // Compute nextSalaryDate as the 1st of the next month AFTER lastDate
+                const ldObj = new Date(lastDate);
+                const nextSalaryDate = new Date(ldObj.getFullYear(), ldObj.getMonth() + 1, 1).getTime();
+                
+                const now = Date.now();
+
+                let levelName = "Level 1";
+                if (effectiveActiveUsers >= 50 && effectiveActiveUsers <= 99) levelName = "Level 2";
+                else if (effectiveActiveUsers >= 100 && effectiveActiveUsers <= 199) levelName = "Level 3";
+                else if (effectiveActiveUsers >= 200 && effectiveActiveUsers <= 299) levelName = "Level 4";
+                else if (effectiveActiveUsers >= 300) levelName = "Max Level";
+
+                // Cycle Generation Logic
+                if (now >= nextSalaryDate) {
+                    const cycleId = "CYC_" + lastDate;
+                    if (!mentorData.pendingSalaries || !mentorData.pendingSalaries[cycleId]) {
+                        const workedDays = Math.max(1, Math.ceil((nextSalaryDate - lastDate) / (1000 * 60 * 60 * 24)));
+                        const updates = {};
+                        updates[`mentors/${auth.currentUser.uid}/pendingSalaries/${cycleId}`] = {
+                            startDate: lastDate,
+                            endDate: nextSalaryDate,
+                            activeMembers: effectiveActiveUsers,
+                            workedDays: workedDays,
+                            status: 'pending',
+                            timestamp: now
+                        };
+                        updates[`mentors/${auth.currentUser.uid}/lastSalaryDate`] = nextSalaryDate;
+                        updates[`mentors/${auth.currentUser.uid}/cycleMinActive`] = activeUsers; // Reset for new cycle
+                        database.ref().update(updates).catch(console.error);
+                    }
+                }
+
+                // Recalculate based on possibly updated nextSalaryDate
+                const displayLastDate = (now >= nextSalaryDate && (!mentorData.pendingSalaries || !mentorData.pendingSalaries["CYC_" + lastDate])) ? nextSalaryDate : lastDate;
+                const dldObj = new Date(displayLastDate);
+                const displayNextDate = new Date(dldObj.getFullYear(), dldObj.getMonth() + 1, 1).getTime();
+                
+                let statusMsg = '';
+                const daysLeft = Math.ceil((displayNextDate - now) / (1000 * 60 * 60 * 24));
+                statusMsg = `<div style="font-size: 1.4rem; font-weight: 800; color: white; margin-top: 5px;">${daysLeft} <span style="font-size: 0.9rem; color: #8d9ece; font-weight: 500;">Days Left</span></div>`;
+
+                const joinedDateStr = new Date(startDate).toLocaleDateString();
+                const nextDateStr = new Date(displayNextDate).toLocaleDateString();
 
                 contentHTML = `
-                    <div class="mentor-status-panel success">
-                        <h4>Salary Program: Active</h4>
-                        <p>You are officially enrolled in the ICTEX Monthly Salary Program. Maintain your active members to receive automated monthly payouts.</p>
-                        <div style="display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;">
-                            <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 8px; flex: 1; min-width: 150px;">
-                                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Projected Next Payout</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-up);">$${projectedAmount}</div>
+                    <div class="mentor-status-panel success" style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="color: #81c784; font-size: 1.2rem; margin: 0;"><i class="fa fa-check-circle" style="margin-right: 8px;"></i>Salary Active</h4>
+                            <span style="background: var(--action-blue); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold;">Level: ${levelName}</span>
+                        </div>
+                        <p style="color: #e1e2e8; margin-top: 10px; font-size: 0.95rem;">You are enrolled in the ICTEX Monthly Salary Program. Maintain your active members to receive automated monthly payouts.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Joined Date</div>
+                                <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;">${joinedDateStr}</div>
                             </div>
-                            <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 8px; flex: 1; min-width: 150px;">
-                                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Time until Check</div>
-                                <div style="font-size: 1.5rem; font-weight: 700;">${daysLeft} Days</div>
+                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                <div style="font-size: 0.8rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;">Active Members</div>
+                                <div style="font-size: 1.1rem; font-weight: 600; color: white; margin-top: 5px;"><span style="color: var(--color-up);">${activeUsers}</span></div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; grid-column: span 2; text-align: center;">
+                                <div style="font-size: 0.85rem; color: #8d9ece; text-transform: uppercase; letter-spacing: 1px;">Next Salary Date: ${nextDateStr}</div>
+                                ${statusMsg}
                             </div>
                         </div>
                     </div>`;
+                    
+                // Render Pending Salaries if any
+                if (mentorData.pendingSalaries) {
+                    const pendingList = Object.values(mentorData.pendingSalaries);
+                    if (pendingList.length > 0) {
+                        contentHTML += `<div style="margin-top: 24px;">
+                            <h4 style="margin-bottom: 12px; font-size: 1.1rem; font-weight: 700; color: white;"><i class="fa fa-history" style="margin-right: 8px;"></i>Salary History</h4>
+                        `;
+                        pendingList.sort((a,b) => b.startDate - a.startDate).forEach(p => {
+                            const isPending = p.status === 'pending';
+                            const cardColor = isPending ? 'rgba(255,193,7,0.05)' : 'rgba(76,175,80,0.05)';
+                            const borderColor = isPending ? 'rgba(255,193,7,0.2)' : 'rgba(76,175,80,0.2)';
+                            const textColor = isPending ? 'var(--warning)' : 'var(--color-up)';
+                            const statusText = isPending ? 'Pending Admin Approval' : 'Paid';
+                            
+                            contentHTML += `
+                                <div style="background: ${cardColor}; border: 1px solid ${borderColor}; border-radius: 10px; padding: 16px; margin-bottom: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="font-size: 0.95rem; font-weight: 600; color: white;">Cycle: ${new Date(p.startDate).toLocaleDateString()} - ${new Date(p.endDate).toLocaleDateString()}</div>
+                                        <div style="background: rgba(255,255,255,0.1); color: ${textColor}; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">${statusText}</div>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: #8d9ece; margin-top: 8px;">Worked for <span style="color: white; font-weight: bold;">${p.workedDays || 30} Days</span> | Active Members: <span style="color: white; font-weight: bold;">${p.activeMembers}</span></div>
+                                </div>
+                            `;
+                        });
+                        contentHTML += `</div>`;
+                    }
+                }
+
             } else {
                 const progress = Math.min(100, (activeUsers / 15) * 100);
+                let progColor = 'var(--danger)';
+                if (progress >= 100) progColor = 'var(--success)';
+                else if (progress >= 33) progColor = 'var(--warning)';
+
                 contentHTML = `
-                    <div class="salary-tier-card premium" style="border: 1px solid var(--action-blue);">
-                        <div class="salary-tier-header">
-                            <span class="salary-tier-title">Unlock Monthly Salary</span>
-                            <span class="salary-tier-reward">Min 15 Users</span>
+                    <div class="salary-tier-card premium" style="border: 1px solid var(--action-blue); background: linear-gradient(145deg, rgba(30,136,229,0.05), transparent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
+                            <span style="color: var(--action-blue); font-size: 1.05rem; font-weight: 700; white-space: nowrap;">Unlock Monthly Salary</span>
+                            <span style="background: rgba(76, 175, 80, 0.15); color: #81c784; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0;">Min 15 Users</span>
                         </div>
-                        <div class="salary-tier-progress-info">
-                            <span>${activeUsers} / 15</span>
-                            <span>Active Members</span>
+                        <div class="salary-tier-progress-info" style="margin-top: 16px;">
+                            <span style="font-size: 1.1rem; font-weight: 600; color: white;">${activeUsers} / 15</span>
+                            <span style="color: #8d9ece;">Active Members</span>
                         </div>
-                        <div class="salary-progress-bar">
-                            <div class="salary-progress-bar-inner" style="width: ${progress}%;"></div>
+                        <div class="salary-progress-bar" style="height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 12px 0;">
+                            <div class="salary-progress-bar-inner" style="width: ${progress}%; background: ${progColor}; height: 100%; border-radius: 5px; box-shadow: 0 0 10px ${progColor}; transition: background 0.3s ease;"></div>
                         </div>
-                        <p class="mentor-card-copy">Get at least 15 active members to automatically enter the salary program. Once active, your monthly salary will be calculated automatically based on the tiers below.</p>
+                        <p class="mentor-card-copy" style="color: #a0aabf; font-size: 0.95rem;">Get at least 15 active members to automatically enter the salary program. Once active, your monthly salary will be calculated automatically based on the tiers below.</p>
                     </div>
                 `;
             }
 
             // Tiers List
+            const getLevelHTML = (levelName, rangeText, rewardText, targetUsers, activeUsers, colorHex) => {
+                const progress = Math.min(100, (activeUsers / targetUsers) * 100);
+                const isUnlocked = activeUsers >= targetUsers;
+                const progressColor = isUnlocked ? 'var(--color-up)' : colorHex;
+                
+                return `
+                    <div style="padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(${parseInt(colorHex.slice(1,3),16) || 100}, ${parseInt(colorHex.slice(3,5),16) || 100}, ${parseInt(colorHex.slice(5,7),16) || 100}, 0.3); border-radius: 8px; margin-bottom: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: nowrap; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 1; min-width: 0;">
+                                <span style="font-weight: 600; font-size: 0.95rem; color: #fff; white-space: nowrap;">${levelName}</span>
+                                <span style="color: #8d9ece; font-size: 0.75rem; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${rangeText}</span>
+                            </div>
+                            <strong style="color: var(--color-up); font-size: 0.9rem; background: rgba(76,175,80,0.1); padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;">${rewardText}</strong>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                                <div style="width: ${progress}%; height: 100%; background: ${progressColor}; box-shadow: 0 0 8px ${progressColor}; transition: width 1s ease;"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; color: #8d9ece; white-space: nowrap; min-width: 45px; text-align: right;">${Math.min(activeUsers, targetUsers)} / ${targetUsers}</span>
+                        </div>
+                    </div>
+                `;
+            };
+
             contentHTML += `
-                <div style="margin-top: 24px;">
-                    <h4 style="margin-bottom: 16px; font-size: 1rem; color: var(--text-secondary);">Salary Tiers</h4>
-                    <div style="display: grid; gap: 12px;">
-                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <span>Tier 1 (15 - 49 Users)</span>
-                            <strong style="color: var(--color-up);">$60 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <span>Tier 2 (50 - 99 Users)</span>
-                            <strong style="color: var(--color-up);">$120 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <span>Tier 3 (100 - 199 Users)</span>
-                            <strong style="color: var(--color-up);">$300 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <span>Tier 4 (200 - 299 Users)</span>
-                            <strong style="color: var(--color-up);">$500 / Month</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <span>Max Tier (300+ Users)</span>
-                            <strong style="color: var(--color-up);">$1500 / Month</strong>
-                        </div>
+                <div style="margin-top: 32px;">
+                    <h4 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Partner Salary Levels</h4>
+                    <div>
+                        ${getLevelHTML('Level 1', '15-49 Active', '$30-$60', 15, effectiveActiveUsers, '#64b5f6')}
+                        ${getLevelHTML('Level 2', '50-99 Active', '$60-$120', 50, effectiveActiveUsers, '#4fc3f7')}
+                        ${getLevelHTML('Level 3', '100-199 Active', '$150-$300', 100, effectiveActiveUsers, '#4dd0e1')}
+                        ${getLevelHTML('Level 4', '200-299 Active', '$300-$500', 200, effectiveActiveUsers, '#4db6ac')}
+                        ${getLevelHTML('Max Level', '300+ Active', '$750-$1500', 300, effectiveActiveUsers, '#81c784')}
                     </div>
                 </div>
             `;
 
-            container.innerHTML = `<h3>Monthly Salary Program</h3>${contentHTML}`;
+            container.innerHTML = contentHTML;
         }
 
         async function handleReferralBonusClaim() {
@@ -16391,6 +16557,8 @@ Please check the admin panel to approve.
                 showNotification('Deposit bonus claim minimum is $10.', 'info');
                 return;
             }
+            const btn = document.getElementById('claim-referral-bonus-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
             try {
                 await database.ref(`mentors/${user.uid}/commissionWallet/balance`).set(0);
                 await updateBalances({ realChange: availableAmount });
@@ -16403,9 +16571,11 @@ Please check the admin panel to approve.
                     type: 'claim'
                 });
                 showNotification(`$${availableAmount.toFixed(2)} deposit bonus claimed to real balance.`, 'win');
+                if (btn) { btn.textContent = `Claim $0.00`; }
             } catch (e) {
                 console.error('Referral claim failed:', e);
                 showNotification('Referral claim failed.', 'loss');
+                if (btn) { btn.disabled = false; btn.textContent = `Claim $${availableAmount.toFixed(2)}`; }
             }
         }
 
@@ -16413,10 +16583,12 @@ Please check the admin panel to approve.
             const user = auth.currentUser;
             if (!user || !mentorData) return;
             const availableAmount = mentorData.salaryWallet?.balance || 0;
-            if (availableAmount < 1000) {
-                showNotification('Salary wallet claim minimum is $1000.', 'info');
+            if (availableAmount < 100) {
+                showNotification('Salary wallet claim minimum is $100.', 'info');
                 return;
             }
+            const btn = document.getElementById('claim-salary-wallet-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
             try {
                 await database.ref(`mentors/${user.uid}/salaryWallet/balance`).set(0);
                 await updateBalances({ realChange: availableAmount });
@@ -16429,9 +16601,11 @@ Please check the admin panel to approve.
                     type: 'claim'
                 });
                 showNotification(`$${availableAmount.toFixed(2)} salary claimed to real balance.`, 'win');
+                if (btn) { btn.textContent = `Claim $0.00`; }
             } catch (e) {
                 console.error('Salary wallet claim failed:', e);
                 showNotification('Salary wallet claim failed.', 'loss');
+                if (btn) { btn.disabled = false; btn.textContent = `Claim $${availableAmount.toFixed(2)}`; }
             }
         }
 
@@ -16449,7 +16623,6 @@ Please check the admin panel to approve.
             document.getElementById('mentor-user-search').addEventListener('input', (e) => {
                  loadAndRenderMentorUsers(e.target.value.trim());
             });
-             document.getElementById('mentor-deleted-users-btn').addEventListener('click', showDeletedUsers);
         }
 
         async function loadAndRenderMentorUsers(searchTerm = '', showDeleted = false) {
@@ -16491,6 +16664,22 @@ Please check the admin panel to approve.
                 const statusClass = isActive ? 'active' : 'inactive';
                 const statusText = isActive ? 'Active' : 'Inactive';
                 
+                let bonusBadge = '';
+                if (!showDeleted) {
+                    if (userData.referralBonusTask) {
+                        const task = userData.referralBonusTask;
+                        if (task.status === 'completed') {
+                            bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #00E676; background: rgba(0,230,118,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">🏆 Bonus: $5 Earned!</div>`;
+                        } else if (task.status === 'active') {
+                            bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #FFB300; background: rgba(255,179,0,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">⏳ Bonus: ${task.currentTrades || 0}/10 Trades</div>`;
+                        } else if (task.status === 'failed_withdraw' || task.status === 'failed_balance' || task.status === 'failed_time') {
+                            bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #FF5252; background: rgba(255,82,82,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">❌ Bonus Failed</div>`;
+                        }
+                    } else {
+                        bonusBadge = `<div style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #9E9E9E; background: rgba(158,158,158,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">🕒 Bonus: Pending Deposit</div>`;
+                    }
+                }
+                
                 userListHTML += `
                     <div class="mentor-user-list-item">
                         <div class="mentor-user-top-row">
@@ -16498,6 +16687,7 @@ Please check the admin panel to approve.
                                 <div class="name">${userData.name}</div>
                                 <div class="uid">ID: ${userData.numericId}</div>
                                 ${!showDeleted ? `<div class="status ${statusClass}">${statusText}</div>` : ''}
+                                ${bonusBadge}
                             </div>
                             <div class="mentor-user-stats">
                                 <div class="stat">
@@ -16538,8 +16728,17 @@ Please check the admin panel to approve.
             if (!userData) return false;
             
             const now = Date.now();
+
+            if (userData.bannedUntil && userData.bannedUntil > now) {
+                return false;
+            }
+
+            const realBalance = parseFloat(userData.realBalance || 0);
+            if (realBalance < 0.50) {
+                return false;
+            }
+
             const fortyEightHoursAgo = now - (48 * 60 * 60 * 1000); 
-            
             const lastTradeTime = userData.lastTradeTimestamp || 0;
             
             if (lastTradeTime < fortyEightHoursAgo) {
@@ -16596,7 +16795,7 @@ Please check the admin panel to approve.
                         partnerStatus: 'inactive',
                         salaryStatus: null
                     });
-                    showNotification('Partner access was deactivated because the 10-day grace period ended before reaching 100 active members.', 'loss');
+                    showNotification(`Partner access was deactivated because the 10-day grace period ended before reaching ${requiredUsers} active members.`, 'loss');
                     return;
                 }
 
@@ -17550,8 +17749,48 @@ Please check the admin panel to approve.
                     showActionResultModal({
                         status: 'success',
                         title: 'Referral & Partner Rules',
-                        message: '1) Every new account becomes a Mentor automatically. 2) Opening the site with a referral link fills the referral code automatically and opens the registration screen first. 3) When a referred user makes a deposit, the Mentor earns a 5% deposit bonus in the Deposit Bonus Wallet. 4) The Deposit Bonus Wallet can be claimed to the real balance once it reaches at least $10. 5) The Salary Wallet can be claimed to the real balance once it reaches at least $1000. 6) The Partner Program unlocks at 100 active members and joins instantly with no admin approval. 7) Each Partner cycle lasts 30 days and pays $3 per active member into the Salary Wallet. 8) If active members drop below 100, a 10-day grace period begins. If the count is not restored in time, Partner access becomes inactive.',
-                        buttonText: 'OK'
+                        message: `
+                            <div style="text-align: left; max-height: 60vh; overflow-y: auto; padding-right: 8px;">
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="color: #00E676; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-wallet" style="margin-right: 6px;"></i> 1. Deposit Commission</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0; line-height: 1.5;">When your referred user makes a deposit, you earn a <strong>5% bonus</strong> instantly in your Deposit Bonus Wallet. This can be claimed to your real balance once it reaches at least <strong>$10</strong>.</p>
+                                </div>
+                                <div style="margin-bottom: 20px; background: rgba(0,230,118,0.05); border-left: 3px solid #00E676; padding: 12px; border-radius: 4px;">
+                                    <h4 style="color: #00E676; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-gift" style="margin-right: 6px;"></i> 2. Extra Referral Bonus ($5)</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Earn an extra <strong>$5 bonus</strong> directly to your Commission Wallet when your user completes these steps:</p>
+                                    <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 12px 16px; padding: 0;">
+                                        <li style="margin-bottom: 4px;">Makes their first deposit within <strong>24 hours</strong> of registration.</li>
+                                        <li>Completes <strong>10 trades</strong> successfully.</li>
+                                    </ul>
+                                    <div style="font-size: 0.85rem; color: #FF5252; background: rgba(255,82,82,0.1); padding: 8px; border-radius: 4px;">
+                                        <strong><i class="fa fa-exclamation-triangle"></i> Deactivation Rules:</strong> This bonus will be permanently cancelled if the user requests a withdrawal before completing 10 trades, or if their balance drops below $0.50 (insufficient to trade).
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="color: var(--action-blue); margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-handshake-o" style="margin-right: 6px;"></i> 3. Partner / Salary Program</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">Earn fixed monthly salaries by reaching different active member levels (e.g., Level 1: 15-49, Level 2: 50+).</p>
+                                    <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 0 16px; padding: 0;">
+                                        <li style="margin-bottom: 4px;">Every 30 days, the Admin reviews your Active Users and adds your earned salary directly to your Salary Wallet.</li>
+                                        <li style="margin-bottom: 4px;">Salary Wallet can be claimed to your real balance once it reaches at least <strong>$100</strong>.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 style="color: #FFB300; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-user-check" style="margin-right: 6px;"></i> 4. Active User Requirements</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 8px 0; line-height: 1.5;">To be counted as an <strong>Active User</strong> for the Salary Program, a referred user must meet all of the following conditions:</p>
+                                    <ul style="color: #b0bec5; font-size: 0.9rem; margin: 0 0 12px 16px; padding: 0;">
+                                        <li style="margin-bottom: 4px;"><strong>Trading Activity:</strong> Must have placed at least one trade in the last <strong>48 hours (2 days)</strong>.</li>
+                                        <li style="margin-bottom: 4px;"><strong>Minimum Balance:</strong> Must maintain a real balance of at least <strong>$0.50</strong>.</li>
+                                        <li><strong>Account Status:</strong> The account must not be currently banned.</li>
+                                    </ul>
+                                    <div style="font-size: 0.85rem; color: #FFB300; background: rgba(255,179,0,0.1); padding: 8px; border-radius: 4px; margin-bottom: 20px;">
+                                        If a user fails to meet any of these criteria, they instantly become <strong>Inactive</strong>. They will become Active again once they meet the requirements.
+                                    </div>
+                                    <h4 style="color: #b0bec5; margin-bottom: 8px; font-size: 1.05rem;"><i class="fa fa-info-circle" style="margin-right: 6px;"></i> General Rules</h4>
+                                    <p style="color: #b0bec5; font-size: 0.9rem; margin: 0; line-height: 1.5;">Every new account becomes a Mentor automatically. Opening the site with a referral link fills the referral code automatically and opens the registration screen first.</p>
+                                </div>
+                            </div>
+                        `,
+                        buttonText: 'I Understand'
                     });
                 });
             }
@@ -18324,8 +18563,102 @@ Please check the admin panel to approve.
                             if (action === 'deposit') showView('deposit-new');
                             else if (action === 'withdraw') showView('withdraw');
                             else if (action === 'transactions') showView('transactions');
+                            else if (action === 'redeem') showView('redeem');
                         }, 350);
                     });
+                });
+
+                // Redeem Code Logic
+                const redeemInput = document.getElementById('redeem-code-input');
+                const submitRedeemBtn = document.getElementById('submit-redeem-btn');
+
+                function showRedeemPopup(title, msg, type) {
+                    const popup = document.getElementById('redeem-premium-popup');
+                    const icon = document.getElementById('redeem-popup-icon');
+                    if (type === 'success') {
+                        popup.style.borderColor = '#0CCF56';
+                        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0CCF56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+                    } else {
+                        popup.style.borderColor = '#FF3B30';
+                        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+                    }
+                    document.getElementById('redeem-popup-title').innerText = title;
+                    document.getElementById('redeem-popup-msg').innerText = msg;
+                    popup.style.display = 'block';
+                }
+
+                submitRedeemBtn.addEventListener('click', async () => {
+                    const code = redeemInput.value.trim().toUpperCase();
+                    if(!code) {
+                        showRedeemPopup('Empty Code', 'Please enter a valid redeem code.', 'error');
+                        return;
+                    }
+                    
+                    submitRedeemBtn.disabled = true;
+                    submitRedeemBtn.textContent = 'Verifying...';
+                    
+                    try {
+                        const uid = auth.currentUser.uid;
+                        const codeRef = database.ref(`redeemCodes/${code}`);
+                        
+                        const txResult = await codeRef.transaction((currentData) => {
+                            if (currentData === null) return;
+                            if (currentData.expiresAt && currentData.expiresAt < Date.now()) return;
+                            if (currentData.usagesLeft <= 0) return;
+                            if (currentData.claimedBy && currentData.claimedBy[uid]) return;
+                            
+                            currentData.usagesLeft -= 1;
+                            if (!currentData.claimedBy) currentData.claimedBy = {};
+                            currentData.claimedBy[uid] = true;
+                            
+                            return currentData;
+                        });
+                        
+                        if (txResult.committed) {
+                            const data = txResult.snapshot.val();
+                            const amount = data.amount || 0;
+                            const walletType = data.targetWallet === 'bonus' ? 'bonus' : 'main';
+                            
+                            if (walletType === 'bonus') {
+                                await updateBalances({ bonusChange: amount });
+                            } else {
+                                await updateBalances({ realChange: amount });
+                            }
+                            
+                            const txId = `REDEEM_${Date.now()}`;
+                            await database.ref(`users/${uid}/transactions/${txId}`).set({
+                                id: txId,
+                                timestamp: Date.now(),
+                                status: 'succeeded',
+                                amount: amount,
+                                method: `Redeem Code (${code})`,
+                                type: 'deposit'
+                            });
+                            
+                            showRedeemPopup('Success!', `Successfully redeemed $${amount} to your ${walletType === 'bonus' ? 'Bonus' : 'Main'} Wallet!`, 'success');
+                            redeemInput.value = '';
+                        } else {
+                            const snap = await codeRef.once('value');
+                            const data = snap.val();
+                            if (!data) {
+                                showRedeemPopup('Invalid Code', 'The code you entered does not exist.', 'error');
+                            } else if (data.expiresAt && data.expiresAt < Date.now()) {
+                                showRedeemPopup('Expired', 'This code has expired.', 'error');
+                            } else if (data.usagesLeft <= 0) {
+                                showRedeemPopup('Limit Reached', 'This code has reached its maximum usages.', 'error');
+                            } else if (data.claimedBy && data.claimedBy[uid]) {
+                                showRedeemPopup('Already Claimed', 'You have already claimed this code.', 'error');
+                            } else {
+                                showRedeemPopup('Error', 'Could not redeem code. Please try again.', 'error');
+                            }
+                        }
+                    } catch(err) {
+                        console.error('Redeem error:', err);
+                        showRedeemPopup('Error', 'An error occurred during redemption.', 'error');
+                    }
+                    
+                    submitRedeemBtn.disabled = false;
+                    submitRedeemBtn.textContent = 'Claim Now';
                 });
 
                 const dragHandler = paymentsModalContent;
@@ -18920,41 +19253,72 @@ Please check the admin panel to approve.
             function attachTaskButtonListeners() {
                 tasksContainer.querySelectorAll('.claim-btn').forEach(btn => {
                     if(!btn.disabled) {
-                        btn.addEventListener('click', () => claimTask(btn.dataset.taskId));
+                        btn.addEventListener('click', (e) => {
+                            e.target.disabled = true;
+                            e.target.textContent = 'Claiming...';
+                            claimTask(e.target.dataset.taskId, e.target);
+                        });
                     }
                 });
             }
             
-            async function claimTask(taskId) {
+            async function claimTask(taskId, btnEl) {
                 const tasks = {
-                    'miner500': { progressKey: 'minerClicks', reward: 5, bonusType: 'BTC Mining Reward', resetKeys: ['minerClicks'] },
-                    'deposit10': { progressKey: 'depositCount', reward: 10, bonusType: 'Deposit Reward', resetKeys: ['depositCount'] },
-                    'tradeVolume5k': { progressKey: 'currentTradeVolume', reward: 50, bonusType: 'Trade Volume Reward', resetKeys: ['currentTradeVolume'] },
-                    'deposit500': { progressKey: 'currentDepositAmount', reward: 50, bonusType: 'Deposit Volume Reward', resetKeys: ['currentDepositAmount'] },
-                    'loss10': { progressKey: 'lossVolume10', reward: 10, bonusType: '100% Risk-Free Cashback', resetKeys: ['lossVolume10', 'lossVolume50', 'lossVolume100'] },
-                    'loss50': { progressKey: 'lossVolume50', reward: 10, bonusType: 'Trader Cashback', resetKeys: ['lossVolume10', 'lossVolume50', 'lossVolume100'] },
-                    'loss100': { progressKey: 'lossVolume100', reward: 20, bonusType: 'Pro Cashback', resetKeys: ['lossVolume10', 'lossVolume50', 'lossVolume100'] }
+                    'miner500': { progressKey: 'minerClicks', target: 500, reward: 5, bonusType: 'BTC Mining Reward', resetKeys: ['minerClicks'] },
+                    'deposit10': { progressKey: 'depositCount', target: 10, reward: 10, bonusType: 'Deposit Reward', resetKeys: ['depositCount'] },
+                    'tradeVolume5k': { progressKey: 'currentTradeVolume', target: 5000, reward: 50, bonusType: 'Trade Volume Reward', resetKeys: ['currentTradeVolume'] },
+                    'deposit500': { progressKey: 'currentDepositAmount', target: 500, reward: 50, bonusType: 'Deposit Volume Reward', resetKeys: ['currentDepositAmount'] },
+                    'loss10': { progressKey: 'lossVolume10', target: 10, reward: 10, bonusType: '100% Risk-Free Cashback', resetKeys: ['lossVolume10', 'lossVolume50', 'lossVolume100'] },
+                    'loss50': { progressKey: 'lossVolume50', target: 50, reward: 10, bonusType: 'Trader Cashback', resetKeys: ['lossVolume10', 'lossVolume50', 'lossVolume100'] },
+                    'loss100': { progressKey: 'lossVolume100', target: 100, reward: 20, bonusType: 'Pro Cashback', resetKeys: ['lossVolume10', 'lossVolume50', 'lossVolume100'] }
                 };
 
                 const task = tasks[taskId];
                 if (!task) return;
 
-                await updateBalances({ bonusChange: task.reward, isBonusTransaction: true, bonusType: task.bonusType });
-                
-                const updates = {};
-                task.resetKeys.forEach(key => {
-                    updates[`/users/${auth.currentUser.uid}/taskProgress/${key}`] = 0;
-                });
-                
-                // Hide the First-Time user task permanently once claimed
-                if (taskId === 'loss10') {
-                    updates[`/users/${auth.currentUser.uid}/taskProgress/loss10Claimed`] = true;
+                try {
+                    const uid = auth.currentUser.uid;
+                    const progressRef = database.ref(`users/${uid}/taskProgress`);
+                    
+                    const txResult = await progressRef.transaction((progress) => {
+                        if (!progress) return progress;
+                        
+                        // Glitch protection: Check if actually completed
+                        if ((progress[task.progressKey] || 0) < task.target) {
+                            return; // Abort transaction
+                        }
+                        
+                        // Prevent loss10 double claim
+                        if (taskId === 'loss10' && progress.loss10Claimed) {
+                            return; // Abort transaction
+                        }
+                        
+                        // Reset progress correctly
+                        task.resetKeys.forEach(key => {
+                            progress[key] = 0;
+                        });
+                        
+                        if (taskId === 'loss10') {
+                            progress.loss10Claimed = true;
+                        }
+                        
+                        return progress;
+                    });
+                    
+                    if (txResult.committed) {
+                        await updateBalances({ bonusChange: task.reward, isBonusTransaction: true, bonusType: task.bonusType });
+                        showNotification(`Congratulations! A $${task.reward} bonus has been added to your account.`, 'win');
+                    } else {
+                        showNotification('Task requirement not met or already claimed.', 'loss');
+                    }
+                    renderRewardsView(); // Refresh view instantly
+                } catch(e) {
+                    console.error("Task claim error", e);
+                    if (btnEl) {
+                        btnEl.disabled = false;
+                        btnEl.textContent = 'Claim';
+                    }
                 }
-                
-                await database.ref().update(updates);
-
-                showNotification(`Congratulations! A $${task.reward} bonus has been added to your account.`, 'win');
-                renderRewardsView(); // Refresh view instantly
             }
 
             taskInfoModal.addEventListener('click', (e) => {
