@@ -16377,6 +16377,11 @@ Please check the admin panel to approve.
             const totalUsers = mentorData.studentCount?.total || 0;
             const isSalaryActive = mentorData.salaryActive === true || activeUsers >= 15;
 
+            let effectiveActiveUsers = activeUsers;
+            if (mentorData.cycleMinActive !== undefined && mentorData.cycleMinActive < activeUsers) {
+                effectiveActiveUsers = mentorData.cycleMinActive;
+            }
+
             let contentHTML = '';
 
             if (isSalaryActive) {
@@ -16388,11 +16393,6 @@ Please check the admin panel to approve.
                 const nextSalaryDate = new Date(ldObj.getFullYear(), ldObj.getMonth() + 1, 1).getTime();
                 
                 const now = Date.now();
-                
-                let effectiveActiveUsers = activeUsers;
-                if (mentorData.cycleMinActive !== undefined && mentorData.cycleMinActive < activeUsers) {
-                    effectiveActiveUsers = mentorData.cycleMinActive;
-                }
 
                 let levelName = "Level 1";
                 if (effectiveActiveUsers >= 50 && effectiveActiveUsers <= 99) levelName = "Level 2";
