@@ -13391,8 +13391,10 @@ Timestamp: ${new Date().toISOString()}
                     currentBalance = myTourBalance;
                 }
 
-                // 3. STRICT RE-VALIDATION AGAINST BALANCE
-                if (isNaN(investmentAmount) || investmentAmount < minInvestment || investmentAmount > currentBalance) { 
+                // 3. STRICT RE-VALIDATION AGAINST BALANCE (FIXED 100% BALANCE BUG)
+                const roundInvest = Math.round(investmentAmount * 100);
+                const roundBal = Math.round(currentBalance * 100);
+                if (isNaN(investmentAmount) || investmentAmount < minInvestment || roundInvest > roundBal) { 
                     SoundEngine.warning();
                     if (investmentAmount > currentBalance && !isDemoAccount && !isTournamentAccount) {
                         const tifmModal = document.getElementById('trade-insufficient-funds-modal');
@@ -17694,9 +17696,15 @@ Please check the admin panel to approve.
             });
             
             amountPlusBtn.addEventListener('click', () => { 
-                const nextAmount = investmentAmount + 1;
+                const currentBal = isDemoAccount ? demoBalance : (isTournamentAccount ? myTourBalance : balance);
+                let nextAmount = investmentAmount + 1;
                 
-                if (nextAmount > balance && balance >= 0.5) {
+                if (Math.round(nextAmount * 100) > Math.round(currentBal * 100)) {
+                    if (Math.round(currentBal * 100) > Math.round(investmentAmount * 100)) {
+                        investmentAmount = currentBal; // একবারে ফুল ব্যালেন্স সেট হবে
+                        updateInvestmentDisplay();
+                        return;
+                    }
                     SoundEngine.warning();
                     showNotification('Insufficient balance. Please deposit.', 'loss');
                     return; 
@@ -17715,9 +17723,10 @@ Please check the admin panel to approve.
             const cancelAmountBtn = document.getElementById('cancel-amount-btn');
             if (confirmAmountBtn) confirmAmountBtn.addEventListener('click', () => {
                 let val = parseFloat(manualAmountInput.value);
+                const currentBal = isDemoAccount ? demoBalance : (isTournamentAccount ? myTourBalance : balance);
                 if (isNaN(val) || val < 0.5) val = 0.5;
                 if (val > 3000) val = 3000;
-                if (val > balance) { 
+                if (Math.round(val * 100) > Math.round(currentBal * 100)) { 
                     SoundEngine.warning();
                     showNotification('Insufficient balance', 'loss'); 
                     return; 
